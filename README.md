@@ -1,10 +1,19 @@
 # ShiroGuessr iOS
 
-iOS版「白Guessr」- 位置当てゲームアプリケーション
+iOS版「白Guessr」- 白色の色当てゲームアプリケーション
 
 ## 概要
 
-ShiroGuessrは、Web版「白Guessr」のiOSネイティブ実装です。ユーザーが表示された場所の画像から実際の位置を推測するゲームです。
+ShiroGuessrは、微妙に異なる白色の中から正解の色を当てるゲームです。Web版「白Guessr」のiOSネイティブ実装で、2つのゲームモードが楽しめます。
+
+### ゲームモード
+
+1. **クラシックモード**: 8つの白色から正解の色を選択
+2. **マップモード**: グラデーションマップ上に正解の色の位置をピン留め
+
+### スクリーンショット
+
+_Coming soon_
 
 ## 技術スタック
 
@@ -93,7 +102,69 @@ open ShiroGuessr.xcodeproj
 
 3. ビルドして実行 (⌘R)
 
+## ゲームルール
+
+### 基本ルール
+
+- 5ラウンド制のゲーム
+- 各ラウンドで目標の白色が表示される
+- 制限時間内に正解の色を選択または位置を指定
+- 距離が近いほど高得点（最大1000点/ラウンド）
+- 全ラウンドの合計スコアを競う（最大5000点）
+
+### スコア計算
+
+スコアは目標色と選択色のマンハッタン距離に基づいて計算されます。
+
+```
+distance = |targetR - selectedR| + |targetG - selectedG| + |targetB - selectedB|
+score = max(0, 1000 - distance * 30)
+```
+
+### 星評価
+
+- 5つ星: 距離0-5
+- 4つ星: 距離6-10
+- 3つ星: 距離11-20
+- 2つ星: 距離21-40
+- 1つ星: 距離41以上
+
+## 機能一覧
+
+### ゲーム機能
+
+- クラシックモード（8色選択）
+- マップモード（グラデーションマップ+タイマー）
+- スコア計算とラウンド結果表示
+- 最終結果画面
+
+### シェア機能
+
+- ゲーム結果のテキストシェア
+- クリップボードへのコピー
+- SNS投稿対応
+- Universal Links対応（`https://shiro-guessr.pages.dev/ios`）
+
+### UI/UX
+
+- Material Design 3準拠のデザイン
+- スムーズなアニメーション
+- レスポンシブデザイン（iPhone/iPad対応）
+- ダークモード非対応（白色ゲームのため）
+
 ## 開発
+
+### テスト
+
+テストの実行:
+
+```bash
+# すべてのテストを実行
+xcodebuild test -scheme ShiroGuessr -destination 'platform=iOS Simulator,name=iPhone 15'
+
+# 特定のテストクラスを実行
+xcodebuild test -scheme ShiroGuessr -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:ShiroGuessrTests/ColorServiceTests
+```
 
 ### ブランチ戦略
 
@@ -103,8 +174,15 @@ open ShiroGuessr.xcodeproj
 ### コーディング規約
 
 - Swift公式のコーディングスタイルガイドに準拠
-- SwiftLintによる静的解析
 - Material Design 3のデザイン原則に従ったUI実装
+- DocCスタイルのドキュメントコメント
+
+### パフォーマンス最適化
+
+- `@Observable`による効率的な状態管理
+- LazyStacksによる遅延レンダリング
+- Canvasによる効率的なマップ描画
+- 不要な再描画の削減
 
 ## 参考リンク
 

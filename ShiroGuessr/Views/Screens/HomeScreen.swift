@@ -36,10 +36,9 @@ struct HomeScreen: View {
                     NavigationLink(destination: ClassicGameScreen()) {
                         HStack {
                             Image(systemName: "gamecontroller.fill")
-                                .font(.mdLabelLarge)
                             Text("Classic Mode")
-                                .font(.mdLabelLarge)
                         }
+                        .font(.mdLabelLarge)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
                         .foregroundStyle(Color.mdOnPrimary)
@@ -47,23 +46,18 @@ struct HomeScreen: View {
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
 
-                    Button(action: {
-                        // Map mode will be implemented later
-                    }) {
+                    NavigationLink(destination: MapGameScreen()) {
                         HStack {
                             Image(systemName: "map.fill")
-                                .font(.mdLabelLarge)
                             Text("Map Mode")
-                                .font(.mdLabelLarge)
                         }
+                        .font(.mdLabelLarge)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
                         .foregroundStyle(Color.mdOnSecondaryContainer)
                         .background(Color.mdSecondaryContainer)
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
-                    .disabled(true)
-                    .opacity(0.6)
                 }
                 .padding(.horizontal, 32)
                 .padding(.bottom, 48)

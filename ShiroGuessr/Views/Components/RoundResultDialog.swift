@@ -95,19 +95,16 @@ struct RoundResultDialog: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
 
             // Next button
-            Button(action: onNext) {
+            Button {
+                onNext()
+            } label: {
                 HStack {
                     Text("Continue")
-                        .font(.mdLabelLarge)
                     Image(systemName: "arrow.right.circle.fill")
-                        .font(.mdLabelLarge)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .foregroundStyle(Color.mdOnPrimary)
-                .background(Color.mdPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 24))
+                .font(.mdLabelLarge)
             }
+            .buttonStyle(.mdFilled)
         }
         .padding(24)
         .background(Color.mdSurface)

@@ -5,6 +5,9 @@ struct ResultScreen: View {
     let gameState: GameState
     let onReplay: () -> Void
 
+    @State private var animateScore = false
+    @State private var animateRounds = false
+
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -13,11 +16,14 @@ struct ResultScreen: View {
                     Image(systemName: "trophy.fill")
                         .font(.system(size: 60))
                         .foregroundStyle(Color.mdPrimary)
+                        .scaleEffect(animateScore ? 1.0 : 0.5)
+                        .opacity(animateScore ? 1.0 : 0.0)
 
                     Text("Game Complete!")
                         .font(.mdHeadlineLarge)
                         .foregroundStyle(Color.mdOnSurface)
                         .fontWeight(.bold)
+                        .opacity(animateScore ? 1.0 : 0.0)
 
                     // Total score
                     VStack(spacing: 4) {
@@ -38,6 +44,8 @@ struct ResultScreen: View {
                     .padding(.horizontal, 32)
                     .background(Color.mdPrimaryContainer)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .scaleEffect(animateScore ? 1.0 : 0.8)
+                    .opacity(animateScore ? 1.0 : 0.0)
                 }
                 .padding(.top, 32)
 
@@ -49,67 +57,64 @@ struct ResultScreen: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 16)
+                        .opacity(animateRounds ? 1.0 : 0.0)
 
                     ForEach(gameState.rounds.indices, id: \.self) { index in
                         RoundResultCard(round: gameState.rounds[index])
+                            .opacity(animateRounds ? 1.0 : 0.0)
+                            .offset(y: animateRounds ? 0 : 20)
+                            .animation(
+                                .spring(response: 0.6, dampingFraction: 0.7)
+                                    .delay(Double(index) * 0.1),
+                                value: animateRounds
+                            )
                     }
                 }
 
                 // Action buttons
                 VStack(spacing: 12) {
-                    Button(action: onReplay) {
+                    Button {
+                        onReplay()
+                    } label: {
                         HStack {
                             Image(systemName: "arrow.counterclockwise.circle.fill")
-                                .font(.mdLabelLarge)
                             Text("Play Again")
-                                .font(.mdLabelLarge)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .foregroundStyle(Color.mdOnPrimary)
-                        .background(Color.mdPrimary)
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .font(.mdLabelLarge)
                     }
+                    .buttonStyle(.mdFilled)
 
-                    Button(action: shareResults) {
+                    ShareButton(gameState: gameState)
+
+                    Button {
+                        copyToClipboard()
+                    } label: {
                         HStack {
-                            Image(systemName: "square.and.arrow.up")
-                                .font(.mdLabelLarge)
-                            Text("Share Results")
-                                .font(.mdLabelLarge)
+                            Image(systemName: "doc.on.clipboard")
+                            Text("Copy to Clipboard")
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .foregroundStyle(Color.mdOnSecondaryContainer)
-                        .background(Color.mdSecondaryContainer)
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .font(.mdLabelLarge)
                     }
+                    .buttonStyle(.mdFilledTonal)
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 32)
             }
         }
         .background(Color.mdBackground)
+        .onAppear {
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
+                animateScore = true
+            }
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.3)) {
+                animateRounds = true
+            }
+        }
     }
 
-    private func shareResults() {
-        let text = """
-        白Guessr Results
-        Score: \(gameState.totalScore)/5000
-
-        Can you beat my score? Try the white color guessing game!
-        """
-
-        let activityVC = UIActivityViewController(
-            activityItems: [text],
-            applicationActivities: nil
-        )
-
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first,
-           let rootVC = window.rootViewController {
-            rootVC.present(activityVC, animated: true)
-        }
+    private func copyToClipboard() {
+        let text = ShareService.generateShareText(gameState: gameState)
+        ShareService.copyToClipboard(text)
     }
 }
 

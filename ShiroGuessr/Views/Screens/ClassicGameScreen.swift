@@ -96,21 +96,16 @@ struct ClassicGameScreen: View {
 
                         Spacer()
 
-                        Button(action: {
+                        Button {
                             viewModel.startNewGame()
-                        }) {
+                        } label: {
                             HStack {
                                 Image(systemName: "play.fill")
-                                    .font(.mdLabelLarge)
                                 Text("Start Game")
-                                    .font(.mdLabelLarge)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .foregroundStyle(Color.mdOnPrimary)
-                            .background(Color.mdPrimary)
-                            .clipShape(RoundedRectangle(cornerRadius: 24))
+                            .font(.mdLabelLarge)
                         }
+                        .buttonStyle(.mdFilled)
                         .padding(.horizontal, 32)
                         .padding(.bottom, 40)
                     }
