@@ -1,0 +1,139 @@
+import SwiftUI
+
+/// Dialog displaying the result of a single round
+struct RoundResultDialog: View {
+    let round: GameRound
+    let onNext: () -> Void
+
+    var body: some View {
+        VStack(spacing: 24) {
+            // Header
+            Text("Round \(round.roundNumber) Result")
+                .font(.mdHeadlineMedium)
+                .foregroundStyle(Color.mdOnSurface)
+                .fontWeight(.bold)
+
+            // Color comparison
+            HStack(spacing: 24) {
+                // Target color
+                VStack(spacing: 8) {
+                    Text("Target")
+                        .font(.mdLabelMedium)
+                        .foregroundStyle(Color.mdOnSurfaceVariant)
+
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(round.targetColor.toColor())
+                        .frame(width: 100, height: 100)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(Color.mdOutline, lineWidth: 1)
+                        )
+
+                    Text(round.targetColor.toCSSString())
+                        .font(.mdBodySmall)
+                        .foregroundStyle(Color.mdOnSurfaceVariant)
+                        .fontDesign(.monospaced)
+                }
+
+                // Selected color
+                VStack(spacing: 8) {
+                    Text("Your Guess")
+                        .font(.mdLabelMedium)
+                        .foregroundStyle(Color.mdOnSurfaceVariant)
+
+                    if let selectedColor = round.selectedColor {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(selectedColor.toColor())
+                            .frame(width: 100, height: 100)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .strokeBorder(Color.mdOutline, lineWidth: 1)
+                            )
+
+                        Text(selectedColor.toCSSString())
+                            .font(.mdBodySmall)
+                            .foregroundStyle(Color.mdOnSurfaceVariant)
+                            .fontDesign(.monospaced)
+                    }
+                }
+            }
+
+            // Stats
+            VStack(spacing: 12) {
+                // Distance
+                HStack {
+                    Text("Distance:")
+                        .font(.mdBodyLarge)
+                        .foregroundStyle(Color.mdOnSurface)
+                    Spacer()
+                    Text("\(round.distance ?? 0)")
+                        .font(.mdTitleMedium)
+                        .foregroundStyle(Color.mdOnSurface)
+                        .fontWeight(.semibold)
+                }
+                .padding(.horizontal, 20)
+
+                Divider()
+                    .background(Color.mdOutlineVariant)
+                    .padding(.horizontal, 20)
+
+                // Score
+                HStack {
+                    Text("Score:")
+                        .font(.mdBodyLarge)
+                        .foregroundStyle(Color.mdOnSurface)
+                    Spacer()
+                    Text("\(round.score ?? 0)")
+                        .font(.mdTitleLarge)
+                        .foregroundStyle(Color.mdPrimary)
+                        .fontWeight(.bold)
+                }
+                .padding(.horizontal, 20)
+            }
+            .padding(.vertical, 16)
+            .background(Color.mdSurfaceVariant.opacity(0.3))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            // Next button
+            Button(action: onNext) {
+                HStack {
+                    Text("Continue")
+                        .font(.mdLabelLarge)
+                    Image(systemName: "arrow.right.circle.fill")
+                        .font(.mdLabelLarge)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .foregroundStyle(Color.mdOnPrimary)
+                .background(Color.mdPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
+            }
+        }
+        .padding(24)
+        .background(Color.mdSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 28))
+        .shadow(color: Color.mdShadow, radius: 8, x: 0, y: 4)
+        .padding(24)
+    }
+}
+
+#Preview {
+    ZStack {
+        Color.mdScrim.ignoresSafeArea()
+
+        RoundResultDialog(
+            round: GameRound(
+                roundNumber: 1,
+                targetColor: RGBColor(r: 250, g: 248, b: 252),
+                selectedColor: RGBColor(r: 248, g: 250, b: 250),
+                distance: 6,
+                score: 800,
+                paletteColors: [],
+                pin: nil,
+                targetPin: nil,
+                timeRemaining: nil
+            ),
+            onNext: {}
+        )
+    }
+}
