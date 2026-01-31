@@ -9,20 +9,21 @@ struct MapGameScreen: View {
             Color.mdBackground
                 .ignoresSafeArea()
 
-            if let gameState = viewModel.gameState,
-               let currentRound = viewModel.currentRound,
-               let gradientMap = viewModel.currentGradientMap {
-
+            if let gameState = viewModel.gameState {
                 if gameState.isCompleted {
                     // Show result screen
                     resultView(gameState: gameState)
-                } else {
+                } else if let currentRound = viewModel.currentRound,
+                          let gradientMap = viewModel.currentGradientMap {
                     // Show game view
                     gameView(
                         gameState: gameState,
                         currentRound: currentRound,
                         gradientMap: gradientMap
                     )
+                } else {
+                    // Loading or initial state
+                    startView
                 }
             } else {
                 // Loading or initial state
@@ -88,11 +89,6 @@ struct MapGameScreen: View {
                     )
                     .padding(.horizontal, 16)
 
-                    // Instructions
-                    if !viewModel.hasPinPlaced {
-                        instructionsView
-                    }
-
                     // Game controls
                     GameControls(
                         canSubmit: viewModel.hasPinPlaced,
@@ -136,36 +132,6 @@ struct MapGameScreen: View {
         .padding(16)
         .background(Color.mdSurfaceVariant.opacity(0.3))
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .padding(.horizontal, 16)
-    }
-
-    // MARK: - Instructions View
-
-    @ViewBuilder
-    private var instructionsView: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 12) {
-                Image(systemName: "hand.tap.fill")
-                    .font(.mdBodyLarge)
-                    .foregroundStyle(Color.mdPrimary)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Tap to place pin")
-                        .font(.mdBodyMedium)
-                        .foregroundStyle(Color.mdOnSurface)
-                        .fontWeight(.medium)
-
-                    Text("Use pinch to zoom and drag to pan")
-                        .font(.mdBodySmall)
-                        .foregroundStyle(Color.mdOnSurfaceVariant)
-                }
-
-                Spacer()
-            }
-        }
-        .padding(12)
-        .background(Color.mdPrimaryContainer.opacity(0.3))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 16)
     }
 

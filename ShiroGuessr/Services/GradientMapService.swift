@@ -14,23 +14,23 @@ final class GradientMapService {
 
     // MARK: - Public Methods
 
-    /// Generates a gradient map with random white corner colors
+    /// Generates a gradient map with fixed white corner colors for consistent map appearance
+    /// Colors are always in the range (245-255) for consistency
     /// - Parameters:
     ///   - width: Width of the map in pixels (default: 50)
     ///   - height: Height of the map in pixels (default: 50)
     /// - Returns: A GradientMap with bilinear interpolation
     func generateGradientMap(width: Int = 50, height: Int = 50) -> GradientMap {
-        let cornerColors = [
-            colorService.generateRandomWhiteColor(), // Top-left
-            colorService.generateRandomWhiteColor(), // Top-right
-            colorService.generateRandomWhiteColor(), // Bottom-left
-            colorService.generateRandomWhiteColor()  // Bottom-right
-        ]
+        // Use fixed white colors (245-255) for each corner for consistent map appearance
+        let topLeft = RGBColor(r: 245, g: 245, b: 245)
+        let topRight = RGBColor(r: 255, g: 245, b: 255)
+        let bottomLeft = RGBColor(r: 245, g: 255, b: 255)
+        let bottomRight = RGBColor(r: 255, g: 255, b: 245)
 
         return GradientMap(
             width: width,
             height: height,
-            cornerColors: cornerColors
+            cornerColors: [topLeft, topRight, bottomLeft, bottomRight]
         )
     }
 

@@ -82,6 +82,14 @@ final class MapGameViewModel {
         // Generate gradient map for first round
         currentGradientMap = gradientMapService.generateGradientMap()
 
+        // Set target color for first round
+        if let gradientMap = currentGradientMap, let gameState {
+            self.gameState = mapGameService.startRound(
+                gameState: gameState,
+                gradientMap: gradientMap
+            )
+        }
+
         // Reset UI state
         showingResult = false
 
@@ -141,6 +149,14 @@ final class MapGameViewModel {
            !updatedGameState.isCompleted {
             // Generate new gradient map for next round
             currentGradientMap = gradientMapService.generateGradientMap()
+
+            // Set target color for next round
+            if let gradientMap = currentGradientMap {
+                self.gameState = mapGameService.startRound(
+                    gameState: updatedGameState,
+                    gradientMap: gradientMap
+                )
+            }
 
             // Start timer for next round
             startRoundTimer()

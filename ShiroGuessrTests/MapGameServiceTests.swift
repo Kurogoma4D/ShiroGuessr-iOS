@@ -83,6 +83,7 @@ final class MapGameServiceTests: XCTestCase {
         }
     }
 
+
     // MARK: - placePin Tests
 
     func testPlacePin_shouldAddPinToCurrentRound() {

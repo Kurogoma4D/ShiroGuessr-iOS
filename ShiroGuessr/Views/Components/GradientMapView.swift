@@ -55,6 +55,7 @@ struct GradientMapView: View {
                     drawGradientMap(context: context, size: size)
                 }
                 .frame(width: mapSize, height: mapSize)
+                .coordinateSpace(name: "mapCanvas")
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
@@ -82,13 +83,11 @@ struct GradientMapView: View {
             .scaleEffect(totalScale)
             .offset(totalOffset)
             .gesture(
-                magnificationGesture
+                tapGesture
+                    .simultaneously(with: magnificationGesture)
                     .simultaneously(with: dragGesture)
             )
             .contentShape(Rectangle())
-            .onTapGesture { location in
-                handleTap(at: location, in: geometry)
-            }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .clipped()
         }
@@ -169,17 +168,41 @@ struct GradientMapView: View {
         color: Color,
         systemImage: String
     ) -> some View {
-        Image(systemName: systemImage)
-            .font(.title)
-            .foregroundColor(color)
-            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
-            .position(
-                x: CGFloat(coordinate.x) * mapSize,
-                y: CGFloat(coordinate.y) * mapSize
+        let pinX = CGFloat(coordinate.x) * mapSize
+        let pinY = CGFloat(coordinate.y) * mapSize
+
+        // Use circle instead of mappin to avoid offset issues
+        return Circle()
+            .fill(color)
+            .frame(width: 16, height: 16)
+            .overlay(
+                Circle()
+                    .stroke(Color.white, lineWidth: 2)
             )
+            .overlay(
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 4, height: 4)
+            )
+            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+            .position(x: pinX, y: pinY)
     }
 
     // MARK: - Gestures
+
+    /// Tap gesture for pin placement (using DragGesture with minimum distance)
+    private var tapGesture: some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .named("mapCanvas"))
+            .onEnded { value in
+                // Only treat as tap if there was no significant movement
+                let dragDistance = sqrt(
+                    pow(value.translation.width, 2) + pow(value.translation.height, 2)
+                )
+                if dragDistance < 5 { // Less than 5 points movement = tap
+                    handleTap(at: value.startLocation)
+                }
+            }
+    }
 
     /// Magnification gesture for zooming
     private var magnificationGesture: some Gesture {
@@ -192,9 +215,9 @@ struct GradientMapView: View {
             }
     }
 
-    /// Drag gesture for panning
+    /// Drag gesture for panning (with minimum distance to avoid conflict with tap)
     private var dragGesture: some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 5)
             .updating($dragState) { value, state, _ in
                 state = value.translation
             }
@@ -207,23 +230,32 @@ struct GradientMapView: View {
     // MARK: - Interaction Handlers
 
     /// Handles tap gesture for pin placement
-    private func handleTap(at location: CGPoint, in geometry: GeometryProxy) {
+    /// Using named coordinate space "mapCanvas", location is in Canvas's local coordinates
+    private func handleTap(at location: CGPoint) {
         guard isInteractionEnabled, onPinPlacement != nil else { return }
 
-        // Convert tap location to map coordinates
-        let centerX = geometry.size.width / 2
-        let centerY = geometry.size.height / 2
+        // Debug output
+        print("=== Tap Debug ===")
+        print("Tap location: \(location)")
+        print("MapSize: \(mapSize)")
+        print("TotalScale: \(totalScale)")
+        print("TotalOffset: \(totalOffset)")
 
-        // Account for scale and offset
-        let scaledMapSize = mapSize * totalScale
-        let x = (location.x - centerX - totalOffset.width) / scaledMapSize + 0.5
-        let y = (location.y - centerY - totalOffset.height) / scaledMapSize + 0.5
+        // Location is already in Canvas's coordinate space (300x300)
+        // Simply normalize to 0-1 range
+        let normalizedX = location.x / mapSize
+        let normalizedY = location.y / mapSize
+
+        print("Normalized: (\(normalizedX), \(normalizedY))")
 
         // Clamp to valid range
-        let normalizedX = max(0, min(1, x))
-        let normalizedY = max(0, min(1, y))
+        let clampedX = max(0, min(1, normalizedX))
+        let clampedY = max(0, min(1, normalizedY))
 
-        let coordinate = MapCoordinate(x: normalizedX, y: normalizedY)
+        print("Clamped: (\(clampedX), \(clampedY))")
+        print("================")
+
+        let coordinate = MapCoordinate(x: clampedX, y: clampedY)
         onPinPlacement?(coordinate)
     }
 }
