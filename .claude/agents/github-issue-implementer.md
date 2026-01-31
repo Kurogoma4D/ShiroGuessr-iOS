@@ -44,7 +44,12 @@ Execute the following checks in order:
 - If any step fails, fix the issues and re-run the failed step before proceeding
 - Document any intentional deviations from standards with clear justification
 
-## 5. Pull Request Creation
+## 5. Worktree Cleanup
+- After PR creation, remove the worktree using `git worktree remove`
+- Verify the worktree was successfully removed
+- Return to the main working directory
+
+## 6. Pull Request Creation
 - Commit all changes with a clear, descriptive commit message referencing the issue (e.g., "Fix #42: Implement user authentication")
 - Push the branch to the remote repository
 - Create a PR using `gh pr create` with:
@@ -57,11 +62,6 @@ Execute the following checks in order:
     - Reference to the original issue (e.g., "Closes #42")
   - Appropriate labels matching the issue type
 - Ensure the PR is linked to the original issue for automatic closure upon merge
-
-## 6. Worktree Cleanup
-- After PR creation, remove the worktree using `git worktree remove`
-- Verify the worktree was successfully removed
-- Return to the main working directory
 
 # Decision-Making Framework
 
