@@ -6,17 +6,40 @@
 //
 
 import SwiftUI
+import Combine
+
+enum GameMode {
+    case classicMode
+    case mapMode
+}
+
+struct RootView: View {
+    @State private var currentMode: GameMode = .mapMode
+
+    var body: some View {
+        Group {
+            switch currentMode {
+            case .classicMode:
+                ClassicGameScreen(onModeToggle: toggleMode)
+            case .mapMode:
+                MapGameScreen(onModeToggle: toggleMode)
+            }
+        }
+    }
+
+    private func toggleMode() {
+        currentMode = currentMode == .mapMode ? .classicMode : .mapMode
+    }
+}
 
 @main
 struct ShiroGuessrApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                HomeScreen()
-            }
-            .onOpenURL { url in
-                handleUniversalLink(url)
-            }
+            RootView()
+                .onOpenURL { url in
+                    handleUniversalLink(url)
+                }
         }
     }
 

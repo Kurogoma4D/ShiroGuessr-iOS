@@ -9,8 +9,7 @@ import SwiftUI
 
 struct HomeScreen: View {
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 32) {
+        VStack(spacing: 32) {
                 Spacer()
 
                 // Logo and title
@@ -33,7 +32,7 @@ struct HomeScreen: View {
 
                 // Game mode buttons
                 VStack(spacing: 16) {
-                    NavigationLink(destination: ClassicGameScreen()) {
+                    NavigationLink(value: GameMode.classicMode) {
                         HStack {
                             Image(systemName: "gamecontroller.fill")
                             Text("Classic Mode")
@@ -46,7 +45,7 @@ struct HomeScreen: View {
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
 
-                    NavigationLink(destination: MapGameScreen()) {
+                    NavigationLink(value: GameMode.mapMode) {
                         HStack {
                             Image(systemName: "map.fill")
                             Text("Map Mode")
@@ -64,7 +63,6 @@ struct HomeScreen: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.mdBackground)
-        }
     }
 }
 

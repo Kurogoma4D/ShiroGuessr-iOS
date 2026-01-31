@@ -17,81 +17,48 @@ struct GradientMapView: View {
     /// Callback when user taps to place a pin
     var onPinPlacement: ((MapCoordinate) -> Void)?
 
-    // MARK: - State
-
-    @GestureState private var magnificationState: CGFloat = 1.0
-    @State private var currentScale: CGFloat = 1.0
-    @State private var offset: CGSize = .zero
-    @GestureState private var dragState: CGSize = .zero
-
     // MARK: - Constants
 
-    private let minScale: CGFloat = 0.5
-    private let maxScale: CGFloat = 4.0
     private let mapSize: CGFloat = 300
-
-    // MARK: - Computed Properties
-
-    /// Total scale including gesture state
-    private var totalScale: CGFloat {
-        currentScale * magnificationState
-    }
-
-    /// Total offset including gesture state
-    private var totalOffset: CGSize {
-        CGSize(
-            width: offset.width + dragState.width,
-            height: offset.height + dragState.height
-        )
-    }
 
     // MARK: - Body
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                // Gradient map canvas
-                Canvas { context, size in
-                    drawGradientMap(context: context, size: size)
-                }
-                .frame(width: mapSize, height: mapSize)
-                .coordinateSpace(name: "mapCanvas")
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 2)
-                )
-
-                // User pin
-                if let userPin {
-                    pinMarker(
-                        coordinate: userPin.coordinate,
-                        color: .blue,
-                        systemImage: "mappin.circle.fill"
-                    )
-                }
-
-                // Target pin (shown after submission)
-                if let targetPin {
-                    pinMarker(
-                        coordinate: targetPin.coordinate,
-                        color: .red,
-                        systemImage: "target"
-                    )
-                }
+        ZStack {
+            // Gradient map canvas
+            Canvas { context, size in
+                drawGradientMap(context: context, size: size)
             }
-            .scaleEffect(totalScale)
-            .offset(totalOffset)
-            .gesture(
-                tapGesture
-                    .simultaneously(with: magnificationGesture)
-                    .simultaneously(with: dragGesture)
+            .frame(width: mapSize, height: mapSize)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 2)
             )
-            .contentShape(Rectangle())
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .clipped()
+            .contentShape(RoundedRectangle(cornerRadius: 12))
+            .onTapGesture { location in
+                handleTap(at: location)
+            }
+
+            // User pin
+            if let userPin {
+                pinMarker(
+                    coordinate: userPin.coordinate,
+                    color: .blue,
+                    systemImage: "mappin.circle.fill"
+                )
+            }
+
+            // Target pin (shown after submission)
+            if let targetPin {
+                pinMarker(
+                    coordinate: targetPin.coordinate,
+                    color: .red,
+                    systemImage: "target"
+                )
+            }
         }
-        .frame(height: mapSize)
+        .frame(width: mapSize, height: mapSize)
     }
 
     // MARK: - Drawing Methods
@@ -188,74 +155,18 @@ struct GradientMapView: View {
             .position(x: pinX, y: pinY)
     }
 
-    // MARK: - Gestures
-
-    /// Tap gesture for pin placement (using DragGesture with minimum distance)
-    private var tapGesture: some Gesture {
-        DragGesture(minimumDistance: 0, coordinateSpace: .named("mapCanvas"))
-            .onEnded { value in
-                // Only treat as tap if there was no significant movement
-                let dragDistance = sqrt(
-                    pow(value.translation.width, 2) + pow(value.translation.height, 2)
-                )
-                if dragDistance < 5 { // Less than 5 points movement = tap
-                    handleTap(at: value.startLocation)
-                }
-            }
-    }
-
-    /// Magnification gesture for zooming
-    private var magnificationGesture: some Gesture {
-        MagnificationGesture()
-            .updating($magnificationState) { value, state, _ in
-                state = value
-            }
-            .onEnded { value in
-                currentScale = min(max(currentScale * value, minScale), maxScale)
-            }
-    }
-
-    /// Drag gesture for panning (with minimum distance to avoid conflict with tap)
-    private var dragGesture: some Gesture {
-        DragGesture(minimumDistance: 5)
-            .updating($dragState) { value, state, _ in
-                state = value.translation
-            }
-            .onEnded { value in
-                offset.width += value.translation.width
-                offset.height += value.translation.height
-            }
-    }
-
     // MARK: - Interaction Handlers
 
     /// Handles tap gesture for pin placement
-    /// Using named coordinate space "mapCanvas", location is in Canvas's local coordinates
+    /// Location is in Canvas's local coordinate space (0 to mapSize)
     private func handleTap(at location: CGPoint) {
         guard isInteractionEnabled, onPinPlacement != nil else { return }
 
-        // Debug output
-        print("=== Tap Debug ===")
-        print("Tap location: \(location)")
-        print("MapSize: \(mapSize)")
-        print("TotalScale: \(totalScale)")
-        print("TotalOffset: \(totalOffset)")
+        // Normalize to 0-1 range and clamp
+        let normalizedX = max(0, min(1, location.x / mapSize))
+        let normalizedY = max(0, min(1, location.y / mapSize))
 
-        // Location is already in Canvas's coordinate space (300x300)
-        // Simply normalize to 0-1 range
-        let normalizedX = location.x / mapSize
-        let normalizedY = location.y / mapSize
-
-        print("Normalized: (\(normalizedX), \(normalizedY))")
-
-        // Clamp to valid range
-        let clampedX = max(0, min(1, normalizedX))
-        let clampedY = max(0, min(1, normalizedY))
-
-        print("Clamped: (\(clampedX), \(clampedY))")
-        print("================")
-
-        let coordinate = MapCoordinate(x: clampedX, y: clampedY)
+        let coordinate = MapCoordinate(x: normalizedX, y: normalizedY)
         onPinPlacement?(coordinate)
     }
 }

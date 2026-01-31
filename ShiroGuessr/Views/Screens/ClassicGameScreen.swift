@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Main screen for classic game mode
 struct ClassicGameScreen: View {
+    var onModeToggle: (() -> Void)? = nil
+
     @State private var viewModel = GameViewModel()
 
     var body: some View {
@@ -15,7 +17,9 @@ struct ClassicGameScreen: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             // Header
-                            GameHeader()
+                            GameHeader(onModeButtonTap: {
+                                onModeToggle?()
+                            })
 
                             // Score board
                             ScoreBoard(
