@@ -1,0 +1,186 @@
+import Foundation
+import SwiftUI
+
+/// ViewModel for managing map game state and logic
+@MainActor
+@Observable
+final class MapGameViewModel {
+    // MARK: - Dependencies
+
+    private let mapGameService: MapGameService
+    private let gradientMapService: GradientMapService
+    private let timerService: TimerService
+
+    // MARK: - State
+
+    private(set) var gameState: GameState?
+    private(set) var currentGradientMap: GradientMap?
+    var showingResult = false
+
+    // MARK: - Constants
+
+    private let totalRounds = 5
+    private let timeLimit = 60
+
+    // MARK: - Computed Properties
+
+    /// Current round
+    var currentRound: GameRound? {
+        guard let gameState,
+              gameState.currentRoundIndex < gameState.rounds.count else {
+            return nil
+        }
+        return gameState.rounds[gameState.currentRoundIndex]
+    }
+
+    /// Whether the current round has been submitted
+    var isRoundSubmitted: Bool {
+        currentRound?.selectedColor != nil
+    }
+
+    /// Whether the game is active (not completed)
+    var isGameActive: Bool {
+        guard let gameState else { return false }
+        return !gameState.isCompleted
+    }
+
+    /// Whether a pin has been placed
+    var hasPinPlaced: Bool {
+        currentRound?.pin != nil
+    }
+
+    /// Time remaining from timer service
+    var timeRemaining: Int {
+        timerService.timeRemaining
+    }
+
+    // MARK: - Initialization
+
+    nonisolated init(
+        mapGameService: MapGameService = MapGameService(),
+        gradientMapService: GradientMapService = GradientMapService(),
+        timerService: TimerService = TimerService()
+    ) {
+        self.mapGameService = mapGameService
+        self.gradientMapService = gradientMapService
+        self.timerService = timerService
+    }
+
+    // MARK: - Public Methods
+
+    /// Starts a new map game
+    func startNewGame() {
+        // Stop any existing timer
+        timerService.stopTimer()
+
+        // Create new game state
+        gameState = mapGameService.createNewGame(
+            totalRounds: totalRounds,
+            timeLimit: timeLimit
+        )
+
+        // Generate gradient map for first round
+        currentGradientMap = gradientMapService.generateGradientMap()
+
+        // Reset UI state
+        showingResult = false
+
+        // Start timer
+        startRoundTimer()
+    }
+
+    /// Places a pin at the specified coordinate
+    /// - Parameter coordinate: The coordinate where to place the pin
+    func placePin(at coordinate: MapCoordinate) {
+        guard let gameState,
+              let currentGradientMap,
+              !isRoundSubmitted else {
+            return
+        }
+
+        self.gameState = mapGameService.placePin(
+            gameState: gameState,
+            coordinate: coordinate,
+            gradientMap: currentGradientMap
+        )
+    }
+
+    /// Submits the current guess
+    func submitGuess() {
+        guard let gameState,
+              hasPinPlaced,
+              !isRoundSubmitted else {
+            return
+        }
+
+        // Stop the timer
+        timerService.stopTimer()
+
+        // Submit with current time remaining
+        self.gameState = mapGameService.submitGuess(
+            gameState: gameState,
+            timeRemaining: timerService.timeRemaining
+        )
+
+        // Show result dialog
+        showingResult = true
+    }
+
+    /// Proceeds to the next round or completes the game
+    func nextRound() {
+        guard let gameState else { return }
+
+        // Advance to next round
+        self.gameState = mapGameService.nextRound(gameState: gameState)
+
+        // Reset result dialog
+        showingResult = false
+
+        // Check if game is completed
+        if let updatedGameState = self.gameState,
+           !updatedGameState.isCompleted {
+            // Generate new gradient map for next round
+            currentGradientMap = gradientMapService.generateGradientMap()
+
+            // Start timer for next round
+            startRoundTimer()
+        } else {
+            // Game completed, stop timer
+            timerService.stopTimer()
+        }
+    }
+
+    /// Resets the game to start a new one
+    func resetGame() {
+        startNewGame()
+    }
+
+    // MARK: - Private Methods
+
+    /// Starts the timer for the current round
+    private func startRoundTimer() {
+        timerService.startTimer(seconds: timeLimit) { [weak self] in
+            Task { @MainActor in
+                self?.handleTimeout()
+            }
+        }
+    }
+
+    /// Handles timeout by automatically placing a pin at the center
+    private func handleTimeout() {
+        guard let gameState,
+              let currentGradientMap,
+              !isRoundSubmitted else {
+            return
+        }
+
+        // Handle timeout with automatic pin placement
+        self.gameState = mapGameService.handleTimeout(
+            gameState: gameState,
+            gradientMap: currentGradientMap
+        )
+
+        // Show result dialog
+        showingResult = true
+    }
+}
