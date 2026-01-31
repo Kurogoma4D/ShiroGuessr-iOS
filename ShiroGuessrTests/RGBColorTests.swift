@@ -49,26 +49,6 @@ final class RGBColorTests: XCTestCase {
         XCTAssertNotNil(color)
     }
 
-    // MARK: - toUIColor Tests
-
-    func testToUIColor_shouldReturnValidUIColor() {
-        let rgbColor = RGBColor(r: 250, g: 245, b: 255)
-
-        let uiColor = rgbColor.toUIColor()
-
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-
-        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
-        XCTAssertEqual(red, 250.0 / 255.0, accuracy: 0.001)
-        XCTAssertEqual(green, 245.0 / 255.0, accuracy: 0.001)
-        XCTAssertEqual(blue, 255.0 / 255.0, accuracy: 0.001)
-        XCTAssertEqual(alpha, 1.0)
-    }
-
     // MARK: - Codable Tests
 
     func testCodable_shouldEncodeAndDecode() throws {

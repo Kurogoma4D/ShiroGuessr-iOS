@@ -20,17 +20,6 @@ struct RGBColor: Codable, Equatable, Hashable {
         )
     }
 
-    /// Converts the RGB color to UIKit UIColor
-    /// - Returns: UIColor representation
-    func toUIColor() -> UIColor {
-        UIColor(
-            red: CGFloat(r) / 255.0,
-            green: CGFloat(g) / 255.0,
-            blue: CGFloat(b) / 255.0,
-            alpha: 1.0
-        )
-    }
-
     /// Converts the RGB color to CSS color string
     /// - Returns: CSS color string in format "rgb(r, g, b)"
     func toCSSString() -> String {
