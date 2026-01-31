@@ -1,0 +1,11 @@
+{
+  "sandbox": {
+    "excludedCommands": [
+      "gh api:*",
+      "gh search code:*",
+      "gh issue:*",
+      "gh pr:*",
+      "gh project:*"
+    ]
+  }
+}
