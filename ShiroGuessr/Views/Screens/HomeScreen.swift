@@ -9,17 +9,68 @@ import SwiftUI
 
 struct HomeScreen: View {
     var body: some View {
-        VStack(spacing: 24) {
-            Text("ShiroGuessr")
-                .font(Font.mdDisplayMedium)
-                .foregroundColor(Color.mdOnBackground)
+        NavigationStack {
+            VStack(spacing: 32) {
+                Spacer()
 
-            Text("Welcome to ShiroGuessr iOS")
-                .font(Font.mdBodyLarge)
-                .foregroundColor(Color.mdOnSurfaceVariant)
+                // Logo and title
+                VStack(spacing: 16) {
+                    Image(systemName: "paintpalette.fill")
+                        .font(.system(size: 100))
+                        .foregroundStyle(Color.mdPrimary)
+
+                    Text("白Guessr")
+                        .font(Font.mdDisplayLarge)
+                        .foregroundColor(Color.mdOnBackground)
+                        .fontWeight(.bold)
+
+                    Text("Find the exact shade of white")
+                        .font(Font.mdBodyLarge)
+                        .foregroundColor(Color.mdOnSurfaceVariant)
+                }
+
+                Spacer()
+
+                // Game mode buttons
+                VStack(spacing: 16) {
+                    NavigationLink(destination: ClassicGameScreen()) {
+                        HStack {
+                            Image(systemName: "gamecontroller.fill")
+                                .font(.mdLabelLarge)
+                            Text("Classic Mode")
+                                .font(.mdLabelLarge)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 18)
+                        .foregroundStyle(Color.mdOnPrimary)
+                        .background(Color.mdPrimary)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                    }
+
+                    Button(action: {
+                        // Map mode will be implemented later
+                    }) {
+                        HStack {
+                            Image(systemName: "map.fill")
+                                .font(.mdLabelLarge)
+                            Text("Map Mode")
+                                .font(.mdLabelLarge)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 18)
+                        .foregroundStyle(Color.mdOnSecondaryContainer)
+                        .background(Color.mdSecondaryContainer)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                    }
+                    .disabled(true)
+                    .opacity(0.6)
+                }
+                .padding(.horizontal, 32)
+                .padding(.bottom, 48)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.mdBackground)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.mdBackground)
     }
 }
 
