@@ -32,7 +32,7 @@ jobs:
         xcodebuild clean build test \
           -project ShiroGuessr.xcodeproj \
           -scheme ShiroGuessr \
-          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+          -destination 'platform=iOS Simulator,OS=18.5,name=iPhone 16 Pro' \
           -only-testing:ShiroGuessrTests \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
