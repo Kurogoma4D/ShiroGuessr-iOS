@@ -9,8 +9,7 @@ import SwiftUI
 
 struct HomeScreen: View {
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 32) {
+        VStack(spacing: 32) {
                 Spacer()
 
                 // Logo and title
@@ -33,13 +32,12 @@ struct HomeScreen: View {
 
                 // Game mode buttons
                 VStack(spacing: 16) {
-                    NavigationLink(destination: ClassicGameScreen()) {
+                    NavigationLink(value: GameMode.classicMode) {
                         HStack {
                             Image(systemName: "gamecontroller.fill")
-                                .font(.mdLabelLarge)
                             Text("Classic Mode")
-                                .font(.mdLabelLarge)
                         }
+                        .font(.mdLabelLarge)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
                         .foregroundStyle(Color.mdOnPrimary)
@@ -47,30 +45,24 @@ struct HomeScreen: View {
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
 
-                    Button(action: {
-                        // Map mode will be implemented later
-                    }) {
+                    NavigationLink(value: GameMode.mapMode) {
                         HStack {
                             Image(systemName: "map.fill")
-                                .font(.mdLabelLarge)
                             Text("Map Mode")
-                                .font(.mdLabelLarge)
                         }
+                        .font(.mdLabelLarge)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
                         .foregroundStyle(Color.mdOnSecondaryContainer)
                         .background(Color.mdSecondaryContainer)
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
-                    .disabled(true)
-                    .opacity(0.6)
                 }
                 .padding(.horizontal, 32)
                 .padding(.bottom, 48)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.mdBackground)
-        }
     }
 }
 

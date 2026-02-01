@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Screen for the map mode gameplay
 struct MapGameScreen: View {
+    var onModeToggle: (() -> Void)? = nil
+
     @State private var viewModel = MapGameViewModel()
 
     var body: some View {
@@ -9,20 +11,26 @@ struct MapGameScreen: View {
             Color.mdBackground
                 .ignoresSafeArea()
 
-            if let gameState = viewModel.gameState,
-               let currentRound = viewModel.currentRound,
-               let gradientMap = viewModel.currentGradientMap {
-
+            if let gameState = viewModel.gameState {
                 if gameState.isCompleted {
                     // Show result screen
-                    resultView(gameState: gameState)
-                } else {
+                    ResultScreen(
+                        gameState: gameState,
+                        onReplay: {
+                            viewModel.resetGame()
+                        }
+                    )
+                } else if let currentRound = viewModel.currentRound,
+                          let gradientMap = viewModel.currentGradientMap {
                     // Show game view
                     gameView(
                         gameState: gameState,
                         currentRound: currentRound,
                         gradientMap: gradientMap
                     )
+                } else {
+                    // Loading or initial state
+                    startView
                 }
             } else {
                 // Loading or initial state
@@ -57,55 +65,52 @@ struct MapGameScreen: View {
     ) -> some View {
         VStack(spacing: 0) {
             // Header
-            GameHeader()
+            GameHeader(onModeButtonTap: {
+                onModeToggle?()
+            })
 
-            ScrollView {
-                VStack(spacing: 16) {
-                    // Score board
-                    ScoreBoard(
-                        currentRound: currentRound.roundNumber,
-                        totalRounds: gameState.rounds.count,
-                        currentScore: gameState.totalScore
-                    )
+            VStack(spacing: 8) {
+                // Score board
+                ScoreBoard(
+                    currentRound: currentRound.roundNumber,
+                    totalRounds: gameState.rounds.count,
+                    currentScore: gameState.totalScore
+                )
 
-                    // Timer display
-                    TimerDisplay(timeRemaining: viewModel.timeRemaining)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.horizontal, 16)
-
-                    // Target color display
-                    targetColorView(color: currentRound.targetColor)
-
-                    // Gradient map view
-                    GradientMapView(
-                        gradientMap: gradientMap,
-                        userPin: currentRound.pin,
-                        targetPin: viewModel.isRoundSubmitted ? currentRound.targetPin : nil,
-                        isInteractionEnabled: !viewModel.isRoundSubmitted,
-                        onPinPlacement: { coordinate in
-                            viewModel.placePin(at: coordinate)
-                        }
-                    )
+                // Timer display
+                TimerDisplay(timeRemaining: viewModel.timeRemaining)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.horizontal, 16)
 
-                    // Instructions
-                    if !viewModel.hasPinPlaced {
-                        instructionsView
-                    }
+                // Target color display
+                targetColorView(color: currentRound.targetColor)
 
-                    // Game controls
-                    GameControls(
-                        canSubmit: viewModel.hasPinPlaced,
-                        canProceed: viewModel.isRoundSubmitted,
-                        onSubmit: {
-                            viewModel.submitGuess()
-                        },
-                        onNext: {
-                            viewModel.nextRound()
-                        }
-                    )
-                    .padding(.bottom, 16)
-                }
+                // Gradient map view
+                GradientMapView(
+                    gradientMap: gradientMap,
+                    userPin: currentRound.pin,
+                    targetPin: viewModel.isRoundSubmitted ? currentRound.targetPin : nil,
+                    isInteractionEnabled: !viewModel.isRoundSubmitted,
+                    onPinPlacement: { coordinate in
+                        viewModel.placePin(at: coordinate)
+                    }
+                )
+                .padding(.horizontal, 16)
+
+                Spacer(minLength: 8)
+
+                // Game controls
+                GameControls(
+                    canSubmit: viewModel.hasPinPlaced,
+                    canProceed: viewModel.isRoundSubmitted,
+                    onSubmit: {
+                        viewModel.submitGuess()
+                    },
+                    onNext: {
+                        viewModel.nextRound()
+                    }
+                )
+                .padding(.bottom, 16)
             }
         }
     }
@@ -114,112 +119,29 @@ struct MapGameScreen: View {
 
     @ViewBuilder
     private func targetColorView(color: RGBColor) -> some View {
-        VStack(spacing: 12) {
-            Text("Find this color on the map")
-                .font(.mdTitleMedium)
+        VStack(spacing: 6) {
+            Text("Find this color")
+                .font(.mdBodyLarge)
                 .foregroundStyle(Color.mdOnSurface)
                 .fontWeight(.semibold)
 
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 8)
                 .fill(color.toColor())
-                .frame(height: 80)
+                .frame(height: 50)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(Color.mdOutline, lineWidth: 2)
+                    RoundedRectangle(cornerRadius: 8)
+                        .strokeBorder(Color.mdOutline, lineWidth: 1.5)
                 )
 
             Text(color.toCSSString())
-                .font(.mdBodyMedium)
+                .font(.mdBodySmall)
                 .foregroundStyle(Color.mdOnSurfaceVariant)
                 .fontDesign(.monospaced)
         }
-        .padding(16)
-        .background(Color.mdSurfaceVariant.opacity(0.3))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .padding(.horizontal, 16)
-    }
-
-    // MARK: - Instructions View
-
-    @ViewBuilder
-    private var instructionsView: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 12) {
-                Image(systemName: "hand.tap.fill")
-                    .font(.mdBodyLarge)
-                    .foregroundStyle(Color.mdPrimary)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Tap to place pin")
-                        .font(.mdBodyMedium)
-                        .foregroundStyle(Color.mdOnSurface)
-                        .fontWeight(.medium)
-
-                    Text("Use pinch to zoom and drag to pan")
-                        .font(.mdBodySmall)
-                        .foregroundStyle(Color.mdOnSurfaceVariant)
-                }
-
-                Spacer()
-            }
-        }
         .padding(12)
-        .background(Color.mdPrimaryContainer.opacity(0.3))
+        .background(Color.mdSurfaceVariant.opacity(0.3))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 16)
-    }
-
-    // MARK: - Result View
-
-    @ViewBuilder
-    private func resultView(gameState: GameState) -> some View {
-        VStack(spacing: 24) {
-            Spacer()
-
-            VStack(spacing: 16) {
-                Text("Game Complete!")
-                    .font(.mdHeadlineLarge)
-                    .foregroundStyle(Color.mdOnSurface)
-                    .fontWeight(.bold)
-
-                Text("Final Score")
-                    .font(.mdTitleMedium)
-                    .foregroundStyle(Color.mdOnSurfaceVariant)
-
-                Text("\(gameState.totalScore)")
-                    .font(.system(size: 64, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.mdPrimary)
-
-                Text("out of 5000")
-                    .font(.mdBodyLarge)
-                    .foregroundStyle(Color.mdOnSurfaceVariant)
-            }
-            .padding(32)
-            .background(Color.mdSurfaceVariant.opacity(0.3))
-            .clipShape(RoundedRectangle(cornerRadius: 24))
-            .padding(.horizontal, 24)
-
-            Spacer()
-
-            // Play again button
-            Button(action: {
-                viewModel.resetGame()
-            }) {
-                HStack {
-                    Image(systemName: "arrow.clockwise.circle.fill")
-                        .font(.mdLabelLarge)
-                    Text("Play Again")
-                        .font(.mdLabelLarge)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .foregroundStyle(Color.mdOnPrimary)
-                .background(Color.mdPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 24))
-            }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 32)
-        }
     }
 
     // MARK: - Start View

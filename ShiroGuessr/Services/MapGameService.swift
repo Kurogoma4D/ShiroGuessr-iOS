@@ -31,36 +31,16 @@ final class MapGameService {
         var rounds: [GameRound] = []
 
         for roundNumber in 1...totalRounds {
-            // Generate gradient map for this round
-            let gradientMap = gradientMapService.generateGradientMap()
-
-            // Generate random target coordinate
-            let targetCoordinate = MapCoordinate(
-                x: Double.random(in: 0...1),
-                y: Double.random(in: 0...1)
-            )
-
-            // Get the target color at that coordinate
-            let targetColor = gradientMapService.getColorAt(
-                map: gradientMap,
-                coordinate: targetCoordinate
-            )
-
-            // Create target pin
-            let targetPin = Pin(
-                coordinate: targetCoordinate,
-                color: targetColor
-            )
-
+            // Create placeholder round - target color will be set when round starts
             rounds.append(GameRound(
                 roundNumber: roundNumber,
-                targetColor: targetColor,
+                targetColor: RGBColor(r: 0, g: 0, b: 0), // Placeholder
                 selectedColor: nil,
                 distance: nil,
                 score: nil,
                 paletteColors: [],
                 pin: nil,
-                targetPin: targetPin,
+                targetPin: nil,
                 timeRemaining: nil
             ))
         }
@@ -71,6 +51,59 @@ final class MapGameService {
             isCompleted: false,
             totalScore: 0,
             timeLimit: timeLimit
+        )
+    }
+
+    /// Starts a round by generating gradient map and setting target color
+    /// - Parameters:
+    ///   - gameState: Current game state
+    ///   - gradientMap: Generated gradient map for this round
+    /// - Returns: Updated game state with target color set
+    func startRound(gameState: GameState, gradientMap: GradientMap) -> GameState {
+        guard gameState.currentRoundIndex < gameState.rounds.count else {
+            return gameState
+        }
+
+        let currentRound = gameState.rounds[gameState.currentRoundIndex]
+
+        // Pick a random target coordinate
+        let targetCoordinate = MapCoordinate(
+            x: Double.random(in: 0...1),
+            y: Double.random(in: 0...1)
+        )
+
+        // Get the target color at that coordinate
+        let targetColor = gradientMapService.getColorAt(
+            map: gradientMap,
+            coordinate: targetCoordinate
+        )
+
+        // Create target pin
+        let targetPin = Pin(
+            coordinate: targetCoordinate,
+            color: targetColor
+        )
+
+        // Update the current round
+        var updatedRounds = gameState.rounds
+        updatedRounds[gameState.currentRoundIndex] = GameRound(
+            roundNumber: currentRound.roundNumber,
+            targetColor: targetColor,
+            selectedColor: currentRound.selectedColor,
+            distance: currentRound.distance,
+            score: currentRound.score,
+            paletteColors: currentRound.paletteColors,
+            pin: currentRound.pin,
+            targetPin: targetPin,
+            timeRemaining: currentRound.timeRemaining
+        )
+
+        return GameState(
+            rounds: updatedRounds,
+            currentRoundIndex: gameState.currentRoundIndex,
+            isCompleted: gameState.isCompleted,
+            totalScore: gameState.totalScore,
+            timeLimit: gameState.timeLimit
         )
     }
 

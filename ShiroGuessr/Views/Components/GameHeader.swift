@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Header component displaying game title and mode toggle
 struct GameHeader: View {
+    var onModeButtonTap: (() -> Void)? = nil
+
     var body: some View {
         HStack {
             Text("白Guessr")
@@ -12,7 +14,7 @@ struct GameHeader: View {
             Spacer()
 
             Button(action: {
-                // Mode toggle functionality will be implemented later
+                onModeButtonTap?()
             }) {
                 HStack(spacing: 4) {
                     Image(systemName: "gamecontroller")
