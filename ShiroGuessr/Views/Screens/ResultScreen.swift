@@ -20,7 +20,7 @@ struct ResultScreen: View {
                         .scaleEffect(animateScore ? 1.0 : 0.5)
                         .opacity(animateScore ? 1.0 : 0.0)
 
-                    Text("Game Complete!")
+                    Text(L10n.Result.gameComplete)
                         .font(.mdHeadlineLarge)
                         .foregroundStyle(Color.mdOnSurface)
                         .fontWeight(.bold)
@@ -28,7 +28,7 @@ struct ResultScreen: View {
 
                     // Total score
                     VStack(spacing: 4) {
-                        Text("Total Score")
+                        Text(L10n.Result.totalScore)
                             .font(.mdLabelMedium)
                             .foregroundStyle(Color.mdOnSurfaceVariant)
 
@@ -37,7 +37,7 @@ struct ResultScreen: View {
                             .foregroundStyle(Color.mdPrimary)
                             .fontWeight(.bold)
 
-                        Text("out of 5000")
+                        Text(L10n.Result.outOf5000)
                             .font(.mdBodyMedium)
                             .foregroundStyle(Color.mdOnSurfaceVariant)
                     }
@@ -52,7 +52,7 @@ struct ResultScreen: View {
 
                 // Round results
                 VStack(spacing: 12) {
-                    Text("Round Results")
+                    Text(L10n.Result.roundResults)
                         .font(.mdTitleLarge)
                         .foregroundStyle(Color.mdOnSurface)
                         .fontWeight(.semibold)
@@ -79,7 +79,7 @@ struct ResultScreen: View {
                     } label: {
                         HStack {
                             Image(systemName: "arrow.counterclockwise.circle.fill")
-                            Text("Play Again")
+                            Text(L10n.Result.playAgain)
                         }
                         .font(.mdLabelLarge)
                     }
@@ -92,7 +92,7 @@ struct ResultScreen: View {
                     } label: {
                         HStack {
                             Image(systemName: "doc.on.clipboard")
-                            Text("Copy to Clipboard")
+                            Text(L10n.Result.copyToClipboard)
                         }
                         .font(.mdLabelLarge)
                     }
@@ -171,7 +171,7 @@ private struct RoundResultCard: View {
             // Stats
             VStack(alignment: .trailing, spacing: 2) {
                 HStack(spacing: 4) {
-                    Text("Distance:")
+                    Text(L10n.RoundResult.distance)
                         .font(.mdBodySmall)
                         .foregroundStyle(Color.mdOnSurfaceVariant)
                     Text("\(round.distance ?? 0)")
@@ -181,7 +181,7 @@ private struct RoundResultCard: View {
                 }
 
                 HStack(spacing: 4) {
-                    Text("Score:")
+                    Text(L10n.RoundResult.score)
                         .font(.mdBodySmall)
                         .foregroundStyle(Color.mdOnSurfaceVariant)
                     Text("\(round.score ?? 0)")

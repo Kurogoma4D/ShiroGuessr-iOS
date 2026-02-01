@@ -30,7 +30,7 @@ struct ClassicGameScreen: View {
 
                             // Target color display
                             VStack(spacing: 12) {
-                                Text("Find this color:")
+                                Text(L10n.Game.findThisColorColon)
                                     .font(.mdTitleMedium)
                                     .foregroundStyle(Color.mdOnSurface)
 
@@ -94,7 +94,7 @@ struct ClassicGameScreen: View {
                             .foregroundStyle(Color.mdOnSurface)
                             .fontWeight(.bold)
 
-                        Text("Find the exact shade of white")
+                        Text(L10n.Home.tagline)
                             .font(.mdBodyLarge)
                             .foregroundStyle(Color.mdOnSurfaceVariant)
 
@@ -105,7 +105,7 @@ struct ClassicGameScreen: View {
                         } label: {
                             HStack {
                                 Image(systemName: "play.fill")
-                                Text("Start Game")
+                                Text(L10n.Game.startGame)
                             }
                             .font(.mdLabelLarge)
                         }

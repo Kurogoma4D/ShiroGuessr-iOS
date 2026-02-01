@@ -16,7 +16,7 @@ struct GameControls: View {
                 } label: {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
-                        Text("Submit Answer")
+                        Text(L10n.Controls.submitAnswer)
                     }
                     .font(.mdLabelLarge)
                 }
@@ -30,7 +30,7 @@ struct GameControls: View {
                     onNext()
                 } label: {
                     HStack {
-                        Text("Next Round")
+                        Text(L10n.Controls.nextRound)
                         Image(systemName: "arrow.right.circle.fill")
                     }
                     .font(.mdLabelLarge)

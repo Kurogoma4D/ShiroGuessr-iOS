@@ -1,0 +1,43 @@
+/*
+  Localizable.strings (Japanese)
+  ShiroGuessr
+
+  日本語ローカライズ
+*/
+
+// MARK: - Home Screen
+"home.tagline" = "正確な白の色合いを見つけよう";
+"home.classicMode" = "クラシックモード";
+"home.mapMode" = "マップモード";
+
+// MARK: - Game Screen
+"game.startGame" = "ゲームスタート";
+"game.findThisColor" = "この色を探そう";
+"game.findThisColorColon" = "この色を探そう:";
+"game.loading" = "読み込み中...";
+
+// MARK: - Game Controls
+"controls.submitAnswer" = "回答を提出";
+"controls.nextRound" = "次のラウンド";
+
+// MARK: - Round Result Dialog
+"roundResult.title" = "ラウンド%d 結果";
+"roundResult.target" = "目標";
+"roundResult.yourGuess" = "あなたの予想";
+"roundResult.distance" = "距離:";
+"roundResult.score" = "スコア:";
+"roundResult.continue" = "続ける";
+
+// MARK: - Result Screen
+"result.gameComplete" = "ゲーム完了！";
+"result.totalScore" = "合計スコア";
+"result.outOf5000" = "5000点満点";
+"result.roundResults" = "ラウンド結果";
+"result.playAgain" = "もう一度プレイ";
+"result.share" = "結果を共有";
+"result.copyToClipboard" = "クリップボードにコピー";
+
+// MARK: - Share Service
+"share.score" = "スコア:";
+"share.round" = "ラウンド%d:";
+"share.distance" = "距離:";

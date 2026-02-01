@@ -22,6 +22,7 @@ _Coming soon_
 - **最小対応OS**: iOS 17.0+
 - **デザインシステム**: Material Design 3準拠
 - **広告SDK**: Google Mobile Ads SDK (AdMob)
+- **ローカライゼーション**: 日本語・英語対応
 
 ## プロジェクト構成
 
@@ -96,7 +97,20 @@ git clone https://github.com/Kurogoma4D/ShiroGuessr-iOS.git
 cd ShiroGuessr-iOS
 ```
 
-2. AdMob設定ファイルの準備（本番ビルド時のみ必要）
+2. ローカライゼーションファイルをXcodeプロジェクトに追加
+
+プロジェクトは日本語と英語のローカライゼーションに対応しています。Xcodeで初めてプロジェクトを開く際、以下の手順でローカライゼーションファイルを追加してください:
+
+```bash
+# ローカライゼーション設定スクリプトを実行（手順の確認）
+./scripts/add-localization-to-xcode.sh
+```
+
+詳細な手順については、[LOCALIZATION.md](LOCALIZATION.md)を参照してください。
+
+**注**: ローカライゼーションファイルが追加されていない場合でもビルドは可能ですが、UI文字列が正しく表示されません。
+
+3. AdMob設定ファイルの準備（本番ビルド時のみ必要）
 
 開発環境ではテスト広告IDが自動的に使用されるため、この手順は**リリースビルド時のみ**必要です。
 
@@ -199,6 +213,13 @@ score = max(0, 1000 - distance * 30)
 - インタースティシャル広告（ゲーム再プレイ時）
 - 開発/本番環境の自動切り替え
 - テスト広告による安全な開発環境
+
+### 多言語対応
+
+- 日本語・英語の完全ローカライゼーション
+- デバイスの言語設定に自動対応
+- 型安全な文字列管理（LocalizationService）
+- 詳細は[LOCALIZATION.md](LOCALIZATION.md)を参照
 
 ## 開発
 

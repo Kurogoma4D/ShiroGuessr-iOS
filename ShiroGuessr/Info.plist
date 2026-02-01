@@ -6,6 +6,13 @@
 	<string>$(ADMOB_INTERSTITIAL_AD_UNIT_ID)</string>
 	<key>GADApplicationIdentifier</key>
 	<string>$(ADMOB_APP_ID)</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ja</string>
+	</array>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

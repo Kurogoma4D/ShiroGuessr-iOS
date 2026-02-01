@@ -8,7 +8,7 @@ struct RoundResultDialog: View {
     var body: some View {
         VStack(spacing: 24) {
             // Header
-            Text("Round \(round.roundNumber) Result")
+            Text(L10n.RoundResult.title(round.roundNumber))
                 .font(.mdHeadlineMedium)
                 .foregroundStyle(Color.mdOnSurface)
                 .fontWeight(.bold)
@@ -17,7 +17,7 @@ struct RoundResultDialog: View {
             HStack(spacing: 24) {
                 // Target color
                 VStack(spacing: 8) {
-                    Text("Target")
+                    Text(L10n.RoundResult.target)
                         .font(.mdLabelMedium)
                         .foregroundStyle(Color.mdOnSurfaceVariant)
 
@@ -37,7 +37,7 @@ struct RoundResultDialog: View {
 
                 // Selected color
                 VStack(spacing: 8) {
-                    Text("Your Guess")
+                    Text(L10n.RoundResult.yourGuess)
                         .font(.mdLabelMedium)
                         .foregroundStyle(Color.mdOnSurfaceVariant)
 
@@ -62,7 +62,7 @@ struct RoundResultDialog: View {
             VStack(spacing: 12) {
                 // Distance
                 HStack {
-                    Text("Distance:")
+                    Text(L10n.RoundResult.distance)
                         .font(.mdBodyLarge)
                         .foregroundStyle(Color.mdOnSurface)
                     Spacer()
@@ -79,7 +79,7 @@ struct RoundResultDialog: View {
 
                 // Score
                 HStack {
-                    Text("Score:")
+                    Text(L10n.RoundResult.score)
                         .font(.mdBodyLarge)
                         .foregroundStyle(Color.mdOnSurface)
                     Spacer()
@@ -99,7 +99,7 @@ struct RoundResultDialog: View {
                 onNext()
             } label: {
                 HStack {
-                    Text("Continue")
+                    Text(L10n.RoundResult.continue)
                     Image(systemName: "arrow.right.circle.fill")
                 }
                 .font(.mdLabelLarge)

@@ -120,7 +120,7 @@ struct MapGameScreen: View {
     @ViewBuilder
     private func targetColorView(color: RGBColor) -> some View {
         VStack(spacing: 6) {
-            Text("Find this color")
+            Text(L10n.Game.findThisColor)
                 .font(.mdBodyLarge)
                 .foregroundStyle(Color.mdOnSurface)
                 .fontWeight(.semibold)
@@ -155,7 +155,7 @@ struct MapGameScreen: View {
                 .scaleEffect(1.5)
                 .tint(Color.mdPrimary)
 
-            Text("Loading...")
+            Text(L10n.Game.loading)
                 .font(.mdBodyLarge)
                 .foregroundStyle(Color.mdOnSurfaceVariant)
                 .padding(.top, 24)
