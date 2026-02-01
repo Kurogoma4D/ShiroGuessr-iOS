@@ -44,7 +44,7 @@ jobs:
         xcodebuild clean build test \
           -project ShiroGuessr.xcodeproj \
           -scheme ShiroGuessr \
-          -sdk iphonesimulator \
+          -sdk iphonesimulator18.2 \
           -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
           -only-testing:ShiroGuessrTests \
           CODE_SIGN_IDENTITY="" \
