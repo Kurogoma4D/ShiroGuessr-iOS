@@ -21,6 +21,7 @@ _Coming soon_
 - **UIフレームワーク**: SwiftUI
 - **最小対応OS**: iOS 17.0+
 - **デザインシステム**: Material Design 3準拠
+- **広告SDK**: Google Mobile Ads SDK (AdMob)
 
 ## プロジェクト構成
 
@@ -95,12 +96,43 @@ git clone https://github.com/Kurogoma4D/ShiroGuessr-iOS.git
 cd ShiroGuessr-iOS
 ```
 
-2. Xcodeでプロジェクトを開く
+2. AdMob設定ファイルの準備（本番ビルド時のみ必要）
+
+開発環境ではテスト広告IDが自動的に使用されるため、この手順は**リリースビルド時のみ**必要です。
+
+```bash
+# テンプレートファイルをコピー
+cp ShiroGuessr/AdMobConfig-Prod.plist.example ShiroGuessr/AdMobConfig-Prod.plist
+
+# エディタで開いて実際のAdMob IDを設定
+open ShiroGuessr/AdMobConfig-Prod.plist
+```
+
+`AdMobConfig-Prod.plist`に以下の値を設定:
+- `AppID`: AdMobのアプリID（例: `ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY`）
+- `InterstitialAdUnitID`: インタースティシャル広告ユニットID（例: `ca-app-pub-XXXXXXXXXXXXXXXX/ZZZZZZZZZZ`）
+
+**重要**: `AdMobConfig-Prod.plist`は`.gitignore`に含まれており、リポジトリにコミットされません。
+
+3. Xcodeでプロジェクトを開く
 ```bash
 open ShiroGuessr.xcodeproj
 ```
 
-3. ビルドして実行 (⌘R)
+4. ビルドして実行 (⌘R)
+
+### 環境切り替え
+
+プロジェクトは開発環境（dev）と本番環境（prod）を自動的に切り替えます。
+
+- **Debug ビルド**: テスト広告IDを使用（AdMobConfig-Dev.plist）
+- **Release ビルド**: 本番広告IDを使用（AdMobConfig-Prod.plist）
+
+Xcodeのスキーム設定で使用される環境が決まります:
+- Run/Test/Profile: Debug（開発環境）
+- Archive: Release（本番環境）
+
+開発中は特に設定なしでテスト広告が表示されます。リリースビルドを作成する際は、必ず`AdMobConfig-Prod.plist`を作成してください。
 
 ## ゲームルール
 
@@ -151,6 +183,12 @@ score = max(0, 1000 - distance * 30)
 - スムーズなアニメーション
 - レスポンシブデザイン（iPhone/iPad対応）
 - ダークモード非対応（白色ゲームのため）
+
+### 広告機能
+
+- インタースティシャル広告（ゲーム再プレイ時）
+- 開発/本番環境の自動切り替え
+- テスト広告による安全な開発環境
 
 ## 開発
 
