@@ -1,0 +1,10 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Upload to TestFlight"
+  lane :beta do
+    pilot(
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
