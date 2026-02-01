@@ -32,8 +32,8 @@ jobs:
 
     - name: Prepare iOS Simulator
       run: |
-        # Find available iPhone simulator (trying iPhone 17 Pro, iPhone 16 Pro, or any iPhone)
-        UDID=$(xcrun simctl list devices available | grep -E "iPhone (17 Pro|16 Pro|17|16) \(" | head -1 | sed -E 's/.*\(([0-9A-F-]+)\).*/\1/')
+        # Find iPhone simulator with iOS 26.2 (matching deployment target)
+        UDID=$(xcrun simctl list devices available | grep "iOS 26.2" -A 20 | grep -E "iPhone (17 Pro|17|Air) \(" | head -1 | sed -E 's/.*\(([0-9A-F-]+)\).*/\1/')
         echo "Selected simulator UDID: $UDID"
         echo "SIMULATOR_UDID=$UDID" >> $GITHUB_ENV
         # Boot the simulator
