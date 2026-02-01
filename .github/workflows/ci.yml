@@ -8,14 +8,14 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-15
+    runs-on: macos-26
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Select Xcode version
-      run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+      run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
 
     - name: Cache SPM dependencies
       uses: actions/cache@v4
@@ -26,9 +26,6 @@ jobs:
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-spm-
-
-    - name: Show available SDKs
-      run: xcodebuild -showsdks
 
     - name: Prepare iOS Simulator
       run: |
@@ -44,13 +41,11 @@ jobs:
         xcodebuild clean build test \
           -project ShiroGuessr.xcodeproj \
           -scheme ShiroGuessr \
-          -sdk iphonesimulator18.2 \
           -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
           -only-testing:ShiroGuessrTests \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
-          CODE_SIGNING_ALLOWED=NO \
-          SDKROOT=iphonesimulator18.2
+          CODE_SIGNING_ALLOWED=NO
 
     - name: Upload test results
       if: always()
