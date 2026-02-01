@@ -14,15 +14,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup production configuration
-      env:
-        ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
-        ADMOB_INTERSTITIAL_AD_UNIT_ID: ${{ secrets.ADMOB_INTERSTITIAL_AD_UNIT_ID }}
-      run: |
-        cp Configurations/Prod.xcconfig.example Configurations/Prod.xcconfig
-        sed -i '' "s|ADMOB_APP_ID = .*|ADMOB_APP_ID = $ADMOB_APP_ID|" Configurations/Prod.xcconfig
-        sed -i '' "s|ADMOB_INTERSTITIAL_AD_UNIT_ID = .*|ADMOB_INTERSTITIAL_AD_UNIT_ID = $ADMOB_INTERSTITIAL_AD_UNIT_ID|" Configurations/Prod.xcconfig
-
     - name: Select Xcode version
       run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
 
@@ -50,6 +41,7 @@ jobs:
         xcodebuild clean build test \
           -project ShiroGuessr.xcodeproj \
           -scheme ShiroGuessr \
+          -configuration Debug \
           -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
           -only-testing:ShiroGuessrTests \
           CODE_SIGN_IDENTITY="" \
