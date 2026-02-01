@@ -12,13 +12,13 @@ class ShareService {
         }
 
         var text = "白Guessr 🎨\n"
-        text += "スコア: \(formatScore(gameState.totalScore)) / 5,000\n\n"
+        text += "\(L10n.Share.score) \(formatScore(gameState.totalScore)) / 5,000\n\n"
 
         // Add each round's result
         for round in gameState.rounds {
             let stars = generateStarRating(for: round)
             let distance = round.distance ?? 0
-            text += "Round \(round.roundNumber): \(stars) (距離: \(distance))\n"
+            text += "\(L10n.Share.round(round.roundNumber)) \(stars) (\(L10n.Share.distance) \(distance))\n"
         }
 
         text += "\nhttps://shiro-guessr.pages.dev/ios\n\n"
@@ -147,9 +147,9 @@ struct ShareButton: View {
     let label: String
     let icon: String
 
-    init(gameState: GameState, label: String = "Share Results", icon: String = "square.and.arrow.up") {
+    init(gameState: GameState, label: String? = nil, icon: String = "square.and.arrow.up") {
         self.gameState = gameState
-        self.label = label
+        self.label = label ?? L10n.Result.share
         self.icon = icon
     }
 

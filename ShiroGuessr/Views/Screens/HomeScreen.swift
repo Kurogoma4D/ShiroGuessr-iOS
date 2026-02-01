@@ -23,7 +23,7 @@ struct HomeScreen: View {
                         .foregroundColor(Color.mdOnBackground)
                         .fontWeight(.bold)
 
-                    Text("Find the exact shade of white")
+                    Text(L10n.Home.tagline)
                         .font(Font.mdBodyLarge)
                         .foregroundColor(Color.mdOnSurfaceVariant)
                 }
@@ -35,7 +35,7 @@ struct HomeScreen: View {
                     NavigationLink(value: GameMode.classicMode) {
                         HStack {
                             Image(systemName: "gamecontroller.fill")
-                            Text("Classic Mode")
+                            Text(L10n.Home.classicMode)
                         }
                         .font(.mdLabelLarge)
                         .frame(maxWidth: .infinity)
@@ -48,7 +48,7 @@ struct HomeScreen: View {
                     NavigationLink(value: GameMode.mapMode) {
                         HStack {
                             Image(systemName: "map.fill")
-                            Text("Map Mode")
+                            Text(L10n.Home.mapMode)
                         }
                         .font(.mdLabelLarge)
                         .frame(maxWidth: .infinity)

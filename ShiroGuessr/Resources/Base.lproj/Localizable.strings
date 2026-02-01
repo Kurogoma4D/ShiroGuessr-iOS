@@ -1,0 +1,43 @@
+/*
+  Localizable.strings (Base/English)
+  ShiroGuessr
+
+  Created for Japanese localization support.
+*/
+
+// MARK: - Home Screen
+"home.tagline" = "Find the exact shade of white";
+"home.classicMode" = "Classic Mode";
+"home.mapMode" = "Map Mode";
+
+// MARK: - Game Screen
+"game.startGame" = "Start Game";
+"game.findThisColor" = "Find this color";
+"game.findThisColorColon" = "Find this color:";
+"game.loading" = "Loading...";
+
+// MARK: - Game Controls
+"controls.submitAnswer" = "Guess";
+"controls.nextRound" = "Next Round";
+
+// MARK: - Round Result Dialog
+"roundResult.title" = "Round %d Result";
+"roundResult.target" = "Target";
+"roundResult.yourGuess" = "Your Guess";
+"roundResult.distance" = "Distance:";
+"roundResult.score" = "Score:";
+"roundResult.continue" = "Continue";
+
+// MARK: - Result Screen
+"result.gameComplete" = "Game Complete!";
+"result.totalScore" = "Total Score";
+"result.outOf5000" = "out of 5000";
+"result.roundResults" = "Round Results";
+"result.playAgain" = "Play Again";
+"result.share" = "Share Results";
+"result.copyToClipboard" = "Copy to Clipboard";
+
+// MARK: - Share Service
+"share.score" = "Score:";
+"share.round" = "Round %d:";
+"share.distance" = "Distance:";
