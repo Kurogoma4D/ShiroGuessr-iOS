@@ -7,6 +7,7 @@ struct ResultScreen: View {
 
     @State private var animateScore = false
     @State private var animateRounds = false
+    @StateObject private var adManager = InterstitialAdManager.shared
 
     var body: some View {
         ScrollView {
@@ -74,7 +75,7 @@ struct ResultScreen: View {
                 // Action buttons
                 VStack(spacing: 12) {
                     Button {
-                        onReplay()
+                        handlePlayAgain()
                     } label: {
                         HStack {
                             Image(systemName: "arrow.counterclockwise.circle.fill")
@@ -115,6 +116,13 @@ struct ResultScreen: View {
     private func copyToClipboard() {
         let text = ShareService.generateShareText(gameState: gameState)
         ShareService.copyToClipboard(text)
+    }
+
+    private func handlePlayAgain() {
+        // Show interstitial ad before replaying
+        adManager.showAd {
+            onReplay()
+        }
     }
 }
 

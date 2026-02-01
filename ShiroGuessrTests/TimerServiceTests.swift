@@ -1,60 +1,58 @@
-import XCTest
+import Testing
 @testable import ShiroGuessr
 
+@Suite("TimerService Tests")
 @MainActor
-final class TimerServiceTests: XCTestCase {
-    var sut: TimerService!
-
-    override func setUp() {
-        super.setUp()
-        sut = TimerService()
-    }
-
-    override func tearDown() {
-        sut.stopTimer()
-        sut = nil
-        super.tearDown()
-    }
+struct TimerServiceTests {
 
     // MARK: - startTimer Tests
 
-    func testStartTimer_shouldSetInitialTimeRemaining() {
+    @Test("startTimer should set initial time remaining")
+    func startTimer_shouldSetInitialTimeRemaining() {
+        let sut = TimerService()
         sut.startTimer(seconds: 60)
 
-        XCTAssertEqual(sut.timeRemaining, 60)
+        #expect(sut.timeRemaining == 60)
+
+        sut.stopTimer()
     }
 
-    func testStartTimer_shouldDecrementTimeRemaining() async {
-        let expectation = expectation(description: "Timer should tick")
-        expectation.expectedFulfillmentCount = 1
-
+    @Test("startTimer should decrement time remaining")
+    func startTimer_shouldDecrementTimeRemaining() async {
+        let sut = TimerService()
         sut.startTimer(seconds: 5)
 
         // Wait for at least one tick
         try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
 
-        if sut.timeRemaining < 5 {
-            expectation.fulfill()
-        }
+        #expect(sut.timeRemaining < 5)
 
-        await fulfillment(of: [expectation], timeout: 2.0)
-        XCTAssertLessThan(sut.timeRemaining, 5)
+        sut.stopTimer()
     }
 
-    func testStartTimer_shouldCallOnTimeoutWhenReachingZero() async {
-        let expectation = expectation(description: "Timeout callback should be called")
+    @Test("startTimer should call onTimeout when reaching zero")
+    func startTimer_shouldCallOnTimeoutWhenReachingZero() async {
+        let sut = TimerService()
+        var timeoutCalled = false
 
         sut.startTimer(seconds: 2) {
-            expectation.fulfill()
+            timeoutCalled = true
         }
 
-        await fulfillment(of: [expectation], timeout: 3.0)
-        XCTAssertEqual(sut.timeRemaining, 0)
+        // Wait for timeout with some buffer
+        try? await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
+
+        #expect(timeoutCalled)
+        #expect(sut.timeRemaining == 0)
+
+        sut.stopTimer()
     }
 
     // MARK: - stopTimer Tests
 
-    func testStopTimer_shouldStopDecrementing() async {
+    @Test("stopTimer should stop decrementing")
+    func stopTimer_shouldStopDecrementing() async {
+        let sut = TimerService()
         sut.startTimer(seconds: 10)
 
         try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
@@ -65,19 +63,23 @@ final class TimerServiceTests: XCTestCase {
         try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
         let timeAfterStop = sut.timeRemaining
 
-        XCTAssertEqual(timeAfterStart, timeAfterStop, "Time should not change after stopping")
+        #expect(timeAfterStart == timeAfterStop)
     }
 
     // MARK: - resetTimer Tests
 
-    func testResetTimer_shouldSetTimeToZero() {
+    @Test("resetTimer should set time to zero")
+    func resetTimer_shouldSetTimeToZero() {
+        let sut = TimerService()
         sut.startTimer(seconds: 60)
         sut.resetTimer()
 
-        XCTAssertEqual(sut.timeRemaining, 0)
+        #expect(sut.timeRemaining == 0)
     }
 
-    func testResetTimer_shouldStopTimer() async {
+    @Test("resetTimer should stop timer")
+    func resetTimer_shouldStopTimer() async {
+        let sut = TimerService()
         sut.startTimer(seconds: 10)
         sut.resetTimer()
 
@@ -86,16 +88,20 @@ final class TimerServiceTests: XCTestCase {
         try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
         let timeAfter = sut.timeRemaining
 
-        XCTAssertEqual(timeBefore, timeAfter, "Time should not change after reset")
+        #expect(timeBefore == timeAfter)
     }
 
     // MARK: - Multiple Starts Tests
 
-    func testStartTimer_calledMultipleTimes_shouldRestartTimer() {
+    @Test("startTimer called multiple times should restart timer")
+    func startTimer_calledMultipleTimes_shouldRestartTimer() {
+        let sut = TimerService()
         sut.startTimer(seconds: 10)
-        XCTAssertEqual(sut.timeRemaining, 10)
+        #expect(sut.timeRemaining == 10)
 
         sut.startTimer(seconds: 20)
-        XCTAssertEqual(sut.timeRemaining, 20)
+        #expect(sut.timeRemaining == 20)
+
+        sut.stopTimer()
     }
 }
