@@ -86,8 +86,8 @@ struct MapGameServiceTests {
         #expect(gameState.totalScore == 0)
     }
 
-    @Test("Each round should have target pin")
-    func createNewGame_eachRoundShouldHaveTargetPin() {
+    @Test("Each round should have target pin after start")
+    func startRound_shouldSetTargetPin() {
         let colorService = ColorService()
         let scoreService = ScoreService()
         let gradientMapService = GradientMapService(colorService: colorService)
@@ -97,11 +97,14 @@ struct MapGameServiceTests {
             gradientMapService: gradientMapService
         )
 
-        let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
+        var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
+        let gradientMap = gradientMapService.generateGradientMap()
 
-        for round in gameState.rounds {
-            #expect(round.targetPin != nil)
-        }
+        // Start the first round
+        gameState = sut.startRound(gameState: gameState, gradientMap: gradientMap)
+
+        let currentRound = gameState.rounds[gameState.currentRoundIndex]
+        #expect(currentRound.targetPin != nil)
     }
 
     @Test("Each round should not have user pin")
