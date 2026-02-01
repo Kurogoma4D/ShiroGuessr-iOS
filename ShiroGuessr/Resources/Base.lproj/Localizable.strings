@@ -17,7 +17,7 @@
 "game.loading" = "Loading...";
 
 // MARK: - Game Controls
-"controls.submitAnswer" = "Submit Answer";
+"controls.submitAnswer" = "Guess";
 "controls.nextRound" = "Next Round";
 
 // MARK: - Round Result Dialog
