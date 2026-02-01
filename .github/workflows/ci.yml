@@ -17,9 +17,6 @@ jobs:
     - name: Select Xcode version
       run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
-    - name: List available simulators
-      run: xcrun simctl list devices available
-
     - name: Cache SPM dependencies
       uses: actions/cache@v4
       with:
@@ -35,7 +32,7 @@ jobs:
         xcodebuild clean build test \
           -project ShiroGuessr.xcodeproj \
           -scheme ShiroGuessr \
-          -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+          -destination 'platform=iOS Simulator,OS=18.5,name=iPhone 16 Pro' \
           -only-testing:ShiroGuessrTests \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
