@@ -7,7 +7,9 @@
 
 import SwiftUI
 import Combine
+#if !TESTING
 import GoogleMobileAds
+#endif
 
 enum GameMode {
     case classicMode
@@ -36,6 +38,7 @@ struct RootView: View {
 @main
 struct ShiroGuessrApp: App {
     init() {
+        #if !TESTING
         // Initialize Google Mobile Ads SDK
         MobileAds.shared.start()
 
@@ -43,6 +46,7 @@ struct ShiroGuessrApp: App {
         Task { @MainActor in
             InterstitialAdManager.shared.loadAd()
         }
+        #endif
     }
 
     var body: some Scene {
