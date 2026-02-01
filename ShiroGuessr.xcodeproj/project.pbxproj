@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA884DA12F2F121C00C04389 /* Prod.xcconfig.example in Resources */ = {isa = PBXBuildFile; fileRef = CA884D9F2F2F121C00C04389 /* Prod.xcconfig.example */; };
+		CA884DA22F2F121C00C04389 /* Dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CA884D9E2F2F121C00C04389 /* Dev.xcconfig */; };
+		CA884DA42F2F122C00C04389 /* Prod.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CA884DA32F2F122C00C04389 /* Prod.xcconfig */; };
 		CAC520352F2EEAC600146241 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = CAC520342F2EEAC600146241 /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
@@ -31,11 +34,27 @@
 		CA1913572F2DBBFB00298F22 /* ShiroGuessr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShiroGuessr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA1913662F2DBBFB00298F22 /* ShiroGuessrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShiroGuessrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA1913702F2DBBFB00298F22 /* ShiroGuessrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShiroGuessrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA884D9E2F2F121C00C04389 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
+		CA884D9F2F2F121C00C04389 /* Prod.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Prod.xcconfig.example; sourceTree = "<group>"; };
+		CA884DA32F2F122C00C04389 /* Prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Prod.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CAFBE8452F2F157D00B7A648 /* Exceptions for "ShiroGuessr" folder in "ShiroGuessr" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CA1913562F2DBBFB00298F22 /* ShiroGuessr */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CA1913592F2DBBFB00298F22 /* ShiroGuessr */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CAFBE8452F2F157D00B7A648 /* Exceptions for "ShiroGuessr" folder in "ShiroGuessr" target */,
+			);
 			path = ShiroGuessr;
 			sourceTree = "<group>";
 		};
@@ -80,6 +99,7 @@
 		CA19134E2F2DBBFB00298F22 = {
 			isa = PBXGroup;
 			children = (
+				CA884DA02F2F121C00C04389 /* Configurations */,
 				CA1913592F2DBBFB00298F22 /* ShiroGuessr */,
 				CA1913692F2DBBFB00298F22 /* ShiroGuessrTests */,
 				CA1913732F2DBBFB00298F22 /* ShiroGuessrUITests */,
@@ -96,6 +116,16 @@
 				CA1913702F2DBBFB00298F22 /* ShiroGuessrUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CA884DA02F2F121C00C04389 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				CA884D9E2F2F121C00C04389 /* Dev.xcconfig */,
+				CA884DA32F2F122C00C04389 /* Prod.xcconfig */,
+				CA884D9F2F2F121C00C04389 /* Prod.xcconfig.example */,
+			);
+			path = Configurations;
 			sourceTree = "<group>";
 		};
 		CAC520332F2EEAC600146241 /* Frameworks */ = {
@@ -183,7 +213,7 @@
 		CA19134F2F2DBBFB00298F22 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
@@ -229,6 +259,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA884DA12F2F121C00C04389 /* Prod.xcconfig.example in Resources */,
+				CA884DA22F2F121C00C04389 /* Dev.xcconfig in Resources */,
+				CA884DA42F2F122C00C04389 /* Prod.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +321,7 @@
 /* Begin XCBuildConfiguration section */
 		CA1913782F2DBBFB00298F22 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884D9E2F2F121C00C04389 /* Dev.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -352,6 +386,7 @@
 		};
 		CA1913792F2DBBFB00298F22 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884DA32F2F122C00C04389 /* Prod.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -409,6 +444,7 @@
 		};
 		CA19137B2F2DBBFB00298F22 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884D9E2F2F121C00C04389 /* Dev.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -418,6 +454,7 @@
 				DEVELOPMENT_TEAM = W8476NSA2M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShiroGuessr/Info.plist;
 				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -443,6 +480,7 @@
 		};
 		CA19137C2F2DBBFB00298F22 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884DA32F2F122C00C04389 /* Prod.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -452,6 +490,7 @@
 				DEVELOPMENT_TEAM = W8476NSA2M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShiroGuessr/Info.plist;
 				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -477,6 +516,7 @@
 		};
 		CA19137E2F2DBBFB00298F22 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884D9E2F2F121C00C04389 /* Dev.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -499,6 +539,7 @@
 		};
 		CA19137F2F2DBBFB00298F22 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884DA32F2F122C00C04389 /* Prod.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -521,6 +562,7 @@
 		};
 		CA1913812F2DBBFB00298F22 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884D9E2F2F121C00C04389 /* Dev.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -541,6 +583,7 @@
 		};
 		CA1913822F2DBBFB00298F22 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA884DA32F2F122C00C04389 /* Prod.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -569,7 +612,7 @@
 				CA1913792F2DBBFB00298F22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		CA19137A2F2DBBFB00298F22 /* Build configuration list for PBXNativeTarget "ShiroGuessr" */ = {
 			isa = XCConfigurationList;
@@ -578,7 +621,7 @@
 				CA19137C2F2DBBFB00298F22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		CA19137D2F2DBBFB00298F22 /* Build configuration list for PBXNativeTarget "ShiroGuessrTests" */ = {
 			isa = XCConfigurationList;
@@ -587,7 +630,7 @@
 				CA19137F2F2DBBFB00298F22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		CA1913802F2DBBFB00298F22 /* Build configuration list for PBXNativeTarget "ShiroGuessrUITests" */ = {
 			isa = XCConfigurationList;
@@ -596,7 +639,7 @@
 				CA1913822F2DBBFB00298F22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

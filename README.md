@@ -102,37 +102,47 @@ cd ShiroGuessr-iOS
 
 ```bash
 # テンプレートファイルをコピー
-cp ShiroGuessr/AdMobConfig-Prod.plist.example ShiroGuessr/AdMobConfig-Prod.plist
+cp Configurations/Prod.xcconfig.example Configurations/Prod.xcconfig
 
 # エディタで開いて実際のAdMob IDを設定
-open ShiroGuessr/AdMobConfig-Prod.plist
+open Configurations/Prod.xcconfig
 ```
 
-`AdMobConfig-Prod.plist`に以下の値を設定:
-- `AppID`: AdMobのアプリID（例: `ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY`）
-- `InterstitialAdUnitID`: インタースティシャル広告ユニットID（例: `ca-app-pub-XXXXXXXXXXXXXXXX/ZZZZZZZZZZ`）
+`Configurations/Prod.xcconfig`に以下の値を設定:
+- `ADMOB_APP_ID`: AdMobのアプリID（例: `ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY`）
+- `ADMOB_INTERSTITIAL_AD_UNIT_ID`: インタースティシャル広告ユニットID（例: `ca-app-pub-XXXXXXXXXXXXXXXX/ZZZZZZZZZZ`）
 
-**重要**: `AdMobConfig-Prod.plist`は`.gitignore`に含まれており、リポジトリにコミットされません。
+**重要**: `Configurations/Prod.xcconfig`は`.gitignore`に含まれており、リポジトリにコミットされません。
 
 3. Xcodeでプロジェクトを開く
 ```bash
 open ShiroGuessr.xcodeproj
 ```
 
-4. ビルドして実行 (⌘R)
+4. Xcode で xcconfig ファイルを設定（初回のみ）
+
+プロジェクト設定で環境別の設定ファイルを指定します:
+- Project Navigator でプロジェクトを選択
+- ShiroGuessr target を選択
+- Info タブを開く
+- Configurations セクションで:
+  - Debug: `Configurations/Dev.xcconfig`
+  - Release: `Configurations/Prod.xcconfig`
+
+5. ビルドして実行 (⌘R)
 
 ### 環境切り替え
 
 プロジェクトは開発環境（dev）と本番環境（prod）を自動的に切り替えます。
 
-- **Debug ビルド**: テスト広告IDを使用（AdMobConfig-Dev.plist）
-- **Release ビルド**: 本番広告IDを使用（AdMobConfig-Prod.plist）
+- **Debug ビルド**: テスト広告IDを使用（`Configurations/Dev.xcconfig`）
+- **Release ビルド**: 本番広告IDを使用（`Configurations/Prod.xcconfig`）
 
 Xcodeのスキーム設定で使用される環境が決まります:
 - Run/Test/Profile: Debug（開発環境）
 - Archive: Release（本番環境）
 
-開発中は特に設定なしでテスト広告が表示されます。リリースビルドを作成する際は、必ず`AdMobConfig-Prod.plist`を作成してください。
+開発中は特に設定なしでテスト広告が表示されます。リリースビルドを作成する際は、必ず`Configurations/Prod.xcconfig`を作成してください。
 
 ## ゲームルール
 

@@ -101,6 +101,7 @@ iOSInjectionProject/
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swift
 
 # AdMob Configuration
-# Production configuration files should not be committed
-AdMobConfig-Prod.plist
+# Production configuration should not be committed
+# AdMob configuration is managed via xcconfig files
+Configurations/Prod.xcconfig
 GoogleService-Info.plist

@@ -1,0 +1,15 @@
+//
+//  Prod.xcconfig.example
+//  ShiroGuessr
+//
+//  Production configuration template
+//  Copy this file to Prod.xcconfig and replace with your actual production values
+//
+
+// AdMob Configuration - Production
+// Replace these with your actual AdMob IDs from https://apps.admob.com/
+ADMOB_APP_ID = ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
+ADMOB_INTERSTITIAL_AD_UNIT_ID = ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+
+// Bundle Identifier
+PRODUCT_BUNDLE_IDENTIFIER = dev.krgm4d.ShiroGuessr
