@@ -8,14 +8,23 @@ on:
 
 jobs:
   deploy:
-    runs-on: macos-15
+    runs-on: macos-26
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Select Xcode version
-      run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+      run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+
+    - name: Setup production configuration
+      env:
+        ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+        ADMOB_INTERSTITIAL_AD_UNIT_ID: ${{ secrets.ADMOB_INTERSTITIAL_AD_UNIT_ID }}
+      run: |
+        cp Configurations/Prod.xcconfig.example Configurations/Prod.xcconfig
+        sed -i '' "s|ADMOB_APP_ID = .*|ADMOB_APP_ID = $ADMOB_APP_ID|" Configurations/Prod.xcconfig
+        sed -i '' "s|ADMOB_INTERSTITIAL_AD_UNIT_ID = .*|ADMOB_INTERSTITIAL_AD_UNIT_ID = $ADMOB_INTERSTITIAL_AD_UNIT_ID|" Configurations/Prod.xcconfig
 
     - name: Setup App Store Connect API Key
       env:
