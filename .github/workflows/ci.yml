@@ -27,6 +27,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-spm-
 
+    - name: Show available SDKs
+      run: xcodebuild -showsdks
+
     - name: Prepare iOS Simulator
       run: |
         # Find available iPhone 16 Pro simulator
@@ -41,6 +44,7 @@ jobs:
         xcodebuild clean build test \
           -project ShiroGuessr.xcodeproj \
           -scheme ShiroGuessr \
+          -sdk iphonesimulator \
           -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
           -only-testing:ShiroGuessrTests \
           CODE_SIGN_IDENTITY="" \
