@@ -1,11 +1,12 @@
-import XCTest
+import Testing
 @testable import ShiroGuessr
 
-final class ShareServiceTests: XCTestCase {
+@Suite("ShareService Tests")
+struct ShareServiceTests {
 
     // MARK: - Test Data
 
-    private func createTestGameState() -> GameState {
+    func createTestGameState() -> GameState {
         return GameState(
             rounds: [
                 GameRound(
@@ -73,7 +74,8 @@ final class ShareServiceTests: XCTestCase {
 
     // MARK: - Generate Share Text Tests
 
-    func testGenerateShareTextForCompletedGame() {
+    @Test("Generate share text for completed game")
+    func generateShareTextForCompletedGame() {
         // Given
         let gameState = createTestGameState()
 
@@ -81,15 +83,16 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("白Guessr 🎨"))
-        XCTAssertTrue(shareText.contains("スコア: 4,100 / 5,000"))
-        XCTAssertTrue(shareText.contains("Round 1:"))
-        XCTAssertTrue(shareText.contains("Round 5:"))
-        XCTAssertTrue(shareText.contains("https://shiro-guessr.pages.dev/ios"))
-        XCTAssertTrue(shareText.contains("#白Guessr"))
+        #expect(shareText.contains("白Guessr 🎨"))
+        #expect(shareText.contains("スコア: 4,100 / 5,000"))
+        #expect(shareText.contains("Round 1:"))
+        #expect(shareText.contains("Round 5:"))
+        #expect(shareText.contains("https://shiro-guessr.pages.dev/ios"))
+        #expect(shareText.contains("#白Guessr"))
     }
 
-    func testGenerateShareTextForIncompleteGame() {
+    @Test("Generate share text for incomplete game")
+    func generateShareTextForIncompleteGame() {
         // Given
         let incompleteGameState = GameState(
             rounds: [],
@@ -103,10 +106,11 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: incompleteGameState)
 
         // Then
-        XCTAssertTrue(shareText.isEmpty)
+        #expect(shareText.isEmpty)
     }
 
-    func testShareTextContainsAllRounds() {
+    @Test("Share text contains all rounds")
+    func shareTextContainsAllRounds() {
         // Given
         let gameState = createTestGameState()
 
@@ -115,13 +119,14 @@ final class ShareServiceTests: XCTestCase {
 
         // Then
         for round in gameState.rounds {
-            XCTAssertTrue(shareText.contains("Round \(round.roundNumber):"))
+            #expect(shareText.contains("Round \(round.roundNumber):"))
         }
     }
 
     // MARK: - Star Rating Tests
 
-    func testStarRatingForPerfectDistance() {
+    @Test("Star rating for perfect distance")
+    func starRatingForPerfectDistance() {
         // Given
         let gameState = GameState(
             rounds: [
@@ -147,11 +152,12 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("⭐⭐⭐⭐⭐"))
-        XCTAssertTrue(shareText.contains("(距離: 0)"))
+        #expect(shareText.contains("⭐⭐⭐⭐⭐"))
+        #expect(shareText.contains("(距離: 0)"))
     }
 
-    func testStarRatingForGoodDistance() {
+    @Test("Star rating for good distance")
+    func starRatingForGoodDistance() {
         // Given
         let gameState = GameState(
             rounds: [
@@ -177,11 +183,12 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("⭐⭐⭐⭐"))
-        XCTAssertTrue(shareText.contains("(距離: 8)"))
+        #expect(shareText.contains("⭐⭐⭐⭐"))
+        #expect(shareText.contains("(距離: 8)"))
     }
 
-    func testStarRatingForAverageDistance() {
+    @Test("Star rating for average distance")
+    func starRatingForAverageDistance() {
         // Given
         let gameState = GameState(
             rounds: [
@@ -207,11 +214,12 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("⭐⭐⭐"))
-        XCTAssertTrue(shareText.contains("(距離: 15)"))
+        #expect(shareText.contains("⭐⭐⭐"))
+        #expect(shareText.contains("(距離: 15)"))
     }
 
-    func testStarRatingForPoorDistance() {
+    @Test("Star rating for poor distance")
+    func starRatingForPoorDistance() {
         // Given
         let gameState = GameState(
             rounds: [
@@ -237,11 +245,12 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("⭐⭐"))
-        XCTAssertTrue(shareText.contains("(距離: 30)"))
+        #expect(shareText.contains("⭐⭐"))
+        #expect(shareText.contains("(距離: 30)"))
     }
 
-    func testStarRatingForVeryPoorDistance() {
+    @Test("Star rating for very poor distance")
+    func starRatingForVeryPoorDistance() {
         // Given
         let gameState = GameState(
             rounds: [
@@ -267,14 +276,15 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("⭐"))
-        XCTAssertFalse(shareText.contains("⭐⭐"))
-        XCTAssertTrue(shareText.contains("(距離: 50)"))
+        #expect(shareText.contains("⭐"))
+        #expect(!shareText.contains("⭐⭐"))
+        #expect(shareText.contains("(距離: 50)"))
     }
 
     // MARK: - Score Formatting Tests
 
-    func testScoreFormattingWithCommas() {
+    @Test("Score formatting with commas")
+    func scoreFormattingWithCommas() {
         // Given
         let gameState = GameState(
             rounds: Array(repeating: GameRound(
@@ -298,10 +308,11 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("4,523"))
+        #expect(shareText.contains("4,523"))
     }
 
-    func testScoreFormattingWithoutCommas() {
+    @Test("Score formatting without commas")
+    func scoreFormattingWithoutCommas() {
         // Given
         let gameState = GameState(
             rounds: [
@@ -327,6 +338,6 @@ final class ShareServiceTests: XCTestCase {
         let shareText = ShareService.generateShareText(gameState: gameState)
 
         // Then
-        XCTAssertTrue(shareText.contains("500"))
+        #expect(shareText.contains("500"))
     }
 }

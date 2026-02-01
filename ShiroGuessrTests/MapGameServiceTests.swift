@@ -1,92 +1,159 @@
-import XCTest
+import Testing
 @testable import ShiroGuessr
 
-final class MapGameServiceTests: XCTestCase {
-    var sut: MapGameService!
-    var colorService: ColorService!
-    var scoreService: ScoreService!
-    var gradientMapService: GradientMapService!
+@Suite("MapGameService Tests")
+struct MapGameServiceTests {
 
-    override func setUp() {
-        super.setUp()
-        colorService = ColorService()
-        scoreService = ScoreService()
-        gradientMapService = GradientMapService(colorService: colorService)
-        sut = MapGameService(
+    // MARK: - createNewGame Tests
+
+    @Test("Create new game should create correct number of rounds")
+    func createNewGame_shouldCreateCorrectNumberOfRounds() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
             colorService: colorService,
             scoreService: scoreService,
             gradientMapService: gradientMapService
         )
-    }
 
-    override func tearDown() {
-        sut = nil
-        gradientMapService = nil
-        scoreService = nil
-        colorService = nil
-        super.tearDown()
-    }
-
-    // MARK: - createNewGame Tests
-
-    func testCreateNewGame_shouldCreateCorrectNumberOfRounds() {
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
-        XCTAssertEqual(gameState.rounds.count, 5)
+        #expect(gameState.rounds.count == 5)
     }
 
-    func testCreateNewGame_shouldSetTimeLimitCorrectly() {
+    @Test("Create new game should set time limit correctly")
+    func createNewGame_shouldSetTimeLimitCorrectly() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
-        XCTAssertEqual(gameState.timeLimit, 60)
+        #expect(gameState.timeLimit == 60)
     }
 
-    func testCreateNewGame_shouldStartAtFirstRound() {
+    @Test("Create new game should start at first round")
+    func createNewGame_shouldStartAtFirstRound() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
-        XCTAssertEqual(gameState.currentRoundIndex, 0)
+        #expect(gameState.currentRoundIndex == 0)
     }
 
-    func testCreateNewGame_shouldNotBeCompleted() {
+    @Test("Create new game should not be completed")
+    func createNewGame_shouldNotBeCompleted() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
-        XCTAssertFalse(gameState.isCompleted)
+        #expect(!gameState.isCompleted)
     }
 
-    func testCreateNewGame_shouldHaveZeroInitialScore() {
+    @Test("Create new game should have zero initial score")
+    func createNewGame_shouldHaveZeroInitialScore() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
-        XCTAssertEqual(gameState.totalScore, 0)
+        #expect(gameState.totalScore == 0)
     }
 
-    func testCreateNewGame_eachRoundShouldHaveTargetPin() {
+    @Test("Each round should have target pin")
+    func createNewGame_eachRoundShouldHaveTargetPin() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
         for round in gameState.rounds {
-            XCTAssertNotNil(round.targetPin, "Each round should have a target pin")
+            #expect(round.targetPin != nil)
         }
     }
 
-    func testCreateNewGame_eachRoundShouldNotHaveUserPin() {
+    @Test("Each round should not have user pin")
+    func createNewGame_eachRoundShouldNotHaveUserPin() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
         for round in gameState.rounds {
-            XCTAssertNil(round.pin, "User pin should not be placed initially")
+            #expect(round.pin == nil)
         }
     }
 
-    func testCreateNewGame_roundNumbersShouldBeSequential() {
+    @Test("Round numbers should be sequential")
+    func createNewGame_roundNumbersShouldBeSequential() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
         for (index, round) in gameState.rounds.enumerated() {
-            XCTAssertEqual(round.roundNumber, index + 1)
+            #expect(round.roundNumber == index + 1)
         }
     }
 
 
     // MARK: - placePin Tests
 
-    func testPlacePin_shouldAddPinToCurrentRound() {
+    @Test("Place pin should add pin to current round")
+    func placePin_shouldAddPinToCurrentRound() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -98,11 +165,21 @@ final class MapGameServiceTests: XCTestCase {
         )
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertNotNil(currentRound.pin)
-        XCTAssertEqual(currentRound.pin?.coordinate, coordinate)
+        #expect(currentRound.pin != nil)
+        #expect(currentRound.pin?.coordinate == coordinate)
     }
 
-    func testPlacePin_shouldSetCorrectColorAtPin() {
+    @Test("Place pin should set correct color at pin")
+    func placePin_shouldSetCorrectColorAtPin() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -116,10 +193,20 @@ final class MapGameServiceTests: XCTestCase {
         let expectedColor = gradientMapService.getColorAt(map: gradientMap, coordinate: coordinate)
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
 
-        XCTAssertEqual(currentRound.pin?.color, expectedColor)
+        #expect(currentRound.pin?.color == expectedColor)
     }
 
-    func testPlacePin_shouldAllowMovingPin() {
+    @Test("Place pin should allow moving pin")
+    func placePin_shouldAllowMovingPin() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
 
@@ -140,12 +227,22 @@ final class MapGameServiceTests: XCTestCase {
         )
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertEqual(currentRound.pin?.coordinate, coordinate2)
+        #expect(currentRound.pin?.coordinate == coordinate2)
     }
 
     // MARK: - submitGuess Tests
 
-    func testSubmitGuess_shouldCalculateDistance() {
+    @Test("Submit guess should calculate distance")
+    func submitGuess_shouldCalculateDistance() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -159,10 +256,20 @@ final class MapGameServiceTests: XCTestCase {
         gameState = sut.submitGuess(gameState: gameState, timeRemaining: 30)
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertNotNil(currentRound.distance)
+        #expect(currentRound.distance != nil)
     }
 
-    func testSubmitGuess_shouldCalculateScore() {
+    @Test("Submit guess should calculate score")
+    func submitGuess_shouldCalculateScore() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -176,12 +283,22 @@ final class MapGameServiceTests: XCTestCase {
         gameState = sut.submitGuess(gameState: gameState, timeRemaining: 30)
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertNotNil(currentRound.score)
-        XCTAssertGreaterThanOrEqual(currentRound.score!, 0)
-        XCTAssertLessThanOrEqual(currentRound.score!, 1000)
+        #expect(currentRound.score != nil)
+        #expect(currentRound.score! >= 0)
+        #expect(currentRound.score! <= 1000)
     }
 
-    func testSubmitGuess_shouldSetSelectedColor() {
+    @Test("Submit guess should set selected color")
+    func submitGuess_shouldSetSelectedColor() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -195,10 +312,20 @@ final class MapGameServiceTests: XCTestCase {
         gameState = sut.submitGuess(gameState: gameState, timeRemaining: 30)
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertNotNil(currentRound.selectedColor)
+        #expect(currentRound.selectedColor != nil)
     }
 
-    func testSubmitGuess_shouldUpdateTotalScore() {
+    @Test("Submit guess should update total score")
+    func submitGuess_shouldUpdateTotalScore() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -212,10 +339,20 @@ final class MapGameServiceTests: XCTestCase {
         let scoreBefore = gameState.totalScore
         gameState = sut.submitGuess(gameState: gameState, timeRemaining: 30)
 
-        XCTAssertGreaterThanOrEqual(gameState.totalScore, scoreBefore)
+        #expect(gameState.totalScore >= scoreBefore)
     }
 
-    func testSubmitGuess_shouldStoreTimeRemaining() {
+    @Test("Submit guess should store time remaining")
+    func submitGuess_shouldStoreTimeRemaining() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -229,63 +366,123 @@ final class MapGameServiceTests: XCTestCase {
         gameState = sut.submitGuess(gameState: gameState, timeRemaining: 42)
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertEqual(currentRound.timeRemaining, 42)
+        #expect(currentRound.timeRemaining == 42)
     }
 
-    func testSubmitGuess_withoutPin_shouldNotModifyState() {
+    @Test("Submit guess without pin should not modify state")
+    func submitGuess_withoutPin_shouldNotModifyState() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         let gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gameStateBefore = gameState
 
         let gameStateAfter = sut.submitGuess(gameState: gameState, timeRemaining: 30)
 
-        XCTAssertEqual(gameStateBefore, gameStateAfter)
+        #expect(gameStateBefore == gameStateAfter)
     }
 
     // MARK: - handleTimeout Tests
 
-    func testHandleTimeout_shouldPlacePinAtCenter() {
+    @Test("Handle timeout should place pin at center")
+    func handleTimeout_shouldPlacePinAtCenter() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
 
         gameState = sut.handleTimeout(gameState: gameState, gradientMap: gradientMap)
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertNotNil(currentRound.pin)
-        XCTAssertEqual(currentRound.pin?.coordinate.x, 0.5)
-        XCTAssertEqual(currentRound.pin?.coordinate.y, 0.5)
+        #expect(currentRound.pin != nil)
+        #expect(currentRound.pin?.coordinate.x == 0.5)
+        #expect(currentRound.pin?.coordinate.y == 0.5)
     }
 
-    func testHandleTimeout_shouldSubmitGuessWithZeroTime() {
+    @Test("Handle timeout should submit guess with zero time")
+    func handleTimeout_shouldSubmitGuessWithZeroTime() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
 
         gameState = sut.handleTimeout(gameState: gameState, gradientMap: gradientMap)
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertEqual(currentRound.timeRemaining, 0)
+        #expect(currentRound.timeRemaining == 0)
     }
 
-    func testHandleTimeout_shouldCalculateScore() {
+    @Test("Handle timeout should calculate score")
+    func handleTimeout_shouldCalculateScore() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
 
         gameState = sut.handleTimeout(gameState: gameState, gradientMap: gradientMap)
 
         let currentRound = gameState.rounds[gameState.currentRoundIndex]
-        XCTAssertNotNil(currentRound.score)
+        #expect(currentRound.score != nil)
     }
 
     // MARK: - nextRound Tests
 
-    func testNextRound_shouldIncrementRoundIndex() {
+    @Test("Next round should increment round index")
+    func nextRound_shouldIncrementRoundIndex() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
         gameState = sut.nextRound(gameState: gameState)
 
-        XCTAssertEqual(gameState.currentRoundIndex, 1)
+        #expect(gameState.currentRoundIndex == 1)
     }
 
-    func testNextRound_onLastRound_shouldCompleteGame() {
+    @Test("Next round on last round should complete game")
+    func nextRound_onLastRound_shouldCompleteGame() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
         // Advance through all rounds (0->1, 1->2, 2->3, 3->4, 4->completed)
@@ -293,18 +490,38 @@ final class MapGameServiceTests: XCTestCase {
             gameState = sut.nextRound(gameState: gameState)
         }
 
-        XCTAssertTrue(gameState.isCompleted)
+        #expect(gameState.isCompleted)
     }
 
-    func testNextRound_beforeLastRound_shouldNotCompleteGame() {
+    @Test("Next round before last round should not complete game")
+    func nextRound_beforeLastRound_shouldNotCompleteGame() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
 
         gameState = sut.nextRound(gameState: gameState)
 
-        XCTAssertFalse(gameState.isCompleted)
+        #expect(!gameState.isCompleted)
     }
 
-    func testNextRound_shouldPreserveTotalScore() {
+    @Test("Next round should preserve total score")
+    func nextRound_shouldPreserveTotalScore() {
+        let colorService = ColorService()
+        let scoreService = ScoreService()
+        let gradientMapService = GradientMapService(colorService: colorService)
+        let sut = MapGameService(
+            colorService: colorService,
+            scoreService: scoreService,
+            gradientMapService: gradientMapService
+        )
+
         var gameState = sut.createNewGame(totalRounds: 5, timeLimit: 60)
         let gradientMap = gradientMapService.generateGradientMap()
         let coordinate = MapCoordinate(x: 0.5, y: 0.5)
@@ -320,6 +537,6 @@ final class MapGameServiceTests: XCTestCase {
         let scoreAfterRound1 = gameState.totalScore
         gameState = sut.nextRound(gameState: gameState)
 
-        XCTAssertEqual(gameState.totalScore, scoreAfterRound1)
+        #expect(gameState.totalScore == scoreAfterRound1)
     }
 }
