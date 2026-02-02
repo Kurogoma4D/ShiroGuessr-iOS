@@ -41,3 +41,13 @@
 "share.score" = "Score:";
 "share.round" = "Round %d:";
 "share.distance" = "Distance:";
+
+// MARK: - Tutorial
+"tutorial.welcome" = "Welcome to 白Guessr!";
+"tutorial.welcomeDescription" = "Can you find the true white among countless shades? Test your color perception skills in this challenging game.";
+"tutorial.howToPlay" = "How to Play";
+"tutorial.howToPlayDescription" = "You'll see a gradient map with a hidden target color. Tap on the map to guess where the target color is located. The closer you are, the higher your score!";
+"tutorial.gameModes" = "Two Game Modes";
+"tutorial.gameModesDescription" = "Choose Classic Mode for a single gradient map, or Map Mode to explore different gradient patterns. Each mode offers 5 rounds of color-finding fun!";
+"tutorial.next" = "Next";
+"tutorial.getStarted" = "Get Started";

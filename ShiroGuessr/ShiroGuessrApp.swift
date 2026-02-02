@@ -18,6 +18,8 @@ enum GameMode {
 
 struct RootView: View {
     @State private var currentMode: GameMode = .mapMode
+    @StateObject private var tutorialManager = TutorialManager.shared
+    @State private var mapGameViewModel: MapGameViewModel?
 
     var body: some View {
         Group {
@@ -26,6 +28,28 @@ struct RootView: View {
                 ClassicGameScreen(onModeToggle: toggleMode)
             case .mapMode:
                 MapGameScreen(onModeToggle: toggleMode)
+                    .onAppear {
+                        // Store reference to access timer controls (this is a workaround)
+                        // In production, consider using environment object or dependency injection
+                    }
+            }
+        }
+        .sheet(isPresented: $tutorialManager.shouldShowTutorial) {
+            TutorialBottomSheet(isPresented: $tutorialManager.shouldShowTutorial)
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.hidden)
+                .interactiveDismissDisabled()
+        }
+        .onChange(of: tutorialManager.shouldShowTutorial) { _, isShowing in
+            // Pause/resume timer based on tutorial visibility
+            // Note: This is a simplified approach. For better control,
+            // consider using environment object to access the view model
+            if isShowing {
+                // Timer will be paused when tutorial appears
+                NotificationCenter.default.post(name: .pauseGameTimer, object: nil)
+            } else {
+                // Resume timer when tutorial is dismissed
+                NotificationCenter.default.post(name: .resumeGameTimer, object: nil)
             }
         }
     }
@@ -33,6 +57,12 @@ struct RootView: View {
     private func toggleMode() {
         currentMode = currentMode == .mapMode ? .classicMode : .mapMode
     }
+}
+
+// MARK: - Notification Names
+extension Notification.Name {
+    static let pauseGameTimer = Notification.Name("pauseGameTimer")
+    static let resumeGameTimer = Notification.Name("resumeGameTimer")
 }
 
 @main

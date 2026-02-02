@@ -39,8 +39,16 @@ struct MapGameScreen: View {
         }
         .onAppear {
             if viewModel.gameState == nil {
-                viewModel.startNewGame()
+                // Start game without timer if tutorial is showing
+                let shouldStartTimer = !TutorialManager.shared.shouldShowTutorial
+                viewModel.startNewGame(startTimer: shouldStartTimer)
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .pauseGameTimer)) { _ in
+            viewModel.pauseTimer()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .resumeGameTimer)) { _ in
+            viewModel.resumeTimer()
         }
         .sheet(isPresented: $viewModel.showingResult) {
             if let currentRound = viewModel.currentRound {

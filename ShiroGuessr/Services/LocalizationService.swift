@@ -61,4 +61,16 @@ enum L10n {
         }
         static let distance = NSLocalizedString("share.distance", comment: "Distance label for sharing")
     }
+
+    // MARK: - Tutorial
+    enum Tutorial {
+        static let welcome = NSLocalizedString("tutorial.welcome", comment: "Tutorial welcome title")
+        static let welcomeDescription = NSLocalizedString("tutorial.welcomeDescription", comment: "Tutorial welcome description")
+        static let howToPlay = NSLocalizedString("tutorial.howToPlay", comment: "How to play title")
+        static let howToPlayDescription = NSLocalizedString("tutorial.howToPlayDescription", comment: "How to play description")
+        static let gameModes = NSLocalizedString("tutorial.gameModes", comment: "Game modes title")
+        static let gameModesDescription = NSLocalizedString("tutorial.gameModesDescription", comment: "Game modes description")
+        static let next = NSLocalizedString("tutorial.next", comment: "Next button")
+        static let getStarted = NSLocalizedString("tutorial.getStarted", comment: "Get started button")
+    }
 }

@@ -69,7 +69,8 @@ final class MapGameViewModel {
     // MARK: - Public Methods
 
     /// Starts a new map game
-    func startNewGame() {
+    /// - Parameter startTimer: Whether to start the timer immediately (default: true)
+    func startNewGame(startTimer: Bool = true) {
         // Stop any existing timer
         timerService.stopTimer()
 
@@ -93,8 +94,17 @@ final class MapGameViewModel {
         // Reset UI state
         showingResult = false
 
-        // Start timer
-        startRoundTimer()
+        // Start timer if requested, otherwise just set the time
+        if startTimer {
+            startRoundTimer()
+        } else {
+            // Set time without starting the timer
+            timerService.setTime(seconds: timeLimit) { [weak self] in
+                Task { @MainActor in
+                    self?.handleTimeout()
+                }
+            }
+        }
     }
 
     /// Places a pin at the specified coordinate
@@ -169,6 +179,19 @@ final class MapGameViewModel {
     /// Resets the game to start a new one
     func resetGame() {
         startNewGame()
+    }
+
+    /// Pauses the game timer
+    func pauseTimer() {
+        timerService.pauseTimer()
+    }
+
+    /// Resumes the game timer
+    func resumeTimer() {
+        // If timer is not running and has time remaining, resume or start it
+        if !timerService.isRunning && timerService.timeRemaining > 0 {
+            timerService.resumeTimer()
+        }
     }
 
     // MARK: - Private Methods

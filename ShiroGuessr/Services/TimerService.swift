@@ -10,6 +10,9 @@ final class TimerService {
     /// Remaining time in seconds
     private(set) var timeRemaining: Int = 0
 
+    /// Whether the timer is currently running
+    private(set) var isRunning = false
+
     // MARK: - Private Properties
 
     /// Callback to execute when timer reaches zero
@@ -18,14 +21,21 @@ final class TimerService {
     /// Timer publisher
     private var timerCancellable: AnyCancellable?
 
-    /// Whether the timer is currently running
-    private var isRunning = false
-
     // MARK: - Initialization
 
     nonisolated init() {}
 
     // MARK: - Public Methods
+
+    /// Sets the timer duration without starting it
+    /// - Parameters:
+    ///   - seconds: Duration in seconds
+    ///   - onTimeout: Optional callback to execute when timer reaches zero
+    func setTime(seconds: Int, onTimeout: (() -> Void)? = nil) {
+        stopTimer()
+        timeRemaining = seconds
+        self.onTimeout = onTimeout
+    }
 
     /// Starts the timer with the specified duration
     /// - Parameters:
@@ -38,6 +48,29 @@ final class TimerService {
         self.onTimeout = onTimeout
         isRunning = true
 
+        timerCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                Task { @MainActor in
+                    self.tick()
+                }
+            }
+    }
+
+    /// Pauses the timer without clearing state
+    func pauseTimer() {
+        guard isRunning else { return }
+        timerCancellable?.cancel()
+        timerCancellable = nil
+        isRunning = false
+    }
+
+    /// Resumes the timer from paused state or starts it if not yet started
+    func resumeTimer() {
+        guard !isRunning, timeRemaining > 0 else { return }
+
+        isRunning = true
         timerCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
