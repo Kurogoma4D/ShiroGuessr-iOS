@@ -34,9 +34,6 @@ struct TutorialBottomSheet: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Drag handle
-            dragHandle
-
             // Content
             TabView(selection: $currentPage) {
                 ForEach(0..<pages.count, id: \.self) { index in
@@ -46,13 +43,10 @@ struct TutorialBottomSheet: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
-            .frame(height: 420)
 
             // Bottom action
             actionButton
         }
-        .background(Color.mdSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 28))
     }
 
     private var dragHandle: some View {
@@ -83,8 +77,8 @@ struct TutorialBottomSheet: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
         }
         .padding(.horizontal, 24)
-        .padding(.bottom, 32)
-        .padding(.top, 16)
+        .padding(.bottom, 24)
+        .padding(.top, 8)
     }
 }
 
@@ -125,7 +119,6 @@ struct TutorialPageView: View {
 
             Spacer()
         }
-        .padding(.vertical, 24)
     }
 }
 

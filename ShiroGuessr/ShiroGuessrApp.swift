@@ -36,7 +36,7 @@ struct RootView: View {
         }
         .sheet(isPresented: $tutorialManager.shouldShowTutorial) {
             TutorialBottomSheet(isPresented: $tutorialManager.shouldShowTutorial)
-                .presentationDetents([.medium])
+                .presentationDetents([.large])
                 .presentationDragIndicator(.hidden)
                 .interactiveDismissDisabled()
         }
