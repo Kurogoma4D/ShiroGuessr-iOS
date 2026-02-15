@@ -41,3 +41,13 @@
 "share.score" = "スコア:";
 "share.round" = "ラウンド%d:";
 "share.distance" = "距離:";
+
+// MARK: - Tutorial
+"tutorial.welcome" = "白Guessrへようこそ！";
+"tutorial.welcomeDescription" = "無数の白の中から、本当の白を見つけられますか？あなたの色覚を試す挑戦的なゲームです。";
+"tutorial.howToPlay" = "遊び方";
+"tutorial.howToPlayDescription" = "グラデーションマップに隠された目標の色があります。マップをタップして、目標の色がどこにあるか当ててください。近ければ近いほど、高得点！";
+"tutorial.gameModes" = "2つのゲームモード";
+"tutorial.gameModesDescription" = "クラシックモードは単一のグラデーションマップ、マップモードは様々なグラデーションパターンが楽しめます。各モードで5ラウンドの色探しを楽しみましょう！";
+"tutorial.next" = "次へ";
+"tutorial.getStarted" = "はじめる";
