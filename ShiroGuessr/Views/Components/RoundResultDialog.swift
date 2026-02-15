@@ -106,31 +106,28 @@ struct RoundResultDialog: View {
             }
             .buttonStyle(.mdFilled)
         }
-        .padding(24)
-        .background(Color.mdSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 28))
-        .shadow(color: Color.mdShadow, radius: 8, x: 0, y: 4)
-        .padding(24)
+        .padding(.horizontal, 24)
+        .padding(.top, 48)
+        .padding(.bottom, 24)
+        .frame(maxWidth: .infinity)
     }
 }
 
 #Preview {
-    ZStack {
-        Color.mdScrim.ignoresSafeArea()
-
-        RoundResultDialog(
-            round: GameRound(
-                roundNumber: 1,
-                targetColor: RGBColor(r: 250, g: 248, b: 252),
-                selectedColor: RGBColor(r: 248, g: 250, b: 250),
-                distance: 6,
-                score: 800,
-                paletteColors: [],
-                pin: nil,
-                targetPin: nil,
-                timeRemaining: nil
-            ),
-            onNext: {}
-        )
-    }
+    RoundResultDialog(
+        round: GameRound(
+            roundNumber: 1,
+            targetColor: RGBColor(r: 250, g: 248, b: 252),
+            selectedColor: RGBColor(r: 248, g: 250, b: 250),
+            distance: 6,
+            score: 800,
+            paletteColors: [],
+            pin: nil,
+            targetPin: nil,
+            timeRemaining: nil
+        ),
+        onNext: {}
+    )
+    .presentationDetents([.medium])
+    .presentationDragIndicator(.visible)
 }

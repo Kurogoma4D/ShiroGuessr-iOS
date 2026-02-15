@@ -65,6 +65,8 @@ struct MapGameScreen: View {
                         viewModel.nextRound()
                     }
                 )
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
             }
         }
     }
