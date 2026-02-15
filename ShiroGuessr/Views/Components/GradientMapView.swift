@@ -11,6 +11,12 @@ struct GradientMapView: View {
     /// Optional target pin to show after submission
     var targetPin: Pin?
 
+    /// Whether to show target pin with pop-in animation
+    var showTargetPinAnimated: Bool = false
+
+    /// Progress of dashed line drawing (0-1)
+    var lineDrawProgress: CGFloat = 0.0
+
     /// Whether pin placement is enabled
     var isInteractionEnabled: Bool = true
 
@@ -40,6 +46,20 @@ struct GradientMapView: View {
                 handleTap(at: location)
             }
 
+            // Dashed line between user pin and target pin
+            if let userPin, let targetPin, lineDrawProgress > 0 {
+                DashedLinePath(
+                    from: CGPoint(x: userPin.coordinate.x, y: userPin.coordinate.y),
+                    to: CGPoint(x: targetPin.coordinate.x, y: targetPin.coordinate.y)
+                )
+                .trim(from: 0, to: lineDrawProgress)
+                .stroke(
+                    Color.mdOnSurface.opacity(0.6),
+                    style: StrokeStyle(lineWidth: 2, dash: [8, 6])
+                )
+                .animation(.easeOut(duration: 0.42), value: lineDrawProgress)
+            }
+
             // User pin
             if let userPin {
                 pinMarker(
@@ -51,11 +71,15 @@ struct GradientMapView: View {
 
             // Target pin (shown after submission)
             if let targetPin {
-                pinMarker(
-                    coordinate: targetPin.coordinate,
-                    color: .red,
-                    systemImage: "target"
-                )
+                if showTargetPinAnimated {
+                    AnimatedTargetPin(coordinate: targetPin.coordinate, mapSize: mapSize)
+                } else {
+                    pinMarker(
+                        coordinate: targetPin.coordinate,
+                        color: .red,
+                        systemImage: "target"
+                    )
+                }
             }
         }
         .frame(width: mapSize, height: mapSize)
@@ -168,6 +192,42 @@ struct GradientMapView: View {
 
         let coordinate = MapCoordinate(x: normalizedX, y: normalizedY)
         onPinPlacement?(coordinate)
+    }
+}
+
+// MARK: - Animated Target Pin
+
+/// Target pin that animates in with a spring pop-in effect
+private struct AnimatedTargetPin: View {
+    let coordinate: MapCoordinate
+    let mapSize: CGFloat
+
+    @State private var scale: CGFloat = 0.0
+
+    var body: some View {
+        let pinX = CGFloat(coordinate.x) * mapSize
+        let pinY = CGFloat(coordinate.y) * mapSize
+
+        Circle()
+            .fill(Color.red)
+            .frame(width: 16, height: 16)
+            .overlay(
+                Circle()
+                    .stroke(Color.white, lineWidth: 2)
+            )
+            .overlay(
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 4, height: 4)
+            )
+            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+            .scaleEffect(scale)
+            .position(x: pinX, y: pinY)
+            .onAppear {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.55)) {
+                    scale = 1.0
+                }
+            }
     }
 }
 
