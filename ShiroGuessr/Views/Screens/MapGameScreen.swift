@@ -106,7 +106,9 @@ struct MapGameScreen: View {
                     gradientMap: gradientMap,
                     userPin: currentRound.pin,
                     targetPin: viewModel.isRoundSubmitted ? currentRound.targetPin : nil,
-                    isInteractionEnabled: !viewModel.isRoundSubmitted,
+                    showTargetPinAnimated: viewModel.showTargetPin,
+                    lineDrawProgress: viewModel.lineDrawProgress,
+                    isInteractionEnabled: !viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
                     onPinPlacement: { coordinate in
                         viewModel.placePin(at: coordinate)
                     }
@@ -117,8 +119,8 @@ struct MapGameScreen: View {
 
                 // Game controls
                 GameControls(
-                    canSubmit: viewModel.hasPinPlaced,
-                    canProceed: viewModel.isRoundSubmitted,
+                    canSubmit: viewModel.hasPinPlaced && !viewModel.isAnimatingResult,
+                    canProceed: viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
                     onSubmit: {
                         viewModel.submitGuess()
                     },

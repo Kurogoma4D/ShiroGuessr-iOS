@@ -17,6 +17,13 @@ final class MapGameViewModel {
     private(set) var currentGradientMap: GradientMap?
     var showingResult = false
 
+    // MARK: - Animation State
+
+    private(set) var isAnimatingResult = false
+    private(set) var showTargetPin = false
+    private(set) var lineDrawProgress: CGFloat = 0.0
+    private var animationTask: Task<Void, Never>?
+
     // MARK: - Constants
 
     private let totalRounds = 5
@@ -93,6 +100,9 @@ final class MapGameViewModel {
 
         // Reset UI state
         showingResult = false
+        animationTask?.cancel()
+        animationTask = nil
+        resetAnimationState()
 
         // Start timer if requested, otherwise just set the time
         if startTimer {
@@ -127,7 +137,8 @@ final class MapGameViewModel {
     func submitGuess() {
         guard let gameState,
               hasPinPlaced,
-              !isRoundSubmitted else {
+              !isRoundSubmitted,
+              !isAnimatingResult else {
             return
         }
 
@@ -140,19 +151,24 @@ final class MapGameViewModel {
             timeRemaining: timerService.timeRemaining
         )
 
-        // Show result dialog
-        showingResult = true
+        // Start result animation sequence
+        startResultAnimation()
     }
 
     /// Proceeds to the next round or completes the game
     func nextRound() {
         guard let gameState else { return }
 
+        // Cancel any running animation
+        animationTask?.cancel()
+        animationTask = nil
+
         // Advance to next round
         self.gameState = mapGameService.nextRound(gameState: gameState)
 
-        // Reset result dialog
+        // Reset result dialog and animation state
         showingResult = false
+        resetAnimationState()
 
         // Check if game is completed
         if let updatedGameState = self.gameState,
@@ -219,7 +235,34 @@ final class MapGameViewModel {
             gradientMap: currentGradientMap
         )
 
-        // Show result dialog
-        showingResult = true
+        // Start result animation sequence
+        startResultAnimation()
+    }
+
+    /// Starts the result animation sequence (pin pop-in → dashed line → result sheet)
+    private func startResultAnimation() {
+        isAnimatingResult = true
+        animationTask = Task {
+            // Phase 1: Show target pin with spring animation (0ms)
+            showTargetPin = true
+
+            // Phase 2: Draw dashed line (180ms delay)
+            try? await Task.sleep(for: .milliseconds(180))
+            guard !Task.isCancelled else { return }
+            lineDrawProgress = 1.0
+
+            // Phase 3: Show result sheet (700ms from start)
+            try? await Task.sleep(for: .milliseconds(520))
+            guard !Task.isCancelled else { return }
+            showingResult = true
+            isAnimatingResult = false
+        }
+    }
+
+    /// Resets animation state for the next round
+    private func resetAnimationState() {
+        isAnimatingResult = false
+        showTargetPin = false
+        lineDrawProgress = 0.0
     }
 }
