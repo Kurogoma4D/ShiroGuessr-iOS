@@ -7,9 +7,7 @@
 
 import SwiftUI
 import Combine
-#if !TESTING
 import GoogleMobileAds
-#endif
 
 enum GameMode {
     case classicMode
@@ -67,8 +65,13 @@ extension Notification.Name {
 
 @main
 struct ShiroGuessrApp: App {
+    private static var isRunningTests: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
+
     init() {
-        #if !TESTING
+        guard !Self.isRunningTests else { return }
+
         // Initialize Google Mobile Ads SDK
         MobileAds.shared.start()
 
@@ -76,7 +79,6 @@ struct ShiroGuessrApp: App {
         Task { @MainActor in
             InterstitialAdManager.shared.loadAd()
         }
-        #endif
     }
 
     var body: some Scene {
