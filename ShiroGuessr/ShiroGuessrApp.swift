@@ -16,9 +16,11 @@ enum GameMode {
 }
 
 struct RootView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @State private var currentMode: GameMode = .mapMode
     @StateObject private var tutorialManager = TutorialManager.shared
     @State private var mapGameViewModel: MapGameViewModel?
+    @State private var hasRequestedATT = false
 
     var body: some View {
         Group {
@@ -33,8 +35,13 @@ struct RootView: View {
                     }
             }
         }
-        .task {
-            await requestTrackingAuthorizationAndInitializeAds()
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active && !hasRequestedATT {
+                hasRequestedATT = true
+                Task {
+                    await requestTrackingAuthorizationAndInitializeAds()
+                }
+            }
         }
         .sheet(isPresented: $tutorialManager.shouldShowTutorial) {
             TutorialBottomSheet(isPresented: $tutorialManager.shouldShowTutorial)
@@ -69,7 +76,7 @@ struct RootView: View {
         }
 
         // Initialize ads after ATT authorization is resolved (regardless of result)
-        MobileAds.shared.start()
+        await MobileAds.shared.start()
         InterstitialAdManager.shared.loadAd()
     }
 }
