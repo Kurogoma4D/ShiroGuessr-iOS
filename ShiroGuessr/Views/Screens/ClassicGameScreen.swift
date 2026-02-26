@@ -122,8 +122,9 @@ struct ClassicGameScreen: View {
                             viewModel.nextRound()
                         }
                     )
-                    .presentationDetents([.medium])
+                    .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
+                    .modifier(FormPresentationSizingModifier())
                 }
             }
         }
