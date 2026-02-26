@@ -36,6 +36,16 @@ jobs:
         echo "$ASC_SECRET_KEY" | base64 --decode > ~/private_keys/AuthKey_$ASC_KEY_ID.p8
         chmod 600 ~/private_keys/AuthKey_$ASC_KEY_ID.p8
 
+        # fastlane用のAPI Key JSONファイルを作成
+        cat > ~/private_keys/api_key.json <<EOF
+        {
+          "key_id": "$ASC_KEY_ID",
+          "issuer_id": "$ASC_ISSUER_ID",
+          "key_filepath": "$HOME/private_keys/AuthKey_$ASC_KEY_ID.p8",
+          "in_house": false
+        }
+        EOF
+
     - name: Increment Build Number
       run: |
         # GitHub run numberを使用してビルド番号を設定
@@ -95,14 +105,9 @@ jobs:
         bundler-cache: true
 
     - name: Upload to TestFlight
-      env:
-        ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-        ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       run: |
         bundle exec fastlane pilot upload \
-          --api_key_path ~/private_keys/AuthKey_$ASC_KEY_ID.p8 \
-          --api_key_id $ASC_KEY_ID \
-          --api_key_issuer_id $ASC_ISSUER_ID \
+          --api_key_path ~/private_keys/api_key.json \
           --ipa build/ShiroGuessr.ipa \
           --skip_waiting_for_build_processing
 
