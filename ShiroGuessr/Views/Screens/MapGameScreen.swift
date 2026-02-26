@@ -4,6 +4,8 @@ import SwiftUI
 struct MapGameScreen: View {
     var onModeToggle: (() -> Void)? = nil
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     @State private var viewModel = MapGameViewModel()
     @State private var hasStartedGame = false
 
@@ -101,18 +103,28 @@ struct MapGameScreen: View {
                 // Target color display
                 targetColorView(color: currentRound.targetColor)
 
-                // Gradient map view
-                GradientMapView(
-                    gradientMap: gradientMap,
-                    userPin: currentRound.pin,
-                    targetPin: viewModel.isRoundSubmitted ? currentRound.targetPin : nil,
-                    showTargetPinAnimated: viewModel.showTargetPin,
-                    lineDrawProgress: viewModel.lineDrawProgress,
-                    isInteractionEnabled: !viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
-                    onPinPlacement: { coordinate in
-                        viewModel.placePin(at: coordinate)
-                    }
-                )
+                // Gradient map view with adaptive sizing for iPad
+                GeometryReader { geometry in
+                    let availableWidth = geometry.size.width - 32 // account for horizontal padding
+                    let mapSize: CGFloat = horizontalSizeClass == .regular
+                        ? min(availableWidth, 500)
+                        : min(availableWidth, 300)
+
+                    GradientMapView(
+                        gradientMap: gradientMap,
+                        userPin: currentRound.pin,
+                        targetPin: viewModel.isRoundSubmitted ? currentRound.targetPin : nil,
+                        showTargetPinAnimated: viewModel.showTargetPin,
+                        lineDrawProgress: viewModel.lineDrawProgress,
+                        mapSize: mapSize,
+                        isInteractionEnabled: !viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
+                        onPinPlacement: { coordinate in
+                            viewModel.placePin(at: coordinate)
+                        }
+                    )
+                    .frame(maxWidth: .infinity)
+                }
+                .frame(height: horizontalSizeClass == .regular ? 500 : 300)
                 .padding(.horizontal, 16)
 
                 Spacer(minLength: 8)
