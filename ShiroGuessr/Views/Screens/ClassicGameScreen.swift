@@ -3,7 +3,9 @@ import SwiftUI
 /// Main screen for classic game mode
 struct ClassicGameScreen: View {
     var onModeToggle: (() -> Void)? = nil
-    
+
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     @State private var viewModel = GameViewModel()
     
     var body: some View {
@@ -122,7 +124,8 @@ struct ClassicGameScreen: View {
                             viewModel.nextRound()
                         }
                     )
-                    .presentationDetents([.medium, .large])
+                    .presentationDetents([.medium, .large],
+                        selection: .constant(horizontalSizeClass == .regular ? .large : .medium))
                     .presentationDragIndicator(.visible)
                     .modifier(FormPresentationSizingModifier())
                 }

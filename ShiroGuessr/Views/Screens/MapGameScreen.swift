@@ -67,7 +67,8 @@ struct MapGameScreen: View {
                         viewModel.nextRound()
                     }
                 )
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.medium, .large],
+                    selection: .constant(horizontalSizeClass == .regular ? .large : .medium))
                 .presentationDragIndicator(.visible)
                 .modifier(FormPresentationSizingModifier())
             }
