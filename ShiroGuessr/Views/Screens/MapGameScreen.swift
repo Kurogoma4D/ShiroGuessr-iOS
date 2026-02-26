@@ -151,10 +151,6 @@ struct MapGameScreen: View {
                         .strokeBorder(Color.mdOutline, lineWidth: 1.5)
                 )
 
-            Text(color.toCSSString())
-                .font(.mdBodySmall)
-                .foregroundStyle(Color.mdOnSurfaceVariant)
-                .fontDesign(.monospaced)
         }
         .padding(12)
         .background(Color.mdSurfaceVariant.opacity(0.3))
