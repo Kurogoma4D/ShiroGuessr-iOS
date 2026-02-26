@@ -37,11 +37,12 @@ jobs:
         chmod 600 ~/private_keys/AuthKey_$ASC_KEY_ID.p8
 
         # fastlane用のAPI Key JSONファイルを作成
+        KEY_CONTENT=$(awk '{printf "%s\\n", $0}' ~/private_keys/AuthKey_$ASC_KEY_ID.p8)
         cat > ~/private_keys/api_key.json <<EOF
         {
           "key_id": "$ASC_KEY_ID",
           "issuer_id": "$ASC_ISSUER_ID",
-          "key_filepath": "$HOME/private_keys/AuthKey_$ASC_KEY_ID.p8",
+          "key": "$KEY_CONTENT",
           "in_house": false
         }
         EOF
