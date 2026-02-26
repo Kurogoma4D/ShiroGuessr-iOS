@@ -214,5 +214,7 @@
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>ShiroGuessr</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This app uses your data to provide personalized ads.</string>
 </dict>
 </plist>

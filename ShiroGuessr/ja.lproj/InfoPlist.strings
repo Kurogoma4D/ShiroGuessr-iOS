@@ -7,3 +7,4 @@
 */
 
 "CFBundleDisplayName" = "白Guessr";
+"NSUserTrackingUsageDescription" = "パーソナライズされた広告を表示するためにデータを使用します。";

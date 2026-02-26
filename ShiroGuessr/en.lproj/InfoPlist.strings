@@ -7,3 +7,4 @@
 */
 
 "CFBundleDisplayName" = "ShiroGuessr";
+"NSUserTrackingUsageDescription" = "This app uses your data to provide personalized ads.";

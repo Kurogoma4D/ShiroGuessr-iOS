@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import GoogleMobileAds
+import AppTrackingTransparency
 
 enum GameMode {
     case classicMode
@@ -15,9 +16,11 @@ enum GameMode {
 }
 
 struct RootView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @State private var currentMode: GameMode = .mapMode
     @StateObject private var tutorialManager = TutorialManager.shared
     @State private var mapGameViewModel: MapGameViewModel?
+    @State private var hasRequestedATT = false
 
     var body: some View {
         Group {
@@ -30,6 +33,14 @@ struct RootView: View {
                         // Store reference to access timer controls (this is a workaround)
                         // In production, consider using environment object or dependency injection
                     }
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active && !hasRequestedATT {
+                hasRequestedATT = true
+                Task {
+                    await requestTrackingAuthorizationAndInitializeAds()
+                }
             }
         }
         .sheet(isPresented: $tutorialManager.shouldShowTutorial) {
@@ -55,6 +66,19 @@ struct RootView: View {
     private func toggleMode() {
         currentMode = currentMode == .mapMode ? .classicMode : .mapMode
     }
+
+    private func requestTrackingAuthorizationAndInitializeAds() async {
+        guard !ShiroGuessrApp.isRunningTests else { return }
+
+        let status = ATTrackingManager.trackingAuthorizationStatus
+        if status == .notDetermined {
+            _ = await ATTrackingManager.requestTrackingAuthorization()
+        }
+
+        // Initialize ads after ATT authorization is resolved (regardless of result)
+        await MobileAds.shared.start()
+        InterstitialAdManager.shared.loadAd()
+    }
 }
 
 // MARK: - Notification Names
@@ -65,20 +89,8 @@ extension Notification.Name {
 
 @main
 struct ShiroGuessrApp: App {
-    private static var isRunningTests: Bool {
+    static var isRunningTests: Bool {
         ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-    }
-
-    init() {
-        guard !Self.isRunningTests else { return }
-
-        // Initialize Google Mobile Ads SDK
-        MobileAds.shared.start()
-
-        // Preload the first interstitial ad
-        Task { @MainActor in
-            InterstitialAdManager.shared.loadAd()
-        }
     }
 
     var body: some Scene {
