@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import GoogleMobileAds
+import AppTrackingTransparency
 
 enum GameMode {
     case classicMode
@@ -32,6 +33,9 @@ struct RootView: View {
                     }
             }
         }
+        .task {
+            await requestTrackingAuthorizationAndInitializeAds()
+        }
         .sheet(isPresented: $tutorialManager.shouldShowTutorial) {
             TutorialBottomSheet(isPresented: $tutorialManager.shouldShowTutorial)
                 .presentationDetents([.large])
@@ -55,6 +59,19 @@ struct RootView: View {
     private func toggleMode() {
         currentMode = currentMode == .mapMode ? .classicMode : .mapMode
     }
+
+    private func requestTrackingAuthorizationAndInitializeAds() async {
+        guard !ShiroGuessrApp.isRunningTests else { return }
+
+        let status = ATTrackingManager.trackingAuthorizationStatus
+        if status == .notDetermined {
+            _ = await ATTrackingManager.requestTrackingAuthorization()
+        }
+
+        // Initialize ads after ATT authorization is resolved (regardless of result)
+        MobileAds.shared.start()
+        InterstitialAdManager.shared.loadAd()
+    }
 }
 
 // MARK: - Notification Names
@@ -65,20 +82,8 @@ extension Notification.Name {
 
 @main
 struct ShiroGuessrApp: App {
-    private static var isRunningTests: Bool {
+    static var isRunningTests: Bool {
         ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-    }
-
-    init() {
-        guard !Self.isRunningTests else { return }
-
-        // Initialize Google Mobile Ads SDK
-        MobileAds.shared.start()
-
-        // Preload the first interstitial ad
-        Task { @MainActor in
-            InterstitialAdManager.shared.loadAd()
-        }
     }
 
     var body: some Scene {
