@@ -96,6 +96,7 @@ struct ShiroGuessrApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .preferredColorScheme(.light)
                 .onOpenURL { url in
                     handleUniversalLink(url)
                 }
