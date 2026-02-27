@@ -17,15 +17,14 @@ struct GradientMapView: View {
     /// Progress of dashed line drawing (0-1)
     var lineDrawProgress: CGFloat = 0.0
 
+    /// The size (width and height) of the square map canvas
+    var mapSize: CGFloat = 300
+
     /// Whether pin placement is enabled
     var isInteractionEnabled: Bool = true
 
     /// Callback when user taps to place a pin
     var onPinPlacement: ((MapCoordinate) -> Void)?
-
-    // MARK: - Constants
-
-    private let mapSize: CGFloat = 300
 
     // MARK: - Body
 
