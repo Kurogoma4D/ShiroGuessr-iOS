@@ -90,7 +90,7 @@ struct ShareServiceTests {
         // Should contain round numbers (language-agnostic check)
         #expect(shareText.contains("1:"))
         #expect(shareText.contains("5:"))
-        #expect(shareText.contains("https://shiro-guessr.pages.dev/ios"))
+        #expect(shareText.contains("https://shiro-guessr.pages.dev/app"))
         #expect(shareText.contains("#白Guessr"))
     }
 

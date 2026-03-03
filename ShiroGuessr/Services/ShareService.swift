@@ -21,7 +21,7 @@ class ShareService {
             text += "\(L10n.Share.round(round.roundNumber)) \(stars) (\(L10n.Share.distance) \(distance))\n"
         }
 
-        text += "\nhttps://shiro-guessr.pages.dev/ios\n\n"
+        text += "\nhttps://shiro-guessr.pages.dev/app\n\n"
         text += "#白Guessr"
 
         return text
