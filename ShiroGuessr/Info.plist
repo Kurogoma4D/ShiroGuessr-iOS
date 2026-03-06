@@ -4,15 +4,13 @@
 <dict>
 	<key>AdMobInterstitialAdUnitID</key>
 	<string>$(ADMOB_INTERSTITIAL_AD_UNIT_ID)</string>
-	<key>GADApplicationIdentifier</key>
-	<string>$(ADMOB_APP_ID)</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
 		<string>ja</string>
 	</array>
+	<key>GADApplicationIdentifier</key>
+	<string>$(ADMOB_APP_ID)</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
@@ -212,9 +210,5 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
-	<key>CFBundleDisplayName</key>
-	<string>ShiroGuessr</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This app uses your data to provide personalized ads.</string>
 </dict>
 </plist>
