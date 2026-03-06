@@ -16,60 +16,64 @@ struct ClassicGameScreen: View {
                 if let currentRound = viewModel.currentRound,
                    viewModel.isGameActive {
                     // Active game view
-                    VStack(spacing: 20) {
+                    VStack(spacing: 0) {
                         // Header
                         GameHeader(onModeButtonTap: {
                             onModeToggle?()
                         })
-                        
-                        // Score board
-                        ScoreBoard(
-                            currentRound: currentRound.roundNumber,
-                            totalRounds: 5,
-                            currentScore: viewModel.gameState?.totalScore ?? 0
-                        )
-                        
-                        // Target color display
-                        VStack(spacing: 12) {
-                            Text(L10n.Game.findThisColorColon)
-                                .font(.mdTitleMedium)
-                                .foregroundStyle(Color.mdOnSurface)
-                            
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(currentRound.targetColor.toColor())
-                                .frame(height: 80)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .strokeBorder(Color.mdOutline, lineWidth: 2)
+
+                        ScrollableIfNeeded {
+                            VStack(spacing: 20) {
+                                // Score board
+                                ScoreBoard(
+                                    currentRound: currentRound.roundNumber,
+                                    totalRounds: 5,
+                                    currentScore: viewModel.gameState?.totalScore ?? 0
                                 )
-                                .shadow(color: Color.mdShadow, radius: 4, x: 0, y: 2)
+
+                                // Target color display
+                                VStack(spacing: 12) {
+                                    Text(L10n.Game.findThisColorColon)
+                                        .font(.mdTitleMedium)
+                                        .foregroundStyle(Color.mdOnSurface)
+
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(currentRound.targetColor.toColor())
+                                        .frame(height: 80)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 16)
+                                                .strokeBorder(Color.mdOutline, lineWidth: 2)
+                                        )
+                                        .shadow(color: Color.mdShadow, radius: 4, x: 0, y: 2)
+                                        .padding(.horizontal, 16)
+                                }
+
+                                // Color palette
+                                ColorPalette(
+                                    colors: currentRound.paletteColors,
+                                    selectedColor: viewModel.selectedColor,
+                                    onColorSelected: { color in
+                                        viewModel.selectColor(color)
+                                    },
+                                    isEnabled: !viewModel.isRoundSubmitted
+                                )
                                 .padding(.horizontal, 16)
-                        }
-                        
-                        // Color palette
-                        ColorPalette(
-                            colors: currentRound.paletteColors,
-                            selectedColor: viewModel.selectedColor,
-                            onColorSelected: { color in
-                                viewModel.selectColor(color)
-                            },
-                            isEnabled: !viewModel.isRoundSubmitted
-                        )
-                        .padding(.horizontal, 16)
-                        
-                        // Controls
-                        GameControls(
-                            canSubmit: viewModel.hasSelectedColor && !viewModel.isRoundSubmitted,
-                            canProceed: viewModel.isRoundSubmitted,
-                            onSubmit: {
-                                viewModel.submitAnswer()
-                            },
-                            onNext: {
-                                viewModel.nextRound()
+
+                                // Controls
+                                GameControls(
+                                    canSubmit: viewModel.hasSelectedColor && !viewModel.isRoundSubmitted,
+                                    canProceed: viewModel.isRoundSubmitted,
+                                    onSubmit: {
+                                        viewModel.submitAnswer()
+                                    },
+                                    onNext: {
+                                        viewModel.nextRound()
+                                    }
+                                )
+
+                                Spacer(minLength: 20)
                             }
-                        )
-                        
-                        Spacer(minLength: 20)
+                        }
                     }
                 } else if let gameState = viewModel.gameState,
                           gameState.isCompleted {
