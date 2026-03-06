@@ -89,28 +89,25 @@ struct MapGameScreen: View {
                 onModeToggle?()
             })
 
-            VStack(spacing: 8) {
-                // Score board
-                ScoreBoard(
-                    currentRound: currentRound.roundNumber,
-                    totalRounds: gameState.rounds.count,
-                    currentScore: gameState.totalScore
-                )
+            ScrollableIfNeeded {
+                VStack(spacing: 8) {
+                    // Score board
+                    ScoreBoard(
+                        currentRound: currentRound.roundNumber,
+                        totalRounds: gameState.rounds.count,
+                        currentScore: gameState.totalScore
+                    )
 
-                // Timer display
-                TimerDisplay(timeRemaining: viewModel.timeRemaining)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.horizontal, 16)
+                    // Timer display
+                    TimerDisplay(timeRemaining: viewModel.timeRemaining)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.horizontal, 16)
 
-                // Target color display
-                targetColorView(color: currentRound.targetColor)
+                    // Target color display
+                    targetColorView(color: currentRound.targetColor)
 
-                // Gradient map view with adaptive sizing for iPad
-                GeometryReader { geometry in
-                    let availableWidth = geometry.size.width - 32 // account for horizontal padding
-                    let mapSize: CGFloat = horizontalSizeClass == .regular
-                        ? min(availableWidth, 500)
-                        : min(availableWidth, 300)
+                    // Gradient map view with adaptive sizing for iPad
+                    let mapSize: CGFloat = horizontalSizeClass == .regular ? 500 : 300
 
                     GradientMapView(
                         gradientMap: gradientMap,
@@ -124,25 +121,25 @@ struct MapGameScreen: View {
                             viewModel.placePin(at: coordinate)
                         }
                     )
+                    .frame(width: mapSize, height: mapSize)
                     .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
+
+                    Spacer(minLength: 8)
+
+                    // Game controls
+                    GameControls(
+                        canSubmit: viewModel.hasPinPlaced && !viewModel.isAnimatingResult,
+                        canProceed: viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
+                        onSubmit: {
+                            viewModel.submitGuess()
+                        },
+                        onNext: {
+                            viewModel.nextRound()
+                        }
+                    )
+                    .padding(.bottom, 16)
                 }
-                .frame(height: horizontalSizeClass == .regular ? 500 : 300)
-                .padding(.horizontal, 16)
-
-                Spacer(minLength: 8)
-
-                // Game controls
-                GameControls(
-                    canSubmit: viewModel.hasPinPlaced && !viewModel.isAnimatingResult,
-                    canProceed: viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
-                    onSubmit: {
-                        viewModel.submitGuess()
-                    },
-                    onNext: {
-                        viewModel.nextRound()
-                    }
-                )
-                .padding(.bottom, 16)
             }
         }
     }
