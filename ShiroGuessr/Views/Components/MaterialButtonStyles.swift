@@ -2,7 +2,12 @@ import SwiftUI
 
 // MARK: - Material Design 3 Button Styles
 
-/// Filled button style following Material Design 3
+/// Filled button style (Primary CTA) following Shiro Gallery design
+/// - Background: accentPrimary (#C9A96E)
+/// - Text: canvasDeep (#0D0D12)
+/// - Corner radius: 24dp
+/// - Press: scale(0.97) + darken 10%
+/// - Shadow: 0 2dp 8dp rgba(0,0,0,0.3)
 struct FilledButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
@@ -11,15 +16,21 @@ struct FilledButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .foregroundStyle(Color.mdOnPrimary)
-            .background(isEnabled ? Color.mdPrimary : Color.mdOnSurface.opacity(0.12))
+            .background(
+                isEnabled
+                    ? (configuration.isPressed
+                        ? Color.mdPrimary.opacity(0.9)
+                        : Color.mdPrimary)
+                    : Color.mdOnSurface.opacity(0.12)
+            )
             .clipShape(RoundedRectangle(cornerRadius: 24))
             .shadow(
-                color: configuration.isPressed ? Color.clear : Color.mdShadow,
-                radius: configuration.isPressed ? 0 : 2,
+                color: Color.black.opacity(0.3),
+                radius: 4,
                 x: 0,
-                y: configuration.isPressed ? 0 : 1
+                y: 2
             )
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
@@ -46,7 +57,10 @@ struct FilledTonalButtonStyle: ButtonStyle {
     }
 }
 
-/// Outlined button style following Material Design 3
+/// Outlined button style (Secondary) following Shiro Gallery design
+/// - Border: 1.5dp accentSecondary (#8B7A5E)
+/// - Text: accentPrimary
+/// - Press: background accentContainer + scale(0.97)
 struct OutlinedButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
@@ -55,15 +69,20 @@ struct OutlinedButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .foregroundStyle(isEnabled ? Color.mdPrimary : Color.mdOnSurface.opacity(0.38))
-            .background(Color.clear)
+            .background(
+                configuration.isPressed
+                    ? Color.mdPrimaryContainer
+                    : Color.clear
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 24))
             .overlay(
                 RoundedRectangle(cornerRadius: 24)
                     .strokeBorder(
-                        isEnabled ? Color.mdOutline : Color.mdOnSurface.opacity(0.12),
-                        lineWidth: 1
+                        isEnabled ? Color.mdSecondary : Color.mdOnSurface.opacity(0.12),
+                        lineWidth: 1.5
                     )
             )
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
@@ -90,7 +109,9 @@ struct ElevatedButtonStyle: ButtonStyle {
     }
 }
 
-/// Text button style following Material Design 3
+/// Text button style (Tertiary) following Shiro Gallery design
+/// - Text: textSecondary (#9995A0)
+/// - Press: textPrimary + underline
 struct TextButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
@@ -98,12 +119,15 @@ struct TextButtonStyle: ButtonStyle {
         configuration.label
             .padding(.vertical, 12)
             .padding(.horizontal, 16)
-            .foregroundStyle(isEnabled ? Color.mdPrimary : Color.mdOnSurface.opacity(0.38))
-            .background(
-                configuration.isPressed ?
-                    Color.mdPrimary.opacity(0.08) :
-                    Color.clear
+            .foregroundStyle(
+                isEnabled
+                    ? (configuration.isPressed
+                        ? Color.mdOnSurface
+                        : Color.mdOnSurfaceVariant)
+                    : Color.mdOnSurface.opacity(0.38)
             )
+            .underline(configuration.isPressed)
+            .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }

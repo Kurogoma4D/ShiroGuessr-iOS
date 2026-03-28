@@ -88,8 +88,7 @@ struct RoundResultDialog: View {
                 .padding(.horizontal, 20)
             }
             .padding(.vertical, 16)
-            .background(Color.mdSurfaceVariant.opacity(0.3))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .cardPanelStyle()
 
             // Next button
             Button {
