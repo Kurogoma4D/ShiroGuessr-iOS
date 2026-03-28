@@ -148,24 +148,11 @@ struct MapGameScreen: View {
 
     @ViewBuilder
     private func targetColorView(color: RGBColor) -> some View {
-        VStack(spacing: 6) {
-            Text(L10n.Game.findThisColor)
-                .font(.mdBodyLarge)
-                .foregroundStyle(Color.mdOnSurface)
-                .fontWeight(.semibold)
-
-            RoundedRectangle(cornerRadius: 8)
-                .fill(color.toColor())
-                .frame(height: 50)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .strokeBorder(Color.mdOutline, lineWidth: 1.5)
-                )
-
-        }
-        .padding(12)
-        .background(Color.mdSurfaceVariant.opacity(0.3))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        TargetColorFrame(
+            color: color,
+            height: 50,
+            showCSSValue: false
+        )
         .padding(.horizontal, 16)
     }
 

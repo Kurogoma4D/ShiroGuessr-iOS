@@ -31,22 +31,13 @@ struct ClassicGameScreen: View {
                                     currentScore: viewModel.gameState?.totalScore ?? 0
                                 )
 
-                                // Target color display
-                                VStack(spacing: 12) {
-                                    Text(L10n.Game.findThisColorColon)
-                                        .font(.mdTitleMedium)
-                                        .foregroundStyle(Color.mdOnSurface)
-
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .fill(currentRound.targetColor.toColor())
-                                        .frame(height: 80)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 16)
-                                                .strokeBorder(Color.mdOutline, lineWidth: 2)
-                                        )
-                                        .shadow(color: Color.mdShadow, radius: 4, x: 0, y: 2)
-                                        .padding(.horizontal, 16)
-                                }
+                                // Target color display — gallery frame style
+                                TargetColorFrame(
+                                    color: currentRound.targetColor,
+                                    height: 80,
+                                    showCSSValue: false
+                                )
+                                .padding(.horizontal, 16)
 
                                 // Color palette
                                 ColorPalette(

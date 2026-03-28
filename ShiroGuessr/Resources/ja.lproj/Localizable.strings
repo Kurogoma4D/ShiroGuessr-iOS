@@ -12,8 +12,6 @@
 
 // MARK: - Game Screen
 "game.startGame" = "スタート";
-"game.findThisColor" = "この色を探そう";
-"game.findThisColorColon" = "この色を探そう:";
 "game.loading" = "読み込み中...";
 
 // MARK: - Game Controls
