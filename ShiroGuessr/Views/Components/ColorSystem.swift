@@ -40,10 +40,10 @@ extension Color {
     static let mdOnSecondaryContainer = Color(red: 0.910, green: 0.902, blue: 0.890)
 
     // MARK: - Tertiary (reuse secondary gold for consistency)
-    static let mdTertiary = Color(red: 0.545, green: 0.478, blue: 0.369)
-    static let mdOnTertiary = Color(red: 0.051, green: 0.051, blue: 0.071)
-    static let mdTertiaryContainer = Color(red: 0.145, green: 0.145, blue: 0.188)
-    static let mdOnTertiaryContainer = Color(red: 0.910, green: 0.902, blue: 0.890)
+    static let mdTertiary = mdSecondary
+    static let mdOnTertiary = mdOnSecondary
+    static let mdTertiaryContainer = mdSecondaryContainer
+    static let mdOnTertiaryContainer = mdOnSecondaryContainer
 
     // MARK: - Error / Feedback
     /// Low score / error — muted red (#C87E7E)
@@ -55,6 +55,8 @@ extension Color {
     static let mdOnErrorContainer = Color(red: 0.784, green: 0.494, blue: 0.494)
 
     // MARK: - On-Surface Text
+    /// Muted text (#5C5866)
+    static let textMuted = Color(red: 0.361, green: 0.345, blue: 0.400)
     /// Main text — slightly warm off-white (#E8E6E3)
     static let mdOnBackground = Color(red: 0.910, green: 0.902, blue: 0.890)
     /// Main text on surfaces (#E8E6E3)
@@ -87,10 +89,10 @@ extension Color {
     static let timerCritical = Color(red: 0.784, green: 0.494, blue: 0.494)
 
     // MARK: - Color Sample Display
-    /// Border around color samples (#3A3A45)
-    static let sampleBorder = Color(red: 0.227, green: 0.227, blue: 0.271)
-    /// Drop shadow for color samples (rgba(0,0,0,0.4))
-    static let sampleShadow = Color.black.opacity(0.4)
+    /// Border around color samples — alias for mdOutline (#3A3A45)
+    static let sampleBorder = mdOutline
+    /// Drop shadow for color samples — alias for mdShadow (rgba(0,0,0,0.4))
+    static let sampleShadow = mdShadow
     /// Neutral-gray mid-value frame for color sample areas (#787880)
     static let sampleFrame = Color(red: 0.471, green: 0.471, blue: 0.502)
 }
