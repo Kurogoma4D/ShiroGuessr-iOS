@@ -46,8 +46,8 @@ struct TimerDisplay: View {
                 .font(.title2)
 
             Text(formattedTime)
-                .font(.system(.title2, design: .monospaced))
-                .fontWeight(.medium)
+                .font(.custom("JetBrainsMono-Regular", size: 22))
+                .tabularFigures()
         }
         .foregroundColor(timerColor)
         .padding(.horizontal, 16)

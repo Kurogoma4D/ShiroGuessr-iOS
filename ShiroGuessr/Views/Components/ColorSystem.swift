@@ -97,30 +97,64 @@ extension Color {
     static let sampleFrame = Color(red: 0.471, green: 0.471, blue: 0.502)
 }
 
-/// Material Design 3 Typography Scale
+/// "Shiro Gallery" Typography Scale
+///
+/// Font pairing strategy:
+/// - **DM Serif Display** — Scores & large numbers (serif elegance for gallery aesthetic)
+/// - **Outfit** — Headlines & labels (geometric sans-serif, letter-spacing: +0.02em)
+/// - **JetBrains Mono** — CSS values & distance display (monospace for technical data)
+/// - **System font** — Body text (Hiragino Sans for Japanese support, reduces bundle size)
 extension Font {
-    // Display
-    static let mdDisplayLarge = Font.system(size: 57, weight: .regular)
-    static let mdDisplayMedium = Font.system(size: 45, weight: .regular)
-    static let mdDisplaySmall = Font.system(size: 36, weight: .regular)
+    // MARK: - Display (DM Serif Display — scores, large numbers)
+    /// 72pt — Hero score display (gold accent)
+    static let mdDisplayLarge = Font.custom("DMSerifDisplay-Regular", size: 72)
+    /// 48pt — Secondary score display
+    static let mdDisplayMedium = Font.custom("DMSerifDisplay-Regular", size: 48)
+    /// 36pt — Tertiary display
+    static let mdDisplaySmall = Font.custom("DMSerifDisplay-Regular", size: 36)
 
-    // Headline
-    static let mdHeadlineLarge = Font.system(size: 32, weight: .regular)
-    static let mdHeadlineMedium = Font.system(size: 28, weight: .regular)
-    static let mdHeadlineSmall = Font.system(size: 24, weight: .regular)
+    // MARK: - Headline (Outfit Bold/SemiBold — titles, headings)
+    /// 32pt Bold — Primary heading
+    static let mdHeadlineLarge = Font.custom("Outfit", size: 32).weight(.bold)
+    /// 28pt SemiBold — Secondary heading
+    static let mdHeadlineMedium = Font.custom("Outfit", size: 28).weight(.semibold)
+    /// 24pt SemiBold — Tertiary heading
+    static let mdHeadlineSmall = Font.custom("Outfit", size: 24).weight(.semibold)
 
-    // Title
-    static let mdTitleLarge = Font.system(size: 22, weight: .medium)
-    static let mdTitleMedium = Font.system(size: 16, weight: .medium)
-    static let mdTitleSmall = Font.system(size: 14, weight: .medium)
+    // MARK: - Title (Outfit Medium/SemiBold)
+    /// 22pt SemiBold — Large title
+    static let mdTitleLarge = Font.custom("Outfit", size: 22).weight(.semibold)
+    /// 16pt Medium — Medium title
+    static let mdTitleMedium = Font.custom("Outfit", size: 16).weight(.medium)
+    /// 14pt Medium — Small title
+    static let mdTitleSmall = Font.custom("Outfit", size: 14).weight(.medium)
 
-    // Body
+    // MARK: - Body (System font — Hiragino Sans for Japanese support)
+    /// 16pt Regular — Large body text
     static let mdBodyLarge = Font.system(size: 16, weight: .regular)
+    /// 14pt Regular — Medium body text
     static let mdBodyMedium = Font.system(size: 14, weight: .regular)
+    /// 12pt Regular — Small body text
     static let mdBodySmall = Font.system(size: 12, weight: .regular)
 
-    // Label
-    static let mdLabelLarge = Font.system(size: 14, weight: .medium)
-    static let mdLabelMedium = Font.system(size: 12, weight: .medium)
-    static let mdLabelSmall = Font.system(size: 11, weight: .medium)
+    // MARK: - Label (Outfit Medium — UI labels, buttons)
+    /// 14pt Medium — Large label
+    static let mdLabelLarge = Font.custom("Outfit", size: 14).weight(.medium)
+    /// 12pt Medium — Medium label
+    static let mdLabelMedium = Font.custom("Outfit", size: 12).weight(.medium)
+    /// 11pt Medium — Small label
+    static let mdLabelSmall = Font.custom("Outfit", size: 11).weight(.medium)
+
+    // MARK: - Monospace (JetBrains Mono — CSS values, distances)
+    /// 12pt — Technical data display (use with textMuted color)
+    static let mdMono = Font.custom("JetBrainsMono-Regular", size: 12)
+
+}
+
+extension View {
+    /// Applies tabular (monospaced) digit rendering for number alignment.
+    /// Use on score displays to prevent digit shifting during count-up animations.
+    func tabularFigures() -> some View {
+        monospacedDigit()
+    }
 }
