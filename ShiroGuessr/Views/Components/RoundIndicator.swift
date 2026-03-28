@@ -52,19 +52,29 @@ private struct RoundDot: View {
             .frame(width: 10, height: 10)
             .scaleEffect(state == .current && isPulsing ? 1.3 : 1.0)
             .opacity(state == .current && isPulsing ? 0.7 : 1.0)
-            .animation(
-                state == .current
-                    ? Animation.easeInOut(duration: 1.0).repeatForever(autoreverses: true)
-                    : .default,
-                value: isPulsing
-            )
             .onAppear {
-                if state == .current {
-                    isPulsing = true
+                guard state == .current else { return }
+                // Delay to avoid animating initial layout position
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation(
+                        .easeInOut(duration: 1.0).repeatForever(autoreverses: true)
+                    ) {
+                        isPulsing = true
+                    }
                 }
             }
             .onChange(of: state) { _, newState in
-                isPulsing = (newState == .current)
+                if newState == .current {
+                    withAnimation(
+                        .easeInOut(duration: 1.0).repeatForever(autoreverses: true)
+                    ) {
+                        isPulsing = true
+                    }
+                } else {
+                    withAnimation(.default) {
+                        isPulsing = false
+                    }
+                }
             }
     }
 }
