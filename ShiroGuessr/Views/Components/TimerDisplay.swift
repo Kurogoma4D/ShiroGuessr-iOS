@@ -30,11 +30,11 @@ struct TimerDisplay: View {
     /// Color for the timer display
     private var timerColor: Color {
         if isTimeout {
-            return .red
+            return .timerCritical
         } else if isWarning {
-            return .orange
+            return .timerWarning
         } else {
-            return .primary
+            return .mdOnSurface
         }
     }
 
