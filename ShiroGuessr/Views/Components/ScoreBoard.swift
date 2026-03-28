@@ -29,9 +29,9 @@ struct ScoreBoard: View {
                     .font(.mdLabelMedium)
                     .foregroundStyle(Color.mdOnSurfaceVariant)
                 Text("\(currentScore)")
-                    .font(.mdTitleLarge)
+                    .font(.mdDisplaySmall)
                     .foregroundStyle(Color.mdPrimary)
-                    .fontWeight(.semibold)
+                    .tabularFigures()
             }
 
             Spacer()

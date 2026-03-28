@@ -30,9 +30,8 @@ struct RoundResultDialog: View {
                         )
 
                     Text(round.targetColor.toCSSString())
-                        .font(.mdBodySmall)
-                        .foregroundStyle(Color.mdOnSurfaceVariant)
-                        .fontDesign(.monospaced)
+                        .font(.mdMono)
+                        .foregroundStyle(Color.textMuted)
                 }
 
                 // Selected color
@@ -51,9 +50,8 @@ struct RoundResultDialog: View {
                             )
 
                         Text(selectedColor.toCSSString())
-                            .font(.mdBodySmall)
-                            .foregroundStyle(Color.mdOnSurfaceVariant)
-                            .fontDesign(.monospaced)
+                            .font(.mdMono)
+                            .foregroundStyle(Color.textMuted)
                     }
                 }
             }
@@ -67,9 +65,8 @@ struct RoundResultDialog: View {
                         .foregroundStyle(Color.mdOnSurface)
                     Spacer()
                     Text("\(round.distance ?? 0)")
-                        .font(.mdTitleMedium)
-                        .foregroundStyle(Color.mdOnSurface)
-                        .fontWeight(.semibold)
+                        .font(.mdMono)
+                        .foregroundStyle(Color.mdPrimary)
                 }
                 .padding(.horizontal, 20)
 
@@ -84,9 +81,9 @@ struct RoundResultDialog: View {
                         .foregroundStyle(Color.mdOnSurface)
                     Spacer()
                     Text("\(round.score ?? 0)")
-                        .font(.mdTitleLarge)
+                        .font(.mdDisplaySmall)
                         .foregroundStyle(Color.mdPrimary)
-                        .fontWeight(.bold)
+                        .tabularFigures()
                 }
                 .padding(.horizontal, 20)
             }

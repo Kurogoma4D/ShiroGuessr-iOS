@@ -33,9 +33,9 @@ struct ResultScreen: View {
                             .foregroundStyle(Color.mdOnSurfaceVariant)
 
                         Text("\(gameState.totalScore)")
-                            .font(.mdDisplayMedium)
+                            .font(.scoreDisplay)
                             .foregroundStyle(Color.mdPrimary)
-                            .fontWeight(.bold)
+                            .tabularFigures()
 
                         Text(L10n.Result.outOf5000)
                             .font(.mdBodyMedium)
@@ -175,9 +175,8 @@ private struct RoundResultCard: View {
                         .font(.mdBodySmall)
                         .foregroundStyle(Color.mdOnSurfaceVariant)
                     Text("\(round.distance ?? 0)")
-                        .font(.mdBodyMedium)
+                        .font(.mdMono)
                         .foregroundStyle(Color.mdOnSurface)
-                        .fontWeight(.medium)
                 }
 
                 HStack(spacing: 4) {
@@ -185,9 +184,8 @@ private struct RoundResultCard: View {
                         .font(.mdBodySmall)
                         .foregroundStyle(Color.mdOnSurfaceVariant)
                     Text("\(round.score ?? 0)")
-                        .font(.mdBodyMedium)
+                        .font(.mdMono)
                         .foregroundStyle(Color.mdPrimary)
-                        .fontWeight(.semibold)
                 }
             }
         }
