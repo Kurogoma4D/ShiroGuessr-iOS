@@ -12,12 +12,16 @@ struct GameHeader: View {
 
     var body: some View {
         HStack {
-            // Small logo mark — minimal branding during gameplay
-            Text("白G")
-                .font(.mdHeadlineSmall)
-                .foregroundStyle(Color.mdPrimary)
-                .fontWeight(.bold)
-                .accessibilityHidden(true)
+            // Logo mark during gameplay
+            HStack(spacing: 0) {
+                Text("白")
+                    .foregroundStyle(Color.mdPrimary)
+                Text("Guessr")
+                    .foregroundStyle(Color.mdOnSurface)
+            }
+            .font(.mdHeadlineSmall)
+            .fontWeight(.bold)
+            .accessibilityHidden(true)
 
             Spacer()
 
