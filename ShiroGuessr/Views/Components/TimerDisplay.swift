@@ -49,9 +49,7 @@ struct TimerDisplay: View {
 
     /// Color for the timer display
     private var timerColor: Color {
-        if isTimeout {
-            return .timerCritical
-        } else if isCritical {
+        if isCritical || isTimeout {
             return .timerCritical
         } else if isWarning {
             return .timerWarning
@@ -148,6 +146,7 @@ struct TimerDisplay: View {
 
     /// Starts a repeating pulse animation at the given speed
     private func startPulse(duration: Double) {
+        pulseScale = 1.0
         withAnimation(
             .easeInOut(duration: duration)
             .repeatForever(autoreverses: true)
