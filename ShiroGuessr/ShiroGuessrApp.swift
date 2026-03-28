@@ -26,9 +26,9 @@ struct RootView: View {
         Group {
             switch currentMode {
             case .classicMode:
-                ClassicGameScreen(onModeToggle: toggleMode)
+                ClassicGameScreen()
             case .mapMode:
-                MapGameScreen(onModeToggle: toggleMode)
+                MapGameScreen()
                     .onAppear {
                         // Store reference to access timer controls (this is a workaround)
                         // In production, consider using environment object or dependency injection

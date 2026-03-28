@@ -1,40 +1,77 @@
 import SwiftUI
 
-/// Header component displaying game title and mode toggle
+/// Minimal header component for gameplay screens.
+/// Shows a small logo mark on the left and an optional gold score display on the right.
+/// Mode toggle is intentionally omitted during gameplay (available only on start/result screens).
 struct GameHeader: View {
-    var onModeButtonTap: (() -> Void)? = nil
+    /// Current score to display. When nil, the score area is hidden.
+    var currentScore: Int? = nil
+
+    /// Controls the bounce animation scale effect.
+    @State private var scoreBounce: Bool = false
 
     var body: some View {
         HStack {
-            Text("白Guessr")
-                .font(.mdHeadlineLarge)
-                .foregroundStyle(Color.mdOnSurface)
+            // Small logo mark — minimal branding during gameplay
+            Text("白G")
+                .font(.mdHeadlineSmall)
+                .foregroundStyle(Color.mdPrimary)
                 .fontWeight(.bold)
 
             Spacer()
 
-            Button(action: {
-                onModeButtonTap?()
-            }) {
+            // Persistent gold score display in the top-right
+            if let score = currentScore {
                 HStack(spacing: 4) {
-                    Image(systemName: "gamecontroller")
-                        .font(.mdLabelMedium)
-                    Text("Mode")
-                        .font(.mdLabelMedium)
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.mdPrimary.opacity(0.7))
+
+                    Text("\(score)")
+                        .font(.mdDisplaySmall)
+                        .foregroundStyle(Color.mdPrimary)
+                        .fontWeight(.bold)
+                        .tabularFigures()
                 }
-                .foregroundStyle(Color.mdOnSecondaryContainer)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(Color.mdSecondaryContainer)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .scaleEffect(scoreBounce ? 1.2 : 1.0)
+                .animation(
+                    .spring(response: 0.4, dampingFraction: 0.5),
+                    value: scoreBounce
+                )
+                .onChange(of: score) { oldValue, newValue in
+                    if newValue > oldValue {
+                        triggerBounce()
+                    }
+                }
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 10)
         .background(Color.mdSurface)
+    }
+
+    /// Triggers a bounce animation by toggling the scale effect.
+    private func triggerBounce() {
+        scoreBounce = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(300))
+            scoreBounce = false
+        }
     }
 }
 
-#Preview {
-    GameHeader()
+#Preview("With Score") {
+    VStack(spacing: 0) {
+        GameHeader(currentScore: 2450)
+        Spacer()
+    }
+    .background(Color.mdBackground)
+}
+
+#Preview("Without Score") {
+    VStack(spacing: 0) {
+        GameHeader()
+        Spacer()
+    }
+    .background(Color.mdBackground)
 }

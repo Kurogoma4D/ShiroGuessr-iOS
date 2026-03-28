@@ -2,8 +2,6 @@ import SwiftUI
 
 /// Main screen for classic game mode
 struct ClassicGameScreen: View {
-    var onModeToggle: (() -> Void)? = nil
-
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var viewModel = GameViewModel()
@@ -17,18 +15,17 @@ struct ClassicGameScreen: View {
                    viewModel.isGameActive {
                     // Active game view
                     VStack(spacing: 0) {
-                        // Header
-                        GameHeader(onModeButtonTap: {
-                            onModeToggle?()
-                        })
+                        // Header with score — mode toggle hidden during gameplay
+                        GameHeader(
+                            currentScore: viewModel.gameState?.totalScore ?? 0
+                        )
 
                         ScrollableIfNeeded {
                             VStack(spacing: 20) {
-                                // Score board
+                                // Round indicator
                                 ScoreBoard(
                                     currentRound: currentRound.roundNumber,
-                                    totalRounds: 5,
-                                    currentScore: viewModel.gameState?.totalScore ?? 0
+                                    totalRounds: 5
                                 )
 
                                 // Target color display — gallery frame style
