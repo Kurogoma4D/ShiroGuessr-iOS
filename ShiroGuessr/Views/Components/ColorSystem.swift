@@ -147,31 +147,11 @@ extension Font {
 
     // MARK: - Monospace (JetBrains Mono — CSS values, distances)
     /// 12pt — Technical data display (use with textMuted color)
-    static let mdMono = Font.custom("JetBrains Mono", size: 12)
+    static let mdMono = Font.custom("JetBrainsMono-Regular", size: 12)
 
-    // MARK: - Score Display (DM Serif Display — hero element)
-    /// 72pt — Score number with tabular figures for count-up animation stability
-    static let scoreDisplay = Font.custom("DMSerifDisplay-Regular", size: 72)
-}
-
-// MARK: - Typography Tracking (Letter Spacing)
-
-/// View modifier for applying Outfit's recommended letter spacing (+0.02em)
-struct OutfitTracking: ViewModifier {
-    let fontSize: CGFloat
-
-    func body(content: Content) -> some View {
-        content.tracking(fontSize * 0.02)
-    }
 }
 
 extension View {
-    /// Applies the Outfit font's recommended letter spacing (+0.02em)
-    /// Use on views with Outfit font (headlines, titles, labels)
-    func outfitTracking(fontSize: CGFloat) -> some View {
-        modifier(OutfitTracking(fontSize: fontSize))
-    }
-
     /// Applies tabular (monospaced) digit rendering for number alignment.
     /// Use on score displays to prevent digit shifting during count-up animations.
     func tabularFigures() -> some View {

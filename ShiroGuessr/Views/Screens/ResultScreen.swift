@@ -33,7 +33,7 @@ struct ResultScreen: View {
                             .foregroundStyle(Color.mdOnSurfaceVariant)
 
                         Text("\(gameState.totalScore)")
-                            .font(.scoreDisplay)
+                            .font(.mdDisplayLarge)
                             .foregroundStyle(Color.mdPrimary)
                             .tabularFigures()
 
