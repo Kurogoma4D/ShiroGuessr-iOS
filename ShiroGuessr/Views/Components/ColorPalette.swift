@@ -79,17 +79,23 @@ private struct ColorCell: View {
             }
         }
         .scaleEffect(scaleValue)
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    guard isEnabled, !isPressed else { return }
+                    withAnimation(.easeOut(duration: 0.15)) {
+                        isPressed = true
+                    }
+                }
+                .onEnded { _ in
+                    guard isEnabled else { return }
+                    withAnimation(.easeOut(duration: 0.15)) {
+                        isPressed = false
+                    }
+                    onTap()
+                }
+        )
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isSelected)
-        .animation(.easeOut(duration: 0.15), value: isPressed)
-        .onTapGesture {
-            guard isEnabled else { return }
-            // Trigger sink effect
-            isPressed = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                isPressed = false
-            }
-            onTap()
-        }
     }
 }
 
