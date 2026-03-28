@@ -1,71 +1,126 @@
 import SwiftUI
 
 /// Component displaying a 5x5 grid of selectable colors
+/// Redesigned with gallery-style presentation: gold ring selection,
+/// tap sink effect, and elevated dark surface card.
 struct ColorPalette: View {
     let colors: [PaletteColor]
     let selectedColor: RGBColor?
     let onColorSelected: (RGBColor) -> Void
     let isEnabled: Bool
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 5)
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 8) {
+        LazyVGrid(columns: columns, spacing: 10) {
             ForEach(colors.indices, id: \.self) { index in
                 let color = colors[index].color
                 ColorCell(
                     color: color,
                     isSelected: selectedColor == color,
-                    isEnabled: isEnabled
-                )
-                .onTapGesture {
-                    if isEnabled {
-                        onColorSelected(color)
+                    isEnabled: isEnabled,
+                    onTap: {
+                        if isEnabled {
+                            onColorSelected(color)
+                        }
                     }
-                }
+                )
             }
         }
         .padding(16)
-        .background(Color.mdSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: Color.mdShadow, radius: 2, x: 0, y: 1)
+        .cardPanelStyle()
     }
 }
 
-/// Individual color cell in the palette
+/// Individual color cell in the palette with gallery-style interactions
 private struct ColorCell: View {
     let color: RGBColor
     let isSelected: Bool
     let isEnabled: Bool
+    let onTap: () -> Void
+
+    @State private var isPressed = false
+
+    /// Scale factor: pressed -> 0.95, selected -> 1.05, default -> 1.0
+    private var scaleValue: CGFloat {
+        if isPressed {
+            return 0.95
+        } else if isSelected {
+            return 1.05
+        } else {
+            return 1.0
+        }
+    }
 
     var body: some View {
         ZStack {
             // Color background
             color.toColor()
                 .aspectRatio(1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 16)
                         .strokeBorder(
-                            isSelected ? Color.mdPrimary : Color.mdOutlineVariant,
-                            lineWidth: isSelected ? 3 : 1
+                            isSelected ? Color.mdPrimary : Color.sampleBorder,
+                            lineWidth: isSelected ? 2.5 : 1.5
                         )
+                )
+                .shadow(
+                    color: isSelected ? Color.mdPrimary.opacity(0.4) : Color.clear,
+                    radius: isSelected ? 6 : 0,
+                    x: 0,
+                    y: 0
                 )
                 .opacity(isEnabled ? 1.0 : 0.5)
 
-            // Selection indicator
+            // Gold ring selection indicator
             if isSelected {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 20))
-                    .foregroundStyle(Color.mdPrimary)
-                    .background(
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 18, height: 18)
-                    )
+                GoldRingIndicator()
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: isSelected)
+        .scaleEffect(scaleValue)
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    guard isEnabled, !isPressed else { return }
+                    withAnimation(.easeOut(duration: 0.15)) {
+                        isPressed = true
+                    }
+                }
+                .onEnded { _ in
+                    guard isEnabled else { return }
+                    withAnimation(.easeOut(duration: 0.15)) {
+                        isPressed = false
+                    }
+                    onTap()
+                }
+        )
+        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isSelected)
+    }
+}
+
+/// Animated gold ring indicator replacing the checkmark icon
+private struct GoldRingIndicator: View {
+    @State private var ringScale: CGFloat = 0.5
+    @State private var ringOpacity: Double = 0.0
+
+    var body: some View {
+        Circle()
+            .strokeBorder(Color.mdPrimary, lineWidth: 2.5)
+            .frame(width: 20, height: 20)
+            .background(
+                Circle()
+                    .fill(Color.mdPrimary.opacity(0.15))
+                    .frame(width: 20, height: 20)
+            )
+            .scaleEffect(ringScale)
+            .opacity(ringOpacity)
+            .onAppear {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                    ringScale = 1.0
+                    ringOpacity = 1.0
+                }
+            }
     }
 }
 
@@ -77,6 +132,7 @@ private struct ColorCell: View {
             VStack(spacing: 24) {
                 Text("Color Palette - Enabled")
                     .font(.mdTitleMedium)
+                    .foregroundStyle(Color.mdOnSurface)
 
                 ColorPalette(
                     colors: ColorService().getRandomPaletteColors(count: 25),
@@ -90,6 +146,7 @@ private struct ColorCell: View {
 
                 Text("Color Palette - Disabled")
                     .font(.mdTitleMedium)
+                    .foregroundStyle(Color.mdOnSurface)
 
                 ColorPalette(
                     colors: ColorService().getRandomPaletteColors(count: 25),
