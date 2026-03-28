@@ -1,5 +1,5 @@
 //
-//  TutorialBottomSheet.swift
+//  TutorialOverlay.swift
 //  ShiroGuessr
 //
 //  Full-screen overlay tutorial for first-time users.
@@ -369,9 +369,6 @@ private struct TutorialDiagramPage3: View {
 }
 
 // MARK: - Legacy Compatibility
-
-/// Type alias for backward compatibility with existing references
-typealias TutorialBottomSheet = TutorialOverlay
 
 // MARK: - Preview
 
