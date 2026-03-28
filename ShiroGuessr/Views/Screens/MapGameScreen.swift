@@ -106,23 +106,30 @@ struct MapGameScreen: View {
                     // Target color display
                     targetColorView(color: currentRound.targetColor)
 
-                    // Gradient map view with adaptive sizing for iPad
-                    let mapSize: CGFloat = horizontalSizeClass == .regular ? 500 : 300
+                    // Gradient map view with adaptive sizing
+                    // Map is the star of this mode — use a larger ratio of screen width
+                    GeometryReader { geometry in
+                        let availableWidth = geometry.size.width
+                        let mapSize: CGFloat = horizontalSizeClass == .regular
+                            ? min(availableWidth, 560)
+                            : min(availableWidth, 400)
 
-                    GradientMapView(
-                        gradientMap: gradientMap,
-                        userPin: currentRound.pin,
-                        targetPin: viewModel.isRoundSubmitted ? currentRound.targetPin : nil,
-                        showTargetPinAnimated: viewModel.showTargetPin,
-                        lineDrawProgress: viewModel.lineDrawProgress,
-                        mapSize: mapSize,
-                        isInteractionEnabled: !viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
-                        onPinPlacement: { coordinate in
-                            viewModel.placePin(at: coordinate)
-                        }
-                    )
-                    .frame(width: mapSize, height: mapSize)
-                    .frame(maxWidth: .infinity)
+                        GradientMapView(
+                            gradientMap: gradientMap,
+                            userPin: currentRound.pin,
+                            targetPin: viewModel.isRoundSubmitted ? currentRound.targetPin : nil,
+                            showTargetPinAnimated: viewModel.showTargetPin,
+                            lineDrawProgress: viewModel.lineDrawProgress,
+                            mapSize: mapSize,
+                            isInteractionEnabled: !viewModel.isRoundSubmitted && !viewModel.isAnimatingResult,
+                            onPinPlacement: { coordinate in
+                                viewModel.placePin(at: coordinate)
+                            }
+                        )
+                        .frame(width: mapSize, height: mapSize)
+                        .frame(maxWidth: .infinity)
+                    }
+                    .aspectRatio(1, contentMode: .fit)
                     .padding(.horizontal, 16)
 
                     Spacer(minLength: 8)
