@@ -2,8 +2,6 @@ import SwiftUI
 
 /// Screen for the map mode gameplay
 struct MapGameScreen: View {
-    var onModeToggle: (() -> Void)? = nil
-
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var viewModel = MapGameViewModel()

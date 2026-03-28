@@ -2,8 +2,6 @@ import SwiftUI
 
 /// Main screen for classic game mode
 struct ClassicGameScreen: View {
-    var onModeToggle: (() -> Void)? = nil
-
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var viewModel = GameViewModel()

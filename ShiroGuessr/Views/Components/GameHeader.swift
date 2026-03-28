@@ -7,8 +7,6 @@ struct GameHeader: View {
     /// Current score to display. When nil, the score area is hidden.
     var currentScore: Int? = nil
 
-    /// Tracks the previous score to detect point gains for bounce animation.
-    @State private var previousScore: Int = 0
     /// Controls the bounce animation scale effect.
     @State private var scoreBounce: Bool = false
 
@@ -44,7 +42,6 @@ struct GameHeader: View {
                     if newValue > oldValue {
                         triggerBounce()
                     }
-                    previousScore = newValue
                 }
             }
         }
@@ -56,7 +53,8 @@ struct GameHeader: View {
     /// Triggers a bounce animation by toggling the scale effect.
     private func triggerBounce() {
         scoreBounce = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(300))
             scoreBounce = false
         }
     }
