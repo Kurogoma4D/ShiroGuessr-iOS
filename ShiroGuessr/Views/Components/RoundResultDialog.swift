@@ -149,9 +149,8 @@ struct RoundResultDialog: View {
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel(
-                round.selectedColor != nil
-                    ? L10n.Accessibility.yourGuessColor(round.selectedColor!.toCSSString())
-                    : L10n.Accessibility.noGuess
+                round.selectedColor.map { L10n.Accessibility.yourGuessColor($0.toCSSString()) }
+                    ?? L10n.Accessibility.noGuess
             )
         }
     }

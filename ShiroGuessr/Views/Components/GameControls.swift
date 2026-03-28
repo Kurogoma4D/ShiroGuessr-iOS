@@ -25,7 +25,6 @@ struct GameControls: View {
                         Text(L10n.Controls.submitAnswer)
                     }
                     .font(.mdLabelLarge)
-                    .frame(minHeight: 44)
                 }
                 .buttonStyle(.mdFilled)
                 .disabled(!canSubmit || isSubmitting)
@@ -44,7 +43,6 @@ struct GameControls: View {
                         Image(systemName: "arrow.right.circle.fill")
                     }
                     .font(.mdLabelLarge)
-                    .frame(minHeight: 44)
                 }
                 .buttonStyle(.mdFilled)
             }
