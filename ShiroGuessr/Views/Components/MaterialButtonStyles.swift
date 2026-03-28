@@ -13,7 +13,7 @@ struct FilledButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 44)
             .padding(.vertical, 16)
             .foregroundStyle(Color.mdOnPrimary)
             .background(
@@ -41,7 +41,7 @@ struct FilledTonalButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 44)
             .padding(.vertical, 16)
             .foregroundStyle(isEnabled ? Color.mdOnSecondaryContainer : Color.mdOnSurface.opacity(0.38))
             .background(isEnabled ? Color.mdSecondaryContainer : Color.mdOnSurface.opacity(0.12))
@@ -66,7 +66,7 @@ struct OutlinedButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 44)
             .padding(.vertical, 16)
             .foregroundStyle(isEnabled ? Color.mdPrimary : Color.mdOnSurface.opacity(0.38))
             .background(
@@ -93,7 +93,7 @@ struct ElevatedButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 44)
             .padding(.vertical, 16)
             .foregroundStyle(isEnabled ? Color.mdPrimary : Color.mdOnSurface.opacity(0.38))
             .background(isEnabled ? Color.mdSurface : Color.mdOnSurface.opacity(0.12))
@@ -117,6 +117,7 @@ struct TextButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .frame(minHeight: 44)
             .padding(.vertical, 12)
             .padding(.horizontal, 16)
             .foregroundStyle(

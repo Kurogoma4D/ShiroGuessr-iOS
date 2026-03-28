@@ -55,8 +55,8 @@ extension Color {
     static let mdOnErrorContainer = Color(red: 0.784, green: 0.494, blue: 0.494)
 
     // MARK: - On-Surface Text
-    /// Muted text (#5C5866)
-    static let textMuted = Color(red: 0.361, green: 0.345, blue: 0.400)
+    /// Muted text (#7E7A90) — adjusted from #5C5866 for WCAG AA compliance (4.5:1+ on deep bg)
+    static let textMuted = Color(red: 0.494, green: 0.478, blue: 0.565)
     /// Main text — slightly warm off-white (#E8E6E3)
     static let mdOnBackground = Color(red: 0.910, green: 0.902, blue: 0.890)
     /// Main text on surfaces (#E8E6E3)
@@ -65,8 +65,8 @@ extension Color {
     static let mdOnSurfaceVariant = Color(red: 0.600, green: 0.584, blue: 0.627)
 
     // MARK: - Outline Colors
-    /// Border around color samples (#3A3A45)
-    static let mdOutline = Color(red: 0.227, green: 0.227, blue: 0.271)
+    /// Border around color samples (#4A4A58) — adjusted from #3A3A45 for better visual distinction
+    static let mdOutline = Color(red: 0.290, green: 0.290, blue: 0.345)
     /// Subtle separation border (#2A2A35)
     static let mdOutlineVariant = Color(red: 0.165, green: 0.165, blue: 0.208)
 

@@ -43,6 +43,29 @@
 "share.round" = "ラウンド%d:";
 "share.distance" = "距離:";
 
+// MARK: - Accessibility
+"accessibility.tapToStart" = "ダブルタップでこのモードを開始";
+"accessibility.currentScore" = "現在のスコア: %d点";
+"accessibility.roundProgress" = "ラウンド%d / %d";
+"accessibility.targetColor" = "目標の色: %@";
+"accessibility.colorPalette" = "カラーパレット";
+"accessibility.colorCell" = "色%d / %d、%@";
+"accessibility.tapToSelect" = "ダブルタップでこの色を選択";
+"accessibility.timeRemaining" = "残り%d秒";
+"accessibility.timerWarning" = "残り時間わずか";
+"accessibility.timerCritical" = "残り時間がほぼありません";
+"accessibility.gradientMap" = "グラデーションカラーマップ";
+"accessibility.tapToPlacePin" = "タップしてピンを配置";
+"accessibility.starRating" = "5つ星中%dつ星";
+"accessibility.roundScore" = "スコア: %d / %d";
+"accessibility.colorDistance" = "色の距離: %d";
+"accessibility.yourGuessColor" = "あなたの予想: %@";
+"accessibility.noGuess" = "色が選択されていません";
+"accessibility.totalScore" = "合計スコア: %d / %d";
+"accessibility.roundResult" = "ラウンド%d: %d点、星%dつ";
+"accessibility.submitHint" = "ダブルタップで回答を送信";
+"accessibility.tutorialPage" = "ページ%d / %d";
+
 // MARK: - Tutorial
 "tutorial.welcome" = "白Guessrへようこそ！";
 "tutorial.welcomeDescription" = "無数の白の中から、本当の白を見つけられますか？あなたの色覚を試す挑戦的なゲームです。";

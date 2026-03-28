@@ -25,11 +25,13 @@ struct GameControls: View {
                         Text(L10n.Controls.submitAnswer)
                     }
                     .font(.mdLabelLarge)
+                    .frame(minHeight: 44)
                 }
                 .buttonStyle(.mdFilled)
                 .disabled(!canSubmit || isSubmitting)
                 .scaleEffect(isSubmitting ? 0.95 : 1.0)
                 .animation(AnimationConstants.quickResponse, value: isSubmitting)
+                .accessibilityHint(canSubmit ? L10n.Accessibility.submitHint : "")
             }
 
             // Next button (shown after submitting answer)
@@ -42,6 +44,7 @@ struct GameControls: View {
                         Image(systemName: "arrow.right.circle.fill")
                     }
                     .font(.mdLabelLarge)
+                    .frame(minHeight: 44)
                 }
                 .buttonStyle(.mdFilled)
             }

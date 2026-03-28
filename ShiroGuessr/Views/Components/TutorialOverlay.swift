@@ -79,6 +79,8 @@ struct TutorialOverlay: View {
                     .animation(.easeInOut(duration: 0.3), value: currentPage)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L10n.Accessibility.tutorialPage(currentPage + 1, pageCount))
     }
 
     // MARK: - Action Button
@@ -95,6 +97,7 @@ struct TutorialOverlay: View {
             Text(currentPage < pageCount - 1 ? L10n.Tutorial.next : L10n.Tutorial.getStarted)
                 .font(.mdLabelLarge)
                 .frame(maxWidth: .infinity)
+                .frame(minHeight: 44)
                 .padding(.vertical, 18)
                 .foregroundStyle(Color.mdOnPrimary)
                 .background(Color.mdPrimary)

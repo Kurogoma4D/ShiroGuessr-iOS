@@ -17,6 +17,7 @@ struct GameHeader: View {
                 .font(.mdHeadlineSmall)
                 .foregroundStyle(Color.mdPrimary)
                 .fontWeight(.bold)
+                .accessibilityHidden(true)
 
             Spacer()
 
@@ -33,6 +34,8 @@ struct GameHeader: View {
                         .fontWeight(.bold)
                         .tabularFigures()
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(L10n.Accessibility.currentScore(score))
                 .scaleEffect(scoreBounce ? 1.2 : 1.0)
                 .animation(AnimationConstants.springBouncy, value: scoreBounce)
                 .onChange(of: score) { oldValue, newValue in

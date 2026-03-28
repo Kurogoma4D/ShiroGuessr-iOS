@@ -53,6 +53,8 @@ struct TargetColorFrame: View {
                     .padding(.top, 8)
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(L10n.Accessibility.targetColor(color.toCSSString()))
     }
 }
 
