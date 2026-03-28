@@ -30,6 +30,7 @@ struct GameControls: View {
                 .disabled(!canSubmit || isSubmitting)
                 .scaleEffect(isSubmitting ? 0.95 : 1.0)
                 .animation(AnimationConstants.quickResponse, value: isSubmitting)
+                .accessibilityHint(canSubmit ? L10n.Accessibility.submitHint : "")
             }
 
             // Next button (shown after submitting answer)

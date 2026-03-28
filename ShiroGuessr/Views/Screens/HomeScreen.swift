@@ -65,6 +65,7 @@ struct ModeSelectionCard: View {
                 // Mode icon with preview element
                 modePreview
                     .frame(width: 64, height: 64)
+                    .accessibilityHidden(true)
 
                 // Text content
                 VStack(alignment: .leading, spacing: 4) {
@@ -82,6 +83,7 @@ struct ModeSelectionCard: View {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(Color.mdSecondary)
+                    .accessibilityHidden(true)
             }
             .padding(20)
             .background(Color.mdSurface)
@@ -94,6 +96,8 @@ struct ModeSelectionCard: View {
             .matchedGeometryEffect(id: mode, in: namespace)
         }
         .buttonStyle(CardButtonStyle())
+        .accessibilityLabel("\(title), \(subtitle)")
+        .accessibilityHint(L10n.Accessibility.tapToStart)
     }
 
     @ViewBuilder
@@ -193,6 +197,7 @@ struct HomeScreen: View {
             AnimatedGradientBackground()
                 .ignoresSafeArea()
                 .opacity(isTransitioning ? 0 : 1)
+                .accessibilityHidden(true)
 
             // Content
             VStack(spacing: 0) {
@@ -245,6 +250,9 @@ struct HomeScreen: View {
                 .font(.mdHeadlineLarge)
                 .foregroundStyle(Color.mdOnSurface)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
+        .accessibilityLabel("ShiroGuessr")
         .opacity(isTransitioning ? 0 : 1)
     }
 

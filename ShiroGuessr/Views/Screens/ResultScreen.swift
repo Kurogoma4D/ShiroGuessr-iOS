@@ -53,6 +53,7 @@ struct ResultScreen: View {
                 GoldParticleView()
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
 
             ScrollView {
@@ -73,6 +74,7 @@ struct ResultScreen: View {
                 BurstEffectView(tier: burstTier)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
         }
         .onAppear {
@@ -123,6 +125,8 @@ struct ResultScreen: View {
             .scaleEffect(animateScore ? 1.0 : 0.8)
             .scaleEffect(showBurst ? 1.05 : 1.0)
             .opacity(animateScore ? 1.0 : 0.0)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(L10n.Accessibility.totalScore(gameState.totalScore, 5000))
         }
         .padding(.top, 32)
     }
@@ -486,6 +490,7 @@ private struct RoundResultCard: View {
                         .foregroundStyle(Color.mdPrimary)
                 }
             }
+            .accessibilityHidden(true)
 
             Spacer()
 
@@ -497,6 +502,12 @@ private struct RoundResultCard: View {
         .padding(12)
         .cardPanelStyle()
         .padding(.horizontal, 16)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L10n.Accessibility.roundResult(
+            round.roundNumber,
+            round.score ?? 0,
+            starRating
+        ))
     }
 }
 

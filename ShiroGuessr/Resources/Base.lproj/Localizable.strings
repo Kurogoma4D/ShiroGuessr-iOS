@@ -43,6 +43,29 @@
 "share.round" = "Round %d:";
 "share.distance" = "Distance:";
 
+// MARK: - Accessibility
+"accessibility.tapToStart" = "Double tap to start this game mode";
+"accessibility.currentScore" = "Current score: %d points";
+"accessibility.roundProgress" = "Round %d of %d";
+"accessibility.targetColor" = "Target color: %@";
+"accessibility.colorPalette" = "Color palette";
+"accessibility.colorCell" = "Color %d of %d, %@";
+"accessibility.tapToSelect" = "Double tap to select this color";
+"accessibility.timeRemaining" = "%d seconds remaining";
+"accessibility.timerWarning" = "Time running low";
+"accessibility.timerCritical" = "Time almost up";
+"accessibility.gradientMap" = "Gradient color map";
+"accessibility.tapToPlacePin" = "Tap to place your pin on the map";
+"accessibility.starRating" = "%d out of 5 stars";
+"accessibility.roundScore" = "Score: %d out of %d";
+"accessibility.colorDistance" = "Color distance: %d";
+"accessibility.yourGuessColor" = "Your guess: %@";
+"accessibility.noGuess" = "No color selected";
+"accessibility.totalScore" = "Total score: %d out of %d";
+"accessibility.roundResult" = "Round %d: %d points, %d stars";
+"accessibility.submitHint" = "Double tap to submit your answer";
+"accessibility.tutorialPage" = "Page %d of %d";
+
 // MARK: - Tutorial
 "tutorial.welcome" = "Welcome to 白Guessr!";
 "tutorial.welcomeDescription" = "Can you find the true white among countless shades? Test your color perception skills in this challenging game.";

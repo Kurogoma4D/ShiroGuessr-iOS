@@ -17,6 +17,8 @@ struct ColorPalette: View {
                 let color = colors[index].color
                 ColorCell(
                     color: color,
+                    index: index + 1,
+                    totalCount: colors.count,
                     isSelected: selectedColor == color,
                     isEnabled: isEnabled,
                     onTap: {
@@ -29,12 +31,15 @@ struct ColorPalette: View {
         }
         .padding(16)
         .cardPanelStyle()
+        .accessibilityLabel(L10n.Accessibility.colorPalette)
     }
 }
 
 /// Individual color cell in the palette with gallery-style interactions
 private struct ColorCell: View {
     let color: RGBColor
+    let index: Int
+    let totalCount: Int
     let isSelected: Bool
     let isEnabled: Bool
     let onTap: () -> Void
@@ -96,6 +101,13 @@ private struct ColorCell: View {
                 }
         )
         .animation(AnimationConstants.spring, value: isSelected)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L10n.Accessibility.colorCell(index, totalCount, color.toCSSString()))
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+        .accessibilityHint(isEnabled ? L10n.Accessibility.tapToSelect : "")
+        .accessibilityAction {
+            if isEnabled { onTap() }
+        }
     }
 }
 

@@ -120,6 +120,9 @@ struct TimerDisplay: View {
             .padding(.horizontal, 4)
         }
         .animation(AnimationConstants.tweenShort, value: timerColor)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(L10n.Accessibility.timeRemaining(timeRemaining))
+        .accessibilityValue(isCritical ? L10n.Accessibility.timerCritical : (isWarning ? L10n.Accessibility.timerWarning : ""))
         .onChange(of: timeRemaining) { _, newValue in
             updatePulseAnimation(for: newValue)
         }

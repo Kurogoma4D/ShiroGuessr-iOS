@@ -63,6 +63,55 @@ static let loading = NSLocalizedString("game.loading", comment: "Loading text")
         static let distance = NSLocalizedString("share.distance", comment: "Distance label for sharing")
     }
 
+    // MARK: - Accessibility
+    enum Accessibility {
+        static let tapToStart = NSLocalizedString("accessibility.tapToStart", comment: "Hint for mode selection")
+        static func currentScore(_ score: Int) -> String {
+            String(format: NSLocalizedString("accessibility.currentScore", comment: "Current score for VoiceOver"), score)
+        }
+        static func roundProgress(_ current: Int, _ total: Int) -> String {
+            String(format: NSLocalizedString("accessibility.roundProgress", comment: "Round progress for VoiceOver"), current, total)
+        }
+        static func targetColor(_ css: String) -> String {
+            String(format: NSLocalizedString("accessibility.targetColor", comment: "Target color for VoiceOver"), css)
+        }
+        static let colorPalette = NSLocalizedString("accessibility.colorPalette", comment: "Color palette label")
+        static func colorCell(_ index: Int, _ total: Int, _ css: String) -> String {
+            String(format: NSLocalizedString("accessibility.colorCell", comment: "Color cell for VoiceOver"), index, total, css)
+        }
+        static let tapToSelect = NSLocalizedString("accessibility.tapToSelect", comment: "Hint to tap color")
+        static func timeRemaining(_ seconds: Int) -> String {
+            String(format: NSLocalizedString("accessibility.timeRemaining", comment: "Time remaining for VoiceOver"), seconds)
+        }
+        static let timerWarning = NSLocalizedString("accessibility.timerWarning", comment: "Timer warning state")
+        static let timerCritical = NSLocalizedString("accessibility.timerCritical", comment: "Timer critical state")
+        static let gradientMap = NSLocalizedString("accessibility.gradientMap", comment: "Gradient map label")
+        static let tapToPlacePin = NSLocalizedString("accessibility.tapToPlacePin", comment: "Hint to place pin")
+        static func starRating(_ stars: Int) -> String {
+            String(format: NSLocalizedString("accessibility.starRating", comment: "Star rating for VoiceOver"), stars)
+        }
+        static func roundScore(_ score: Int, _ max: Int) -> String {
+            String(format: NSLocalizedString("accessibility.roundScore", comment: "Round score for VoiceOver"), score, max)
+        }
+        static func colorDistance(_ distance: Int) -> String {
+            String(format: NSLocalizedString("accessibility.colorDistance", comment: "Color distance for VoiceOver"), distance)
+        }
+        static func yourGuessColor(_ css: String) -> String {
+            String(format: NSLocalizedString("accessibility.yourGuessColor", comment: "Your guess color for VoiceOver"), css)
+        }
+        static let noGuess = NSLocalizedString("accessibility.noGuess", comment: "No guess made")
+        static func totalScore(_ score: Int, _ max: Int) -> String {
+            String(format: NSLocalizedString("accessibility.totalScore", comment: "Total score for VoiceOver"), score, max)
+        }
+        static func roundResult(_ round: Int, _ score: Int, _ stars: Int) -> String {
+            String(format: NSLocalizedString("accessibility.roundResult", comment: "Round result summary for VoiceOver"), round, score, stars)
+        }
+        static let submitHint = NSLocalizedString("accessibility.submitHint", comment: "Submit button hint")
+        static func tutorialPage(_ current: Int, _ total: Int) -> String {
+            String(format: NSLocalizedString("accessibility.tutorialPage", comment: "Tutorial page indicator"), current, total)
+        }
+    }
+
     // MARK: - Tutorial
     enum Tutorial {
         static let welcome = NSLocalizedString("tutorial.welcome", comment: "Tutorial welcome title")

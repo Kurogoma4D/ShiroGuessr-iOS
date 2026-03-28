@@ -84,6 +84,10 @@ struct GradientMapView: View {
         )
         // Subtle outer shadow
         .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L10n.Accessibility.gradientMap)
+        .accessibilityHint(isInteractionEnabled ? L10n.Accessibility.tapToPlacePin : "")
+        .accessibilityAddTraits(isInteractionEnabled ? .allowsDirectInteraction : .isImage)
     }
 
     // MARK: - Drawing Methods

@@ -104,12 +104,15 @@ struct RoundResultDialog: View {
                     .font(.mdMono)
                     .foregroundStyle(Color.textMuted)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(L10n.Accessibility.targetColor(round.targetColor.toCSSString()))
 
             // "vs" separator
             Text("vs")
                 .font(.mdLabelLarge)
                 .foregroundStyle(Color.mdOnSurfaceVariant)
                 .padding(.top, 20) // Align with circle centers
+                .accessibilityHidden(true)
 
             // Selected color circle
             VStack(spacing: 8) {
@@ -144,6 +147,11 @@ struct RoundResultDialog: View {
                         .foregroundStyle(Color.textMuted)
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(
+                round.selectedColor.map { L10n.Accessibility.yourGuessColor($0.toCSSString()) }
+                    ?? L10n.Accessibility.noGuess
+            )
         }
     }
 
@@ -161,6 +169,8 @@ struct RoundResultDialog: View {
                 .foregroundStyle(Color.mdPrimary)
                 .tabularFigures()
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(L10n.Accessibility.colorDistance(round.distance ?? 0))
     }
 
     // MARK: - Score Ring
@@ -196,6 +206,8 @@ struct RoundResultDialog: View {
                         .foregroundStyle(Color.mdOnSurfaceVariant)
                 }
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(L10n.Accessibility.roundScore(round.score ?? 0, 1000))
         }
     }
 
@@ -210,6 +222,8 @@ struct RoundResultDialog: View {
                     .foregroundStyle(Color.mdPrimary)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L10n.Accessibility.starRating(starRating))
     }
 }
 
