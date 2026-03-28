@@ -61,6 +61,11 @@ final class MapGameViewModel {
         timerService.timeRemaining
     }
 
+    /// Total time limit per round (used for progress bar calculation)
+    var totalTime: Int {
+        timeLimit
+    }
+
     // MARK: - Initialization
 
     nonisolated init(

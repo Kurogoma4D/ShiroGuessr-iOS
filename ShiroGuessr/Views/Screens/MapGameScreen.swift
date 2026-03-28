@@ -95,10 +95,13 @@ struct MapGameScreen: View {
                         totalRounds: gameState.rounds.count
                     )
 
-                    // Timer display
-                    TimerDisplay(timeRemaining: viewModel.timeRemaining)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.horizontal, 16)
+                    // Timer display — enhanced with progress bar and pulse effects
+                    TimerDisplay(
+                        timeRemaining: viewModel.timeRemaining,
+                        totalTime: viewModel.totalTime
+                    )
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.horizontal, 16)
 
                     // Target color display
                     targetColorView(color: currentRound.targetColor)
