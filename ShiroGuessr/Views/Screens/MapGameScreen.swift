@@ -5,24 +5,22 @@ struct MapGameScreen: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var viewModel = MapGameViewModel()
-    @State private var hasStartedGame = false
+    var onBackToHome: (() -> Void)?
 
     var body: some View {
         ZStack {
             Color.mdBackground
                 .ignoresSafeArea()
 
-            if !hasStartedGame && !TutorialManager.shared.shouldShowTutorial {
-                // Show start screen only if tutorial has been seen before
-                startScreen
-            } else if let gameState = viewModel.gameState {
+            if let gameState = viewModel.gameState {
                 if gameState.isCompleted {
                     // Show result screen
                     ResultScreen(
                         gameState: gameState,
                         onReplay: {
                             viewModel.resetGame()
-                        }
+                        },
+                        onBackToHome: onBackToHome
                     )
                 } else if let currentRound = viewModel.currentRound,
                           let gradientMap = viewModel.currentGradientMap {
@@ -33,6 +31,10 @@ struct MapGameScreen: View {
                         gradientMap: gradientMap
                     )
                 }
+            } else {
+                // Loading state — game starts immediately
+                ProgressView()
+                    .tint(Color.mdPrimary)
             }
         }
         .onAppear {
@@ -41,13 +43,11 @@ struct MapGameScreen: View {
 
                 if isTutorialShowing {
                     // First launch with tutorial: auto-start game without timer
-                    hasStartedGame = true
                     viewModel.startNewGame(startTimer: false)
-                } else if hasStartedGame {
-                    // Play Again scenario: auto-start with timer
+                } else {
+                    // Normal start: begin game with timer
                     viewModel.startNewGame(startTimer: true)
                 }
-                // Otherwise: show start screen (user needs to press start button)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .pauseGameTimer)) { _ in
@@ -158,64 +158,6 @@ struct MapGameScreen: View {
             showCSSValue: false
         )
         .padding(.horizontal, 16)
-    }
-
-    // MARK: - Start Screen
-
-    @ViewBuilder
-    private var startScreen: some View {
-        VStack(spacing: 24) {
-            Spacer()
-
-            // Icon
-            Image(systemName: "map.fill")
-                .font(.system(size: 80))
-                .foregroundStyle(Color.mdSecondary)
-                .symbolRenderingMode(.hierarchical)
-                .shadow(color: Color.mdShadow, radius: 8, x: 0, y: 4)
-
-            // Title
-            Text("白Guessr")
-                .font(.mdDisplayMedium)
-                .foregroundStyle(Color.mdOnSurface)
-                .fontWeight(.bold)
-
-            // Subtitle
-            Text(L10n.Home.mapMode)
-                .font(.mdHeadlineSmall)
-                .foregroundStyle(Color.mdOnSurfaceVariant)
-
-            // Description
-            Text(L10n.Home.tagline)
-                .font(.mdBodyLarge)
-                .foregroundStyle(Color.mdOnSurfaceVariant)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-
-            Spacer()
-
-            // Start button
-            Button {
-                hasStartedGame = true
-                // Always start timer when user presses start button
-                viewModel.startNewGame(startTimer: true)
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "play.fill")
-                        .font(.system(size: 16))
-                    Text(L10n.Game.startGame)
-                }
-                .font(.mdLabelLarge)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 18)
-                .foregroundStyle(Color.mdOnPrimary)
-                .background(Color.mdPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-            }
-            .padding(.horizontal, 32)
-            .padding(.bottom, 40)
-            .shadow(color: Color.mdShadow.opacity(0.3), radius: 8, x: 0, y: 4)
-        }
     }
 }
 

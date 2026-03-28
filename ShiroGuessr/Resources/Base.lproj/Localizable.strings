@@ -8,7 +8,9 @@
 // MARK: - Home Screen
 "home.tagline" = "Find the exact shade of white";
 "home.classicMode" = "Classic Mode";
+"home.classicModeSubtitle" = "Find it among 25 colors";
 "home.mapMode" = "Map Mode";
+"home.mapModeSubtitle" = "Locate it in 60 seconds";
 
 // MARK: - Game Screen
 "game.startGame" = "Start Game";
@@ -34,6 +36,7 @@
 "result.playAgain" = "Play Again";
 "result.share" = "Share Results";
 "result.copyToClipboard" = "Copy to Clipboard";
+"result.home" = "Home";
 
 // MARK: - Share Service
 "share.score" = "Score:";

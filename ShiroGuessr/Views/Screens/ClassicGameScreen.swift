@@ -5,12 +5,13 @@ struct ClassicGameScreen: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var viewModel = GameViewModel()
-    
+    var onBackToHome: (() -> Void)?
+
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.mdBackground.ignoresSafeArea()
-                
+
                 if let currentRound = viewModel.currentRound,
                    viewModel.isGameActive {
                     // Active game view
@@ -65,49 +66,26 @@ struct ClassicGameScreen: View {
                     }
                 } else if let gameState = viewModel.gameState,
                           gameState.isCompleted {
-                    // Game completed - navigate to result screen
+                    // Game completed - show result screen
                     ResultScreen(
                         gameState: gameState,
                         onReplay: {
                             viewModel.resetGame()
-                        }
+                        },
+                        onBackToHome: onBackToHome
                     )
                 } else {
-                    // Initial state - show start screen
-                    VStack(spacing: 24) {
-                        Spacer()
-                        
-                        Image(systemName: "paintpalette.fill")
-                            .font(.system(size: 80))
-                            .foregroundStyle(Color.mdPrimary)
-                        
-                        Text("白Guessr")
-                            .font(.mdDisplayMedium)
-                            .foregroundStyle(Color.mdOnSurface)
-                            .fontWeight(.bold)
-                        
-                        Text(L10n.Home.tagline)
-                            .font(.mdBodyLarge)
-                            .foregroundStyle(Color.mdOnSurfaceVariant)
-                        
-                        Spacer()
-                        
-                        Button {
-                            viewModel.startNewGame()
-                        } label: {
-                            HStack {
-                                Image(systemName: "play.fill")
-                                Text(L10n.Game.startGame)
-                            }
-                            .font(.mdLabelLarge)
-                        }
-                        .buttonStyle(.mdFilled)
-                        .padding(.horizontal, 32)
-                        .padding(.bottom, 40)
-                    }
+                    // Loading state — game starts immediately
+                    ProgressView()
+                        .tint(Color.mdPrimary)
                 }
             }
             .navigationBarHidden(true)
+            .onAppear {
+                if viewModel.gameState == nil {
+                    viewModel.startNewGame()
+                }
+            }
             .sheet(isPresented: $viewModel.showingResult) {
                 if let currentRound = viewModel.currentRound {
                     RoundResultDialog(
