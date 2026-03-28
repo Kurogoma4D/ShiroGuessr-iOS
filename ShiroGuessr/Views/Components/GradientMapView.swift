@@ -110,8 +110,8 @@ struct GradientMapView: View {
                 let rect = CGRect(
                     x: CGFloat(x) * pixelWidth,
                     y: CGFloat(y) * pixelHeight,
-                    width: pixelWidth,
-                    height: pixelHeight
+                    width: ceil(pixelWidth + 0.5),
+                    height: ceil(pixelHeight + 0.5)
                 )
 
                 context.fill(
