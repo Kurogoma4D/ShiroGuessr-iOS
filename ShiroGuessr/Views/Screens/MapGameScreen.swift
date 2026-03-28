@@ -84,18 +84,17 @@ struct MapGameScreen: View {
         gradientMap: GradientMap
     ) -> some View {
         VStack(spacing: 0) {
-            // Header
-            GameHeader(onModeButtonTap: {
-                onModeToggle?()
-            })
+            // Header with score — mode toggle hidden during gameplay
+            GameHeader(
+                currentScore: gameState.totalScore
+            )
 
             ScrollableIfNeeded {
                 VStack(spacing: 8) {
-                    // Score board
+                    // Round indicator
                     ScoreBoard(
                         currentRound: currentRound.roundNumber,
-                        totalRounds: gameState.rounds.count,
-                        currentScore: gameState.totalScore
+                        totalRounds: gameState.rounds.count
                     )
 
                     // Timer display
