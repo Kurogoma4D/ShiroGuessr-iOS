@@ -8,15 +8,12 @@ struct ScoreBoard: View {
 
     var body: some View {
         HStack(spacing: 24) {
-            // Round indicator
-            VStack(alignment: .leading, spacing: 4) {
+            // Round dot indicator
+            VStack(alignment: .leading, spacing: 8) {
                 Text("Round")
                     .font(.mdLabelMedium)
                     .foregroundStyle(Color.mdOnSurfaceVariant)
-                Text("\(currentRound)/\(totalRounds)")
-                    .font(.mdTitleLarge)
-                    .foregroundStyle(Color.mdOnSurface)
-                    .fontWeight(.semibold)
+                RoundIndicator(currentRound: currentRound, totalRounds: totalRounds)
             }
 
             Divider()
