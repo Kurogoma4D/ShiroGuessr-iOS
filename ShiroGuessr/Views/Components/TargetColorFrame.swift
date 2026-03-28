@@ -17,7 +17,7 @@ struct TargetColorFrame: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // "TARGET" label — small, muted, uppercase English
+            // "TARGET" label — intentionally English (gallery exhibit style, not localized)
             Text("TARGET")
                 .font(.mdLabelSmall)
                 .foregroundStyle(Color.mdOnSurfaceVariant)

@@ -19,9 +19,7 @@ enum L10n {
     // MARK: - Game Screen
     enum Game {
         static let startGame = NSLocalizedString("game.startGame", comment: "Start game button")
-        static let findThisColor = NSLocalizedString("game.findThisColor", comment: "Find this color label")
-        static let findThisColorColon = NSLocalizedString("game.findThisColorColon", comment: "Find this color label with colon")
-        static let loading = NSLocalizedString("game.loading", comment: "Loading text")
+static let loading = NSLocalizedString("game.loading", comment: "Loading text")
     }
 
     // MARK: - Game Controls

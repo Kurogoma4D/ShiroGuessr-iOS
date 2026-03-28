@@ -12,8 +12,6 @@
 
 // MARK: - Game Screen
 "game.startGame" = "Start Game";
-"game.findThisColor" = "Find this color";
-"game.findThisColorColon" = "Find this color:";
 "game.loading" = "Loading...";
 
 // MARK: - Game Controls
