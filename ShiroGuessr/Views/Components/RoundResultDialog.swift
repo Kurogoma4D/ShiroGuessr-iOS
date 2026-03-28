@@ -29,46 +29,48 @@ struct RoundResultDialog: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            // Header
-            Text(L10n.RoundResult.title(round.roundNumber))
-                .font(.mdHeadlineMedium)
-                .foregroundStyle(Color.mdOnSurface)
-                .fontWeight(.bold)
-                .padding(.bottom, 4)
+        ScrollView {
+            VStack(spacing: 16) {
+                // Header
+                Text(L10n.RoundResult.title(round.roundNumber))
+                    .font(.mdHeadlineMedium)
+                    .foregroundStyle(Color.mdOnSurface)
+                    .fontWeight(.bold)
 
-            // Color comparison — large circles side by side with "vs"
-            colorComparisonSection
-                .opacity(animateContent ? 1.0 : 0.0)
+                // Color comparison — circles side by side with "vs"
+                colorComparisonSection
+                    .opacity(animateContent ? 1.0 : 0.0)
 
-            // Distance — large gold number as primary metric
-            distanceSection
-                .opacity(animateContent ? 1.0 : 0.0)
-                .scaleEffect(animateContent ? 1.0 : 0.8)
+                // Distance and score ring — side by side for compactness
+                HStack(spacing: 24) {
+                    distanceSection
+                        .opacity(animateContent ? 1.0 : 0.0)
+                        .scaleEffect(animateContent ? 1.0 : 0.8)
 
-            // Score — progress ring visualization
-            scoreRingSection
-
-            // Star rating
-            starRatingSection
-                .opacity(animateContent ? 1.0 : 0.0)
-
-            // Next button
-            Button {
-                onNext()
-            } label: {
-                HStack {
-                    Text(L10n.RoundResult.continue)
-                    Image(systemName: "arrow.right.circle.fill")
+                    scoreRingSection
                 }
-                .font(.mdLabelLarge)
+
+                // Star rating
+                starRatingSection
+                    .opacity(animateContent ? 1.0 : 0.0)
+
+                // Next button
+                Button {
+                    onNext()
+                } label: {
+                    HStack {
+                        Text(L10n.RoundResult.continue)
+                        Image(systemName: "arrow.right.circle.fill")
+                    }
+                    .font(.mdLabelLarge)
+                }
+                .buttonStyle(.mdFilled)
             }
-            .buttonStyle(.mdFilled)
+            .padding(.horizontal, 24)
+            .padding(.top, 32)
+            .padding(.bottom, 24)
+            .frame(maxWidth: .infinity)
         }
-        .padding(.horizontal, 24)
-        .padding(.top, 48)
-        .padding(.bottom, 24)
-        .frame(maxWidth: .infinity)
         .onAppear {
             withAnimation(AnimationConstants.tweenShort) {
                 animateContent = true
@@ -93,7 +95,7 @@ struct RoundResultDialog: View {
 
                 Circle()
                     .fill(round.targetColor.toColor())
-                    .frame(width: 80, height: 80)
+                    .frame(width: 64, height: 64)
                     .overlay(
                         Circle()
                             .strokeBorder(Color.sampleBorder, lineWidth: 1.5)
@@ -123,7 +125,7 @@ struct RoundResultDialog: View {
                 if let selectedColor = round.selectedColor {
                     Circle()
                         .fill(selectedColor.toColor())
-                        .frame(width: 80, height: 80)
+                        .frame(width: 64, height: 64)
                         .overlay(
                             Circle()
                                 .strokeBorder(Color.sampleBorder, lineWidth: 1.5)
@@ -136,7 +138,7 @@ struct RoundResultDialog: View {
                 } else {
                     Circle()
                         .fill(Color.mdSurfaceVariant)
-                        .frame(width: 80, height: 80)
+                        .frame(width: 64, height: 64)
                         .overlay(
                             Circle()
                                 .strokeBorder(Color.sampleBorder, lineWidth: 1.5)
@@ -182,7 +184,7 @@ struct RoundResultDialog: View {
                 // Background ring
                 Circle()
                     .stroke(Color.mdSurfaceVariant, lineWidth: 8)
-                    .frame(width: 100, height: 100)
+                    .frame(width: 80, height: 80)
 
                 // Progress ring — animated from 0 to scoreProgress on appear
                 Circle()
@@ -191,7 +193,7 @@ struct RoundResultDialog: View {
                         Color.mdPrimary,
                         style: StrokeStyle(lineWidth: 8, lineCap: .round)
                     )
-                    .frame(width: 100, height: 100)
+                    .frame(width: 80, height: 80)
                     .rotationEffect(.degrees(-90))
 
                 // Score text inside ring
