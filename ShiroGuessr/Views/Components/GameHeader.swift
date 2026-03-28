@@ -34,10 +34,7 @@ struct GameHeader: View {
                         .tabularFigures()
                 }
                 .scaleEffect(scoreBounce ? 1.2 : 1.0)
-                .animation(
-                    .spring(response: 0.4, dampingFraction: 0.5),
-                    value: scoreBounce
-                )
+                .animation(AnimationConstants.spring, value: scoreBounce)
                 .onChange(of: score) { oldValue, newValue in
                     if newValue > oldValue {
                         triggerBounce()

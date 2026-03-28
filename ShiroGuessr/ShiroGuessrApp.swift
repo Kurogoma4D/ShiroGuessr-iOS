@@ -35,10 +35,10 @@ struct RootView: View {
                     .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.3), value: currentScreen)
+        .animation(AnimationConstants.tweenShort, value: currentScreen)
         .onReceive(NotificationCenter.default.publisher(for: .navigateToGame)) { notification in
             if let mode = notification.object as? GameMode {
-                withAnimation(.easeInOut(duration: 0.3)) {
+                withAnimation(AnimationConstants.tweenShort) {
                     switch mode {
                     case .classicMode:
                         currentScreen = .classic
@@ -69,7 +69,7 @@ struct RootView: View {
     }
 
     private func navigateHome() {
-        withAnimation(.easeInOut(duration: 0.3)) {
+        withAnimation(AnimationConstants.tweenShort) {
             currentScreen = .home
         }
     }

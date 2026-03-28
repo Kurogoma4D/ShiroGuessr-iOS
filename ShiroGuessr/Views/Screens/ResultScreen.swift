@@ -145,8 +145,8 @@ struct ResultScreen: View {
                     .opacity(animateRounds ? 1.0 : 0.0)
                     .offset(y: animateRounds ? 0 : 20)
                     .animation(
-                        .spring(response: 0.6, dampingFraction: 0.7)
-                            .delay(Double(index) * 0.1),
+                        AnimationConstants.tweenShort
+                            .delay(Double(index) * AnimationConstants.staggerInterval),
                         value: animateRounds
                     )
             }
@@ -206,16 +206,16 @@ struct ResultScreen: View {
     // MARK: - Animations
 
     private func startAnimations() {
-        // Phase 1: Score area entrance
-        withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
+        // Phase 1: Score area entrance — tween fade/scale in (500ms EaseInOut)
+        withAnimation(AnimationConstants.tweenLong) {
             animateScore = true
         }
 
         // Phase 2: Count-up score with color transition
         startCountUp()
 
-        // Phase 3: Round results staggered fade-in
-        withAnimation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.3)) {
+        // Phase 3: Round results staggered fade-in (100ms intervals, tweenShort per item)
+        withAnimation(AnimationConstants.tweenShort.delay(0.3)) {
             animateRounds = true
         }
     }
@@ -241,12 +241,12 @@ struct ResultScreen: View {
                     countUpValue = targetScore
                     countUpComplete = true
                     if burstTier != .none {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                        withAnimation(AnimationConstants.spring) {
                             showBurst = true
                         }
                         try? await Task.sleep(for: .milliseconds(400))
                         guard !Task.isCancelled else { return }
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                        withAnimation(AnimationConstants.spring) {
                             showBurst = false
                         }
                     }
@@ -414,7 +414,7 @@ struct BurstEffectView: View {
             sizes = (0..<burstCount).map { _ in
                 tier == .large ? CGFloat.random(in: 4...8) : CGFloat.random(in: 3...6)
             }
-            withAnimation(.easeOut(duration: 0.8)) {
+            withAnimation(Animation.easeOut(duration: 0.8)) {
                 animate = true
             }
         }

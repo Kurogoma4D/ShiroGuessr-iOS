@@ -54,7 +54,7 @@ private struct RoundDot: View {
             .opacity(state == .current && isPulsing ? 0.7 : 1.0)
             .animation(
                 state == .current
-                    ? .easeInOut(duration: 1.0).repeatForever(autoreverses: true)
+                    ? Animation.easeInOut(duration: 1.0).repeatForever(autoreverses: true)
                     : .default,
                 value: isPulsing
             )

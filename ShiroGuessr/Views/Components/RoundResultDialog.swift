@@ -1,10 +1,14 @@
 import SwiftUI
 
 /// Dialog displaying the result of a single round
-/// Redesigned with circular color comparison, progress ring score, and star rating
+/// Redesigned with circular color comparison, progress ring score, and star rating.
+/// Entrance animations use tween (300ms EaseInOut) for smooth sheet presentation.
 struct RoundResultDialog: View {
     let round: GameRound
     let onNext: () -> Void
+
+    @State private var animateContent = false
+    @State private var ringProgress: Double = 0.0
 
     /// Star rating based on Manhattan distance (0-30 range)
     /// 0-2: 5 stars, 3-5: 4 stars, 6-10: 3 stars, 11-18: 2 stars, 19+: 1 star
@@ -35,15 +39,19 @@ struct RoundResultDialog: View {
 
             // Color comparison — large circles side by side with "vs"
             colorComparisonSection
+                .opacity(animateContent ? 1.0 : 0.0)
 
             // Distance — large gold number as primary metric
             distanceSection
+                .opacity(animateContent ? 1.0 : 0.0)
+                .scaleEffect(animateContent ? 1.0 : 0.8)
 
             // Score — progress ring visualization
             scoreRingSection
 
             // Star rating
             starRatingSection
+                .opacity(animateContent ? 1.0 : 0.0)
 
             // Next button
             Button {
@@ -61,6 +69,15 @@ struct RoundResultDialog: View {
         .padding(.top, 48)
         .padding(.bottom, 24)
         .frame(maxWidth: .infinity)
+        .onAppear {
+            withAnimation(AnimationConstants.tweenShort) {
+                animateContent = true
+            }
+            // Animate the progress ring with a tween
+            withAnimation(AnimationConstants.tweenLong.delay(0.15)) {
+                ringProgress = scoreProgress
+            }
+        }
     }
 
     // MARK: - Color Comparison
@@ -157,9 +174,9 @@ struct RoundResultDialog: View {
                     .stroke(Color.mdSurfaceVariant, lineWidth: 8)
                     .frame(width: 100, height: 100)
 
-                // Progress ring
+                // Progress ring — animated from 0 to scoreProgress on appear
                 Circle()
-                    .trim(from: 0, to: scoreProgress)
+                    .trim(from: 0, to: ringProgress)
                     .stroke(
                         Color.mdPrimary,
                         style: StrokeStyle(lineWidth: 8, lineCap: .round)

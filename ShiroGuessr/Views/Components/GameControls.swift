@@ -1,18 +1,24 @@
 import SwiftUI
 
-/// Control buttons for game actions (submit and next)
+/// Control buttons for game actions (submit and next).
+///
+/// The submit button triggers a brief ripple scale effect (100ms freeze)
+/// before calling the submit callback, per the animation guideline.
 struct GameControls: View {
     let canSubmit: Bool
     let canProceed: Bool
     let onSubmit: () -> Void
     let onNext: () -> Void
 
+    @State private var isSubmitting = false
+
     var body: some View {
         VStack(spacing: 12) {
             // Submit button (shown before submitting answer)
             if !canProceed {
                 Button {
-                    onSubmit()
+                    guard !isSubmitting else { return }
+                    triggerSubmit()
                 } label: {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
@@ -21,7 +27,9 @@ struct GameControls: View {
                     .font(.mdLabelLarge)
                 }
                 .buttonStyle(.mdFilled)
-                .disabled(!canSubmit)
+                .disabled(!canSubmit || isSubmitting)
+                .scaleEffect(isSubmitting ? 0.95 : 1.0)
+                .animation(AnimationConstants.quickResponse, value: isSubmitting)
             }
 
             // Next button (shown after submitting answer)
@@ -39,7 +47,19 @@ struct GameControls: View {
             }
         }
         .padding(.horizontal, 16)
-        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: canProceed)
+        .animation(AnimationConstants.spring, value: canProceed)
+    }
+
+    /// Triggers a brief freeze (100ms) with a scale ripple effect before calling onSubmit.
+    private func triggerSubmit() {
+        isSubmitting = true
+        Task { @MainActor in
+            try? await Task.sleep(
+                nanoseconds: AnimationConstants.submitFreezeMilliseconds * 1_000_000
+            )
+            onSubmit()
+            isSubmitting = false
+        }
     }
 }
 
