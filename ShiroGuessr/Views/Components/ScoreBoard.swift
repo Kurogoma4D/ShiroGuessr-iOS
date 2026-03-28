@@ -1,44 +1,55 @@
 import SwiftUI
 
 /// Component displaying current round and score information
+/// Uses card/panel style: canvasElevated background, 16dp radius, 1dp border, shadow
 struct ScoreBoard: View {
     let currentRound: Int
     let totalRounds: Int
     let currentScore: Int
 
     var body: some View {
-        HStack(spacing: 24) {
-            // Round indicator
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Round")
-                    .font(.mdLabelMedium)
-                    .foregroundStyle(Color.mdOnSurfaceVariant)
-                Text("\(currentRound)/\(totalRounds)")
-                    .font(.mdTitleLarge)
-                    .foregroundStyle(Color.mdOnSurface)
-                    .fontWeight(.semibold)
+        VStack(spacing: 12) {
+            HStack(spacing: 24) {
+                // Round text
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Round")
+                        .font(.mdLabelMedium)
+                        .foregroundStyle(Color.mdOnSurfaceVariant)
+                    Text("\(currentRound)/\(totalRounds)")
+                        .font(.mdTitleLarge)
+                        .foregroundStyle(Color.mdOnSurface)
+                        .fontWeight(.semibold)
+                }
+
+                Divider()
+                    .frame(height: 44)
+                    .background(Color.mdOutlineVariant)
+
+                // Score display
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Score")
+                        .font(.mdLabelMedium)
+                        .foregroundStyle(Color.mdOnSurfaceVariant)
+                    Text("\(currentScore)")
+                        .font(.mdDisplaySmall)
+                        .foregroundStyle(Color.mdPrimary)
+                        .tabularFigures()
+                }
+
+                Spacer()
             }
 
-            Divider()
-                .frame(height: 44)
-                .background(Color.mdOutlineVariant)
-
-            // Score display
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Score")
-                    .font(.mdLabelMedium)
-                    .foregroundStyle(Color.mdOnSurfaceVariant)
-                Text("\(currentScore)")
-                    .font(.mdDisplaySmall)
-                    .foregroundStyle(Color.mdPrimary)
-                    .tabularFigures()
-            }
-
-            Spacer()
+            // Round indicator dots
+            RoundIndicator(currentRound: currentRound, totalRounds: totalRounds)
         }
         .padding(16)
-        .background(Color.mdSurfaceVariant.opacity(0.3))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(Color.mdSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color.mdOutlineVariant, lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.4), radius: 8, x: 0, y: 4)
         .padding(.horizontal, 16)
     }
 }

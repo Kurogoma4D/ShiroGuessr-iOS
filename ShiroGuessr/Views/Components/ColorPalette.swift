@@ -27,12 +27,21 @@ struct ColorPalette: View {
         }
         .padding(16)
         .background(Color.mdSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: Color.mdShadow, radius: 2, x: 0, y: 1)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color.mdOutlineVariant, lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.4), radius: 8, x: 0, y: 4)
     }
 }
 
 /// Individual color cell in the palette
+/// - Corner radius: 16dp
+/// - Border default: 1.5dp sampleBorder (#3A3A45)
+/// - Border selected: 2.5dp accentPrimary with glow
+/// - Shadow: 0 2dp 6dp rgba(0,0,0,0.3)
+/// - Selected scale: 1.05
 private struct ColorCell: View {
     let color: RGBColor
     let isSelected: Bool
@@ -43,15 +52,23 @@ private struct ColorCell: View {
             // Color background
             color.toColor()
                 .aspectRatio(1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 16)
                         .strokeBorder(
-                            isSelected ? Color.mdPrimary : Color.mdOutlineVariant,
-                            lineWidth: isSelected ? 3 : 1
+                            isSelected ? Color.mdPrimary : Color.sampleBorder,
+                            lineWidth: isSelected ? 2.5 : 1.5
                         )
                 )
+                .shadow(color: Color.black.opacity(0.3), radius: 3, x: 0, y: 2)
                 .opacity(isEnabled ? 1.0 : 0.5)
+
+            // Glow effect for selected cell
+            if isSelected {
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.mdPrimary.opacity(0.4), lineWidth: 4)
+                    .blur(radius: 4)
+            }
 
             // Selection indicator
             if isSelected {
@@ -65,6 +82,7 @@ private struct ColorCell: View {
                     )
             }
         }
+        .scaleEffect(isSelected ? 1.05 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: isSelected)
     }
 }

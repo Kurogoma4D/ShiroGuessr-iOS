@@ -190,9 +190,7 @@ private struct RoundResultCard: View {
             }
         }
         .padding(12)
-        .background(Color.mdSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: Color.mdShadow, radius: 1, x: 0, y: 1)
+        .cardPanelStyle()
         .padding(.horizontal, 16)
     }
 }
