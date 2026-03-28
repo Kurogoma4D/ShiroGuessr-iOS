@@ -43,13 +43,7 @@ struct ScoreBoard: View {
             RoundIndicator(currentRound: currentRound, totalRounds: totalRounds)
         }
         .padding(16)
-        .background(Color.mdSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(Color.mdOutlineVariant, lineWidth: 1)
-        )
-        .shadow(color: Color.black.opacity(0.4), radius: 8, x: 0, y: 4)
+        .cardPanelStyle()
         .padding(.horizontal, 16)
     }
 }

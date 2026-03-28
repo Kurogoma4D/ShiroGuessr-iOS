@@ -12,8 +12,10 @@ struct RoundIndicator: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            ForEach(1...totalRounds, id: \.self) { round in
-                RoundDot(state: dotState(for: round))
+            if totalRounds > 0 {
+                ForEach(1...totalRounds, id: \.self) { round in
+                    RoundDot(state: dotState(for: round))
+                }
             }
         }
     }
@@ -31,7 +33,7 @@ struct RoundIndicator: View {
 
 // MARK: - Round Dot State
 
-private enum RoundDotState {
+private enum RoundDotState: Equatable {
     case completed
     case current
     case upcoming
@@ -60,6 +62,9 @@ private struct RoundDot: View {
                 if state == .current {
                     isPulsing = true
                 }
+            }
+            .onChange(of: state) { _, newState in
+                isPulsing = (newState == .current)
             }
     }
 }
