@@ -12,6 +12,7 @@ struct ResultScreen: View {
     @State private var countUpValue: Int = 0
     @State private var countUpComplete = false
     @State private var showBurst = false
+    @State private var countUpTask: Task<Void, Never>?
     @StateObject private var adManager = InterstitialAdManager.shared
 
     /// Whether the score qualifies for particle effects (3000+)
@@ -76,6 +77,9 @@ struct ResultScreen: View {
         }
         .onAppear {
             startAnimations()
+        }
+        .onDisappear {
+            countUpTask?.cancel()
         }
     }
 
@@ -217,22 +221,22 @@ struct ResultScreen: View {
     }
 
     private func startCountUp() {
+        guard countUpValue == 0 else { return }
         let targetScore = gameState.totalScore
-        let totalDuration: Double = 1.5
-        let steps = 60 // ~60 steps for smooth animation
-        let stepDuration = totalDuration / Double(steps)
+        let steps = 60
+        let stepDuration: UInt64 = 25_000_000 // 25ms per step
 
-        for step in 0...steps {
-            let delay = Double(step) * stepDuration + 0.4 // 0.4s initial delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+        countUpTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(400))
+
+            for step in 0...steps {
+                guard !Task.isCancelled else { return }
                 let progress = Double(step) / Double(steps)
-                // Ease-out curve for satisfying deceleration
                 let easedProgress = 1.0 - pow(1.0 - progress, 3)
-                withAnimation(.linear(duration: stepDuration)) {
+                withAnimation(.linear(duration: 0.025)) {
                     countUpValue = Int(Double(targetScore) * easedProgress)
                 }
 
-                // On completion, trigger burst
                 if step == steps {
                     countUpValue = targetScore
                     countUpComplete = true
@@ -240,13 +244,14 @@ struct ResultScreen: View {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
                             showBurst = true
                         }
-                        // Reset burst scale after a moment
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                                showBurst = false
-                            }
+                        try? await Task.sleep(for: .milliseconds(400))
+                        guard !Task.isCancelled else { return }
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                            showBurst = false
                         }
                     }
+                } else {
+                    try? await Task.sleep(nanoseconds: stepDuration)
                 }
             }
         }
@@ -268,14 +273,16 @@ struct ResultScreen: View {
     /// Linear interpolation between two colors
     private func interpolateColor(from: Color, to: Color, t: Double) -> Color {
         let t = max(0, min(1, t))
-        let fromComponents = UIColor(from).cgColor.components ?? [0, 0, 0, 1]
-        let toComponents = UIColor(to).cgColor.components ?? [0, 0, 0, 1]
+        var fr: CGFloat = 0, fg: CGFloat = 0, fb: CGFloat = 0, fa: CGFloat = 0
+        UIColor(from).getRed(&fr, green: &fg, blue: &fb, alpha: &fa)
+        var tr: CGFloat = 0, tg: CGFloat = 0, tb: CGFloat = 0, ta: CGFloat = 0
+        UIColor(to).getRed(&tr, green: &tg, blue: &tb, alpha: &ta)
 
-        let r = fromComponents[0] + (toComponents[0] - fromComponents[0]) * t
-        let g = fromComponents[1] + (toComponents[1] - fromComponents[1]) * t
-        let b = fromComponents[2] + (toComponents[2] - fromComponents[2]) * t
-
-        return Color(red: r, green: g, blue: b)
+        return Color(
+            red: fr + (tr - fr) * t,
+            green: fg + (tg - fg) * t,
+            blue: fb + (tb - fb) * t
+        )
     }
 }
 
@@ -365,6 +372,7 @@ struct BurstEffectView: View {
     let tier: BurstTier
 
     @State private var animate = false
+    @State private var sizes: [CGFloat] = []
 
     private var burstCount: Int {
         switch tier {
@@ -392,7 +400,7 @@ struct BurstEffectView: View {
                     let radius = animate ? maxRadius : 0
                     let x = center.x + cos(angle) * radius
                     let y = center.y + sin(angle) * radius
-                    let size: CGFloat = tier == .large ? CGFloat.random(in: 4...8) : CGFloat.random(in: 3...6)
+                    let size = index < sizes.count ? sizes[index] : 4.0
 
                     Circle()
                         .fill(Color.mdPrimary)
@@ -403,6 +411,9 @@ struct BurstEffectView: View {
             }
         }
         .onAppear {
+            sizes = (0..<burstCount).map { _ in
+                tier == .large ? CGFloat.random(in: 4...8) : CGFloat.random(in: 3...6)
+            }
             withAnimation(.easeOut(duration: 0.8)) {
                 animate = true
             }
