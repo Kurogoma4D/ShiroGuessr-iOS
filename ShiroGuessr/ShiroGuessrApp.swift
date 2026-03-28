@@ -56,11 +56,8 @@ struct RootView: View {
                 }
             }
         }
-        .sheet(isPresented: $tutorialManager.shouldShowTutorial) {
-            TutorialBottomSheet(isPresented: $tutorialManager.shouldShowTutorial)
-                .presentationDetents([.large])
-                .presentationDragIndicator(.hidden)
-                .interactiveDismissDisabled()
+        .fullScreenCover(isPresented: $tutorialManager.shouldShowTutorial) {
+            TutorialOverlay(isPresented: $tutorialManager.shouldShowTutorial)
         }
         .onChange(of: tutorialManager.shouldShowTutorial) { _, isShowing in
             if isShowing {
