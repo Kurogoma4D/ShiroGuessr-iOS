@@ -113,13 +113,13 @@ struct TimerDisplay: View {
                     RoundedRectangle(cornerRadius: 1.5)
                         .fill(progressBarColor)
                         .frame(width: geometry.size.width * progress, height: 3)
-                        .animation(.linear(duration: 0.3), value: progress)
+                        .animation(AnimationConstants.tweenShort, value: progress)
                 }
             }
             .frame(height: 3)
             .padding(.horizontal, 4)
         }
-        .animation(.easeInOut(duration: 0.3), value: timerColor)
+        .animation(AnimationConstants.tweenShort, value: timerColor)
         .onChange(of: timeRemaining) { _, newValue in
             updatePulseAnimation(for: newValue)
         }
@@ -157,7 +157,7 @@ struct TimerDisplay: View {
 
     /// Stops the pulse and resets scale
     private func stopPulse() {
-        withAnimation(.easeInOut(duration: 0.2)) {
+        withAnimation(AnimationConstants.quickResponse) {
             pulseScale = 1.0
         }
     }

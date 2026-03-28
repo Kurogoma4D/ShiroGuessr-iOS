@@ -31,7 +31,7 @@ struct FilledButtonStyle: ButtonStyle {
                 y: 2
             )
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
+            .animation(AnimationConstants.springLight, value: configuration.isPressed)
     }
 }
 
@@ -53,7 +53,7 @@ struct FilledTonalButtonStyle: ButtonStyle {
                 y: configuration.isPressed ? 0 : 1
             )
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
+            .animation(AnimationConstants.springLight, value: configuration.isPressed)
     }
 }
 
@@ -83,7 +83,7 @@ struct OutlinedButtonStyle: ButtonStyle {
                     )
             )
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
+            .animation(AnimationConstants.springLight, value: configuration.isPressed)
     }
 }
 
@@ -105,7 +105,7 @@ struct ElevatedButtonStyle: ButtonStyle {
                 y: configuration.isPressed ? 1 : 2
             )
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
+            .animation(AnimationConstants.springLight, value: configuration.isPressed)
     }
 }
 
@@ -129,7 +129,7 @@ struct TextButtonStyle: ButtonStyle {
             .underline(configuration.isPressed)
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 20))
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+            .animation(AnimationConstants.quickResponse, value: configuration.isPressed)
     }
 }
 

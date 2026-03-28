@@ -244,20 +244,25 @@ final class MapGameViewModel {
         startResultAnimation()
     }
 
-    /// Starts the result animation sequence (pin pop-in → dashed line → result sheet)
+    /// Starts the result animation sequence (pin pop-in -> dashed line -> result sheet).
+    ///
+    /// Timing aligned with animation guideline:
+    /// - Phase 1 (0ms): Target pin pop-in (spring, response: 0.4, dampingFraction: 0.7)
+    /// - Phase 2 (~200ms): Dashed line draw (tweenMedium, 400ms EaseInOut)
+    /// - Phase 3 (~700ms): Result sheet slides up (standard ModalBottomSheet)
     private func startResultAnimation() {
         isAnimatingResult = true
         animationTask = Task {
             // Phase 1: Show target pin with spring animation (0ms)
             showTargetPin = true
 
-            // Phase 2: Draw dashed line (180ms delay)
-            try? await Task.sleep(for: .milliseconds(180))
+            // Phase 2: Draw dashed line (200ms after pin pop-in starts)
+            try? await Task.sleep(for: .milliseconds(200))
             guard !Task.isCancelled else { return }
             lineDrawProgress = 1.0
 
-            // Phase 3: Show result sheet (700ms from start)
-            try? await Task.sleep(for: .milliseconds(520))
+            // Phase 3: Show result sheet (500ms after line draw starts)
+            try? await Task.sleep(for: .milliseconds(500))
             guard !Task.isCancelled else { return }
             showingResult = true
             isAnimatingResult = false

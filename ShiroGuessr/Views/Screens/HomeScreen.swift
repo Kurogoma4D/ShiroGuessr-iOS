@@ -172,7 +172,7 @@ struct CardButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
+            .animation(AnimationConstants.springLight, value: configuration.isPressed)
     }
 }
 
@@ -180,7 +180,8 @@ struct HomeScreen: View {
     @Namespace private var heroNamespace
     @State private var isTransitioning = false
 
-    private static let transitionDuration: TimeInterval = 0.35
+    /// Transition uses tweenMedium (400ms EaseInOut) per animation guideline.
+    private static let transitionDuration: TimeInterval = 0.4
 
     var body: some View {
         ZStack {
@@ -252,7 +253,7 @@ struct HomeScreen: View {
     private func selectMode(_ mode: GameMode) {
         guard !isTransitioning else { return }
 
-        withAnimation(.easeInOut(duration: Self.transitionDuration)) {
+        withAnimation(AnimationConstants.tweenMedium) {
             isTransitioning = true
         }
 

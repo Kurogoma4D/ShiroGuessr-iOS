@@ -83,19 +83,19 @@ private struct ColorCell: View {
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
                     guard isEnabled, !isPressed else { return }
-                    withAnimation(.easeOut(duration: 0.15)) {
+                    withAnimation(AnimationConstants.quickResponse) {
                         isPressed = true
                     }
                 }
                 .onEnded { _ in
                     guard isEnabled else { return }
-                    withAnimation(.easeOut(duration: 0.15)) {
+                    withAnimation(AnimationConstants.quickResponse) {
                         isPressed = false
                     }
                     onTap()
                 }
         )
-        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isSelected)
+        .animation(AnimationConstants.spring, value: isSelected)
     }
 }
 
@@ -116,7 +116,7 @@ private struct GoldRingIndicator: View {
             .scaleEffect(ringScale)
             .opacity(ringOpacity)
             .onAppear {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                withAnimation(AnimationConstants.spring) {
                     ringScale = 1.0
                     ringOpacity = 1.0
                 }

@@ -56,7 +56,7 @@ struct GradientMapView: View {
                     Color.mdPrimary.opacity(0.8),
                     style: StrokeStyle(lineWidth: 2, dash: [8, 6])
                 )
-                .animation(.easeOut(duration: 0.42), value: lineDrawProgress)
+                .animation(AnimationConstants.tweenMedium, value: lineDrawProgress)
             }
 
             // User pin (gold accent with drop animation)
@@ -227,7 +227,7 @@ private struct AnimatedUserPin: View {
                 // Reset for animation replay
                 dropOffset = -20
                 opacity = 0.0
-                withAnimation(.easeOut(duration: 0.15)) {
+                withAnimation(AnimationConstants.quickResponse) {
                     dropOffset = 0
                     opacity = 1.0
                 }
@@ -277,14 +277,14 @@ private struct AnimatedTargetPin: View {
         .scaleEffect(scale)
         .position(x: pinX, y: pinY)
         .onAppear {
-            // Pop-in with spring
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+            // Pop-in with spring (standard in-game interaction spring)
+            withAnimation(AnimationConstants.spring) {
                 scale = 1.0
             }
 
             // Start pulse animation after pop-in completes
             withAnimation(
-                .easeInOut(duration: 1.0)
+                Animation.easeInOut(duration: 1.0)
                 .repeatCount(3, autoreverses: true)
                 .delay(0.4)
             ) {
