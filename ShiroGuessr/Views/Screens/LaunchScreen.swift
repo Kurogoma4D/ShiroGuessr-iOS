@@ -1,13 +1,13 @@
 import SwiftUI
 
-/// Launch screen following Material Design 3 principles
+/// Launch screen with black background for dark theme visual consistency
 struct LaunchScreen: View {
     @State private var isAnimating = false
 
     var body: some View {
         ZStack {
-            // Background
-            Color.mdBackground
+            // Black background for dark theme splash screen
+            Color.black
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
