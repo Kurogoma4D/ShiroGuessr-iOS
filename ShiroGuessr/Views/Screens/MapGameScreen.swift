@@ -109,7 +109,7 @@ struct MapGameScreen: View {
                     // Gradient map view with adaptive sizing
                     // Map is the star of this mode — use a larger ratio of screen width
                     GeometryReader { geometry in
-                        let availableWidth = geometry.size.width - 32 // 16pt padding each side
+                        let availableWidth = geometry.size.width
                         let mapSize: CGFloat = horizontalSizeClass == .regular
                             ? min(availableWidth, 560)
                             : min(availableWidth, 400)
