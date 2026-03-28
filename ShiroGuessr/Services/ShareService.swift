@@ -146,11 +146,13 @@ struct ShareButton: View {
     let gameState: GameState
     let label: String
     let icon: String
+    let useOutlinedStyle: Bool
 
-    init(gameState: GameState, label: String? = nil, icon: String = "square.and.arrow.up") {
+    init(gameState: GameState, label: String? = nil, icon: String = "square.and.arrow.up", useOutlinedStyle: Bool = false) {
         self.gameState = gameState
         self.label = label ?? L10n.Result.share
         self.icon = icon
+        self.useOutlinedStyle = useOutlinedStyle
     }
 
     var body: some View {
@@ -165,9 +167,19 @@ struct ShareButton: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .foregroundStyle(Color.mdOnSecondaryContainer)
-            .background(Color.mdSecondaryContainer)
+            .foregroundStyle(useOutlinedStyle ? Color.mdPrimary : Color.mdOnSecondaryContainer)
+            .background(
+                useOutlinedStyle
+                    ? Color.clear
+                    : Color.mdSecondaryContainer
+            )
             .clipShape(RoundedRectangle(cornerRadius: 24))
+            .overlay(
+                useOutlinedStyle
+                    ? RoundedRectangle(cornerRadius: 24)
+                        .strokeBorder(Color.mdSecondary, lineWidth: 1.5)
+                    : nil
+            )
         }
     }
 }
