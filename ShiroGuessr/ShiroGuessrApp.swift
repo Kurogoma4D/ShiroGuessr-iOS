@@ -17,22 +17,35 @@ enum GameMode {
 
 struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
-    @State private var currentMode: GameMode = .mapMode
+    @State private var currentScreen: CurrentScreen = .home
     @StateObject private var tutorialManager = TutorialManager.shared
-    @State private var mapGameViewModel: MapGameViewModel?
     @State private var hasRequestedATT = false
 
     var body: some View {
         Group {
-            switch currentMode {
-            case .classicMode:
-                ClassicGameScreen()
-            case .mapMode:
-                MapGameScreen()
-                    .onAppear {
-                        // Store reference to access timer controls (this is a workaround)
-                        // In production, consider using environment object or dependency injection
+            switch currentScreen {
+            case .home:
+                HomeScreen()
+                    .transition(.opacity)
+            case .classic:
+                ClassicGameScreen(onBackToHome: navigateHome)
+                    .transition(.opacity)
+            case .map:
+                MapGameScreen(onBackToHome: navigateHome)
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: currentScreen)
+        .onReceive(NotificationCenter.default.publisher(for: .navigateToGame)) { notification in
+            if let mode = notification.object as? GameMode {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    switch mode {
+                    case .classicMode:
+                        currentScreen = .classic
+                    case .mapMode:
+                        currentScreen = .map
                     }
+                }
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
@@ -50,21 +63,18 @@ struct RootView: View {
                 .interactiveDismissDisabled()
         }
         .onChange(of: tutorialManager.shouldShowTutorial) { _, isShowing in
-            // Pause/resume timer based on tutorial visibility
-            // Note: This is a simplified approach. For better control,
-            // consider using environment object to access the view model
             if isShowing {
-                // Timer will be paused when tutorial appears
                 NotificationCenter.default.post(name: .pauseGameTimer, object: nil)
             } else {
-                // Resume timer when tutorial is dismissed
                 NotificationCenter.default.post(name: .resumeGameTimer, object: nil)
             }
         }
     }
 
-    private func toggleMode() {
-        currentMode = currentMode == .mapMode ? .classicMode : .mapMode
+    private func navigateHome() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            currentScreen = .home
+        }
     }
 
     private func requestTrackingAuthorizationAndInitializeAds() async {
@@ -75,10 +85,17 @@ struct RootView: View {
             _ = await ATTrackingManager.requestTrackingAuthorization()
         }
 
-        // Initialize ads after ATT authorization is resolved (regardless of result)
         await MobileAds.shared.start()
         InterstitialAdManager.shared.loadAd()
     }
+}
+
+// MARK: - Screen State
+
+enum CurrentScreen: Equatable {
+    case home
+    case classic
+    case map
 }
 
 // MARK: - Notification Names
@@ -106,14 +123,9 @@ struct ShiroGuessrApp: App {
     /// Handle Universal Links from shiro-guessr.pages.dev/app
     /// - Parameter url: The incoming URL
     private func handleUniversalLink(_ url: URL) {
-        // For now, just log the URL
-        // In production, this could navigate to a specific screen or show a welcome message
         print("Received Universal Link: \(url)")
 
-        // Example: Check if it's the /app path
         if url.path == "/app" || url.path.contains("/app") {
-            // App was opened from the share link
-            // Could show a welcome message or tutorial
             print("App opened from share link")
         }
     }

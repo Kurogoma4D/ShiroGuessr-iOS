@@ -4,6 +4,7 @@ import SwiftUI
 struct ResultScreen: View {
     let gameState: GameState
     let onReplay: () -> Void
+    var onBackToHome: (() -> Void)?
 
     @State private var animateScore = false
     @State private var animateRounds = false
@@ -97,6 +98,19 @@ struct ResultScreen: View {
                         .font(.mdLabelLarge)
                     }
                     .buttonStyle(.mdFilledTonal)
+
+                    if let onBackToHome {
+                        Button {
+                            onBackToHome()
+                        } label: {
+                            HStack {
+                                Image(systemName: "house")
+                                Text("Home")
+                            }
+                            .font(.mdLabelLarge)
+                        }
+                        .buttonStyle(.mdText)
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 32)
