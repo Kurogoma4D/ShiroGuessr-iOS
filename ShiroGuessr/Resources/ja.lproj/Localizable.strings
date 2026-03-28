@@ -8,7 +8,9 @@
 // MARK: - Home Screen
 "home.tagline" = "本当の白を見つけよう";
 "home.classicMode" = "クラシックモード";
+"home.classicModeSubtitle" = "25色の中から見つけよう";
 "home.mapMode" = "マップモード";
+"home.mapModeSubtitle" = "60秒以内に見つけよう";
 
 // MARK: - Game Screen
 "game.startGame" = "スタート";
@@ -34,6 +36,7 @@
 "result.playAgain" = "もう一度プレイ";
 "result.share" = "結果を共有";
 "result.copyToClipboard" = "クリップボードにコピー";
+"result.home" = "ホーム";
 
 // MARK: - Share Service
 "share.score" = "スコア:";

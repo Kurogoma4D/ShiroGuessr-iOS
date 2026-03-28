@@ -10,10 +10,8 @@ import SwiftUI
 
 /// Animated radial gradient background that slowly shifts on the dark canvas
 struct AnimatedGradientBackground: View {
-    @State private var phase: CGFloat = 0
-
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
+        TimelineView(.animation(minimumInterval: 1.0 / 10.0)) { timeline in
             let t = timeline.date.timeIntervalSinceReferenceDate
             Canvas { context, size in
                 // Slowly moving radial gradient center
@@ -47,26 +45,17 @@ struct ModeSelectionCard: View {
     let namespace: Namespace.ID
     let onTap: () -> Void
 
-    @State private var isPressed = false
-
-    private var icon: String {
-        switch mode {
-        case .classicMode: return "paintpalette.fill"
-        case .mapMode: return "square.grid.3x3.fill"
-        }
-    }
-
     private var title: String {
         switch mode {
-        case .classicMode: return "Classic"
-        case .mapMode: return "Map"
+        case .classicMode: return L10n.Home.classicMode
+        case .mapMode: return L10n.Home.mapMode
         }
     }
 
     private var subtitle: String {
         switch mode {
-        case .classicMode: return "Find it among 25 colors"
-        case .mapMode: return "Locate it in 60 seconds"
+        case .classicMode: return L10n.Home.classicModeSubtitle
+        case .mapMode: return L10n.Home.mapModeSubtitle
         }
     }
 
@@ -189,8 +178,9 @@ struct CardButtonStyle: ButtonStyle {
 
 struct HomeScreen: View {
     @Namespace private var heroNamespace
-    @State private var selectedMode: GameMode?
     @State private var isTransitioning = false
+
+    private static let transitionDuration: TimeInterval = 0.35
 
     var body: some View {
         ZStack {
@@ -261,14 +251,13 @@ struct HomeScreen: View {
 
     private func selectMode(_ mode: GameMode) {
         guard !isTransitioning else { return }
-        selectedMode = mode
 
-        withAnimation(.easeInOut(duration: 0.35)) {
+        withAnimation(.easeInOut(duration: Self.transitionDuration)) {
             isTransitioning = true
         }
 
-        // Post notification after transition animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(Int(Self.transitionDuration * 1000)))
             NotificationCenter.default.post(
                 name: .navigateToGame,
                 object: mode

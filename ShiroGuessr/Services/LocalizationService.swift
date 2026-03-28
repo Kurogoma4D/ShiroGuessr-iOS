@@ -13,7 +13,9 @@ enum L10n {
     enum Home {
         static let tagline = NSLocalizedString("home.tagline", comment: "Home screen tagline")
         static let classicMode = NSLocalizedString("home.classicMode", comment: "Classic mode button")
+        static let classicModeSubtitle = NSLocalizedString("home.classicModeSubtitle", comment: "Classic mode description")
         static let mapMode = NSLocalizedString("home.mapMode", comment: "Map mode button")
+        static let mapModeSubtitle = NSLocalizedString("home.mapModeSubtitle", comment: "Map mode description")
     }
 
     // MARK: - Game Screen
@@ -49,6 +51,7 @@ static let loading = NSLocalizedString("game.loading", comment: "Loading text")
         static let playAgain = NSLocalizedString("result.playAgain", comment: "Play again button")
         static let share = NSLocalizedString("result.share", comment: "Share button")
         static let copyToClipboard = NSLocalizedString("result.copyToClipboard", comment: "Copy to clipboard button")
+        static let home = NSLocalizedString("result.home", comment: "Home button")
     }
 
     // MARK: - Share Service

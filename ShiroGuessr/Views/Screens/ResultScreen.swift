@@ -105,7 +105,7 @@ struct ResultScreen: View {
                         } label: {
                             HStack {
                                 Image(systemName: "house")
-                                Text("Home")
+                                Text(L10n.Result.home)
                             }
                             .font(.mdLabelLarge)
                         }
