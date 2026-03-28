@@ -17,6 +17,9 @@ enum AnimationConstants {
     /// Used for: target pin pop-in, score bounce, selection ring, button state changes.
     static let spring = Animation.spring(response: 0.4, dampingFraction: 0.7)
 
+    /// Bouncier spring for score bounce and celebratory effects.
+    static let springBouncy = Animation.spring(response: 0.4, dampingFraction: 0.5)
+
     /// Lighter spring for subtle feedback (e.g., button press scale).
     static let springLight = Animation.spring(response: 0.3, dampingFraction: 0.7)
 
