@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// View for displaying and interacting with a gradient map
+/// Wrapped in a gallery-style frame with dark border and subtle shadow.
 struct GradientMapView: View {
     /// The gradient map to display
     let gradientMap: GradientMap
@@ -26,6 +27,9 @@ struct GradientMapView: View {
     /// Callback when user taps to place a pin
     var onPinPlacement: ((MapCoordinate) -> Void)?
 
+    /// Frame border width for the gallery-style frame
+    private let frameBorderWidth: CGFloat = 3
+
     // MARK: - Body
 
     var body: some View {
@@ -35,17 +39,13 @@ struct GradientMapView: View {
                 drawGradientMap(context: context, size: size)
             }
             .frame(width: mapSize, height: mapSize)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 2)
-            )
-            .contentShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .contentShape(RoundedRectangle(cornerRadius: 8))
             .onTapGesture { location in
                 handleTap(at: location)
             }
 
-            // Dashed line between user pin and target pin
+            // Dashed line between user pin and target pin (gold color)
             if let userPin, let targetPin, lineDrawProgress > 0 {
                 DashedLinePath(
                     from: CGPoint(x: userPin.coordinate.x, y: userPin.coordinate.y),
@@ -53,18 +53,17 @@ struct GradientMapView: View {
                 )
                 .trim(from: 0, to: lineDrawProgress)
                 .stroke(
-                    Color.mdOnSurface.opacity(0.6),
+                    Color.mdPrimary.opacity(0.8),
                     style: StrokeStyle(lineWidth: 2, dash: [8, 6])
                 )
                 .animation(.easeOut(duration: 0.42), value: lineDrawProgress)
             }
 
-            // User pin
+            // User pin (gold accent with drop animation)
             if let userPin {
-                pinMarker(
+                AnimatedUserPin(
                     coordinate: userPin.coordinate,
-                    color: .blue,
-                    systemImage: "mappin.circle.fill"
+                    mapSize: mapSize
                 )
             }
 
@@ -73,15 +72,18 @@ struct GradientMapView: View {
                 if showTargetPinAnimated {
                     AnimatedTargetPin(coordinate: targetPin.coordinate, mapSize: mapSize)
                 } else {
-                    pinMarker(
-                        coordinate: targetPin.coordinate,
-                        color: .red,
-                        systemImage: "target"
-                    )
+                    targetPinMarker(coordinate: targetPin.coordinate)
                 }
             }
         }
         .frame(width: mapSize, height: mapSize)
+        // Gallery-style frame: dark border
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.mdSurfaceVariant, lineWidth: frameBorderWidth)
+        )
+        // Subtle outer shadow
+        .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 4)
     }
 
     // MARK: - Drawing Methods
@@ -150,31 +152,26 @@ struct GradientMapView: View {
         from + (to - from) * t
     }
 
-    // MARK: - Pin Marker
+    // MARK: - Target Pin (static, non-animated)
 
-    /// Creates a pin marker view
-    private func pinMarker(
-        coordinate: MapCoordinate,
-        color: Color,
-        systemImage: String
-    ) -> some View {
+    /// Creates a target pin marker (white circle + red outline)
+    private func targetPinMarker(coordinate: MapCoordinate) -> some View {
         let pinX = CGFloat(coordinate.x) * mapSize
         let pinY = CGFloat(coordinate.y) * mapSize
 
-        // Use circle instead of mappin to avoid offset issues
         return Circle()
-            .fill(color)
-            .frame(width: 16, height: 16)
+            .fill(Color.white)
+            .frame(width: 18, height: 18)
             .overlay(
                 Circle()
-                    .stroke(Color.white, lineWidth: 2)
+                    .stroke(Color.mdError, lineWidth: 2.5)
             )
             .overlay(
                 Circle()
-                    .fill(Color.white)
-                    .frame(width: 4, height: 4)
+                    .fill(Color.mdError)
+                    .frame(width: 6, height: 6)
             )
-            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+            .shadow(color: .black.opacity(0.4), radius: 3, x: 0, y: 2)
             .position(x: pinX, y: pinY)
     }
 
@@ -194,39 +191,107 @@ struct GradientMapView: View {
     }
 }
 
-// MARK: - Animated Target Pin
+// MARK: - Animated User Pin
 
-/// Target pin that animates in with a spring pop-in effect
-private struct AnimatedTargetPin: View {
+/// User pin with gold accent and ease-out drop animation.
+/// Replays the drop animation each time the pin is repositioned via its id.
+private struct AnimatedUserPin: View {
     let coordinate: MapCoordinate
     let mapSize: CGFloat
 
-    @State private var scale: CGFloat = 0.0
+    @State private var dropOffset: CGFloat = -20
+    @State private var opacity: CGFloat = 0.0
 
     var body: some View {
         let pinX = CGFloat(coordinate.x) * mapSize
         let pinY = CGFloat(coordinate.y) * mapSize
 
         Circle()
-            .fill(Color.red)
-            .frame(width: 16, height: 16)
+            .fill(Color.mdPrimary)
+            .frame(width: 18, height: 18)
             .overlay(
                 Circle()
-                    .stroke(Color.white, lineWidth: 2)
+                    .stroke(Color.mdPrimary.opacity(0.6), lineWidth: 3)
             )
             .overlay(
                 Circle()
-                    .fill(Color.white)
-                    .frame(width: 4, height: 4)
+                    .fill(Color.white.opacity(0.9))
+                    .frame(width: 6, height: 6)
             )
+            .shadow(color: Color.mdPrimary.opacity(0.4), radius: 4, x: 0, y: 2)
             .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
-            .scaleEffect(scale)
+            .offset(y: dropOffset)
+            .opacity(opacity)
             .position(x: pinX, y: pinY)
             .onAppear {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.55)) {
-                    scale = 1.0
+                // Reset for animation replay
+                dropOffset = -20
+                opacity = 0.0
+                withAnimation(.easeOut(duration: 0.15)) {
+                    dropOffset = 0
+                    opacity = 1.0
                 }
             }
+            // Use coordinate as id to replay animation on each placement
+            .id("\(coordinate.x)-\(coordinate.y)")
+    }
+}
+
+// MARK: - Animated Target Pin
+
+/// Target pin (white circle + red outline) with pop-in + pulse animation on result reveal
+private struct AnimatedTargetPin: View {
+    let coordinate: MapCoordinate
+    let mapSize: CGFloat
+
+    @State private var scale: CGFloat = 0.0
+    @State private var pulseScale: CGFloat = 1.0
+    @State private var pulseOpacity: CGFloat = 0.6
+
+    var body: some View {
+        let pinX = CGFloat(coordinate.x) * mapSize
+        let pinY = CGFloat(coordinate.y) * mapSize
+
+        ZStack {
+            // Pulse ring (expands outward and fades)
+            Circle()
+                .stroke(Color.mdError.opacity(pulseOpacity), lineWidth: 2)
+                .frame(width: 18 * pulseScale, height: 18 * pulseScale)
+                .scaleEffect(scale > 0.5 ? 1.0 : 0.0)
+
+            // Main pin: white circle + red outline
+            Circle()
+                .fill(Color.white)
+                .frame(width: 18, height: 18)
+                .overlay(
+                    Circle()
+                        .stroke(Color.mdError, lineWidth: 2.5)
+                )
+                .overlay(
+                    Circle()
+                        .fill(Color.mdError)
+                        .frame(width: 6, height: 6)
+                )
+                .shadow(color: .black.opacity(0.4), radius: 3, x: 0, y: 2)
+        }
+        .scaleEffect(scale)
+        .position(x: pinX, y: pinY)
+        .onAppear {
+            // Pop-in with spring
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                scale = 1.0
+            }
+
+            // Start pulse animation after pop-in completes
+            withAnimation(
+                .easeInOut(duration: 1.0)
+                .repeatCount(3, autoreverses: true)
+                .delay(0.4)
+            ) {
+                pulseScale = 1.8
+                pulseOpacity = 0.0
+            }
+        }
     }
 }
 
@@ -246,6 +311,7 @@ private struct AnimatedTargetPin: View {
 
     return GradientMapView(gradientMap: map)
         .padding()
+        .background(Color.mdBackground)
 }
 
 #Preview("With Pins") {
@@ -273,7 +339,10 @@ private struct AnimatedTargetPin: View {
     return GradientMapView(
         gradientMap: map,
         userPin: userPin,
-        targetPin: targetPin
+        targetPin: targetPin,
+        showTargetPinAnimated: true,
+        lineDrawProgress: 1.0
     )
     .padding()
+    .background(Color.mdBackground)
 }
