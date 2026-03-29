@@ -47,8 +47,14 @@ jobs:
         security set-key-partition-list -S apple-tool:,apple: -k "" $KEYCHAIN_PATH
         security list-keychain -d user -s $KEYCHAIN_PATH
 
+        # Provisioning ProfileをUUID付きファイル名でインストール
+        PP_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH))
+        PP_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH))
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PP_UUID.mobileprovision
+
+        echo "PP_UUID=$PP_UUID" >> $GITHUB_ENV
+        echo "PP_NAME=$PP_NAME" >> $GITHUB_ENV
 
     - name: Setup App Store Connect API Key
       env:
@@ -91,7 +97,8 @@ jobs:
           -authenticationKeyID $ASC_KEY_ID \
           -authenticationKeyIssuerID $ASC_ISSUER_ID \
           CODE_SIGN_IDENTITY="Apple Distribution" \
-          CODE_SIGN_STYLE=Manual
+          CODE_SIGN_STYLE=Manual \
+          PROVISIONING_PROFILE_SPECIFIER="$PP_NAME"
 
     - name: Export IPA
       env:
@@ -99,15 +106,24 @@ jobs:
         ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       run: |
         # ExportOptions.plistを作成
-        cat > ExportOptions.plist <<'PLIST'
+        cat > ExportOptions.plist <<PLIST
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
         <dict>
             <key>method</key>
             <string>app-store</string>
+            <key>signingStyle</key>
+            <string>manual</string>
             <key>teamID</key>
             <string>W8476NSA2M</string>
+            <key>signingCertificate</key>
+            <string>Apple Distribution</string>
+            <key>provisioningProfiles</key>
+            <dict>
+                <key>dev.krgm4d.ShiroGuessr</key>
+                <string>$PP_NAME</string>
+            </dict>
             <key>uploadSymbols</key>
             <true/>
             <key>uploadBitcode</key>
