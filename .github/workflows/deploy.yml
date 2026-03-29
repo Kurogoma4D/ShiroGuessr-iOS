@@ -86,6 +86,7 @@ jobs:
           -scheme ShiroGuessr \
           -archivePath build/ShiroGuessr.xcarchive \
           -configuration Release \
+          -allowProvisioningUpdates \
           -authenticationKeyPath ~/private_keys/AuthKey_$ASC_KEY_ID.p8 \
           -authenticationKeyID $ASC_KEY_ID \
           -authenticationKeyIssuerID $ASC_ISSUER_ID
@@ -117,6 +118,7 @@ jobs:
           -archivePath build/ShiroGuessr.xcarchive \
           -exportPath build \
           -exportOptionsPlist ExportOptions.plist \
+          -allowProvisioningUpdates \
           -authenticationKeyPath ~/private_keys/AuthKey_$ASC_KEY_ID.p8 \
           -authenticationKeyID $ASC_KEY_ID \
           -authenticationKeyIssuerID $ASC_ISSUER_ID
