@@ -58,9 +58,11 @@ class InterstitialAdManager: NSObject, ObservableObject, FullScreenContentDelega
             return
         }
 
-        // Find the root view controller
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootViewController = windowScene.windows.first?.rootViewController else {
+        // On iPhone Duo and iPad the app can have several scenes, so present from the one the user is interacting with
+        guard let rootViewController = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first(where: { $0.activationState == .foregroundActive })?
+                .keyWindow?.rootViewController else {
             print("Failed to find root view controller")
             onDismissed()
             return

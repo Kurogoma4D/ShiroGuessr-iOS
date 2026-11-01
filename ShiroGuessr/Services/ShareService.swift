@@ -66,78 +66,10 @@ class ShareService {
         return String(repeating: "⭐", count: starCount)
     }
 
-    /// Share text using system share sheet
-    /// - Parameters:
-    ///   - text: Text to share
-    ///   - sourceView: Optional source view for iPad popover
-    static func shareText(_ text: String, from sourceView: UIView? = nil) {
-        let activityVC = UIActivityViewController(
-            activityItems: [text],
-            applicationActivities: nil
-        )
-
-        // Configure for iPad
-        if let sourceView = sourceView,
-           let popoverController = activityVC.popoverPresentationController {
-            popoverController.sourceView = sourceView
-            popoverController.sourceRect = sourceView.bounds
-        }
-
-        presentActivityViewController(activityVC)
-    }
-
     /// Copy text to clipboard
     /// - Parameter text: Text to copy
     static func copyToClipboard(_ text: String) {
         UIPasteboard.general.string = text
-    }
-
-    /// Share a SwiftUI view as an image
-    /// - Parameters:
-    ///   - view: The view to render
-    ///   - sourceView: Optional source view for iPad popover
-    @MainActor
-    static func shareViewAsImage<Content: View>(_ view: Content, from sourceView: UIView? = nil) {
-        let renderer = ImageRenderer(content: view)
-
-        // Set scale for high quality
-        renderer.scale = UIScreen.main.scale
-
-        guard let image = renderer.uiImage else {
-            return
-        }
-
-        let activityVC = UIActivityViewController(
-            activityItems: [image],
-            applicationActivities: nil
-        )
-
-        // Configure for iPad
-        if let sourceView = sourceView,
-           let popoverController = activityVC.popoverPresentationController {
-            popoverController.sourceView = sourceView
-            popoverController.sourceRect = sourceView.bounds
-        }
-
-        presentActivityViewController(activityVC)
-    }
-
-    /// Present activity view controller from the top-most view controller
-    /// - Parameter activityVC: The activity view controller to present
-    private static func presentActivityViewController(_ activityVC: UIActivityViewController) {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first,
-              let rootVC = window.rootViewController else {
-            return
-        }
-
-        // Find the top-most view controller
-        var topVC = rootVC
-        while let presentedVC = topVC.presentedViewController {
-            topVC = presentedVC
-        }
-
-        topVC.present(activityVC, animated: true)
     }
 }
 

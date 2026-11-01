@@ -21,7 +21,7 @@ struct ClassicGameScreen: View {
                             currentScore: viewModel.gameState?.totalScore ?? 0
                         )
 
-                        ScrollableIfNeeded {
+                        AdaptiveGameLayout(stackSpacing: 20) {
                             VStack(spacing: 20) {
                                 // Round indicator
                                 ScoreBoard(
@@ -36,8 +36,10 @@ struct ClassicGameScreen: View {
                                     showCSSValue: false
                                 )
                                 .padding(.horizontal, 16)
-
-                                // Color palette
+                            }
+                        } answer: {
+                            VStack(spacing: 20) {
+                                // Color palette — kept square so it shrinks to fit short landscape heights
                                 ColorPalette(
                                     colors: currentRound.paletteColors,
                                     selectedColor: viewModel.selectedColor,
@@ -46,7 +48,9 @@ struct ClassicGameScreen: View {
                                     },
                                     isEnabled: !viewModel.isRoundSubmitted
                                 )
+                                .aspectRatio(1, contentMode: .fit)
                                 .padding(.horizontal, 16)
+                                .layoutPriority(1)
 
                                 // Controls
                                 GameControls(
@@ -59,8 +63,6 @@ struct ClassicGameScreen: View {
                                         viewModel.nextRound()
                                     }
                                 )
-
-                                Spacer(minLength: 20)
                             }
                         }
                     }
