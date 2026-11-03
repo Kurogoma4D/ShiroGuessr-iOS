@@ -235,6 +235,7 @@ struct HomeScreen: View {
                 .padding(.bottom, 48)
                 .opacity(isTransitioning ? 0 : 1)
             }
+            .scrollsWhenTooTall()
         }
     }
 

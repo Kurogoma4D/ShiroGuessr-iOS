@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-26
+    runs-on: xcode-27
 
     steps:
     - name: Checkout code
@@ -21,7 +21,7 @@ jobs:
         cp Configurations/Prod.xcconfig.example Configurations/Prod.xcconfig
 
     - name: Select Xcode version
-      run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      run: sudo xcode-select -s /Applications/Xcode_27.1.app/Contents/Developer
 
     - name: Cache SPM dependencies
       uses: actions/cache@v4
@@ -35,8 +35,8 @@ jobs:
 
     - name: Prepare iOS Simulator
       run: |
-        # Find iPhone simulator with iOS 26.2 (matching deployment target)
-        UDID=$(xcrun simctl list devices available | grep "iOS 26.2" -A 20 | grep -E "iPhone (17 Pro|17|Air) \(" | head -1 | sed -E 's/.*\(([0-9A-F-]+)\).*/\1/')
+        # iOS 27.1 is the first runtime with iPhone Duo support
+        UDID=$(xcrun simctl list devices available | grep "iOS 27.1" -A 20 | grep -E "iPhone Duo \(" | head -1 | sed -E 's/.*\(([0-9A-F-]+)\).*/\1/')
         echo "Selected simulator UDID: $UDID"
         echo "SIMULATOR_UDID=$UDID" >> $GITHUB_ENV
         # Boot the simulator

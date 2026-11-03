@@ -37,6 +37,7 @@ struct TutorialOverlay: View {
                 actionButton
                     .padding(.bottom, 48)
             }
+            .scrollsWhenTooTall()
         }
     }
 

@@ -87,7 +87,7 @@ struct MapGameScreen: View {
                 currentScore: gameState.totalScore
             )
 
-            ScrollableIfNeeded {
+            AdaptiveGameLayout(stackSpacing: 8) {
                 VStack(spacing: 8) {
                     // Round indicator
                     ScoreBoard(
@@ -105,7 +105,9 @@ struct MapGameScreen: View {
 
                     // Target color display
                     targetColorView(color: currentRound.targetColor)
-
+                }
+            } answer: {
+                VStack(spacing: 8) {
                     // Gradient map view with adaptive sizing
                     // Map is the star of this mode — use a larger ratio of screen width
                     GeometryReader { geometry in
