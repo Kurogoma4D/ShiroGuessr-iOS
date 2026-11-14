@@ -5,10 +5,18 @@ import SwiftUI
 /// Entrance animations use tween (300ms EaseInOut) for smooth sheet presentation.
 struct RoundResultDialog: View {
     let round: GameRound
+    var prefersLargeDetent = false
     let onNext: () -> Void
 
     @State private var animateContent = false
     @State private var ringProgress: Double = 0.0
+    @State private var contentHeight: CGFloat?
+
+    /// `.medium` is shorter than the content on short screens such as iPhone Duo's outer display,
+    /// which hides the continue button, so the sheet sizes itself to the content once measured
+    private var fittedDetent: PresentationDetent {
+        contentHeight.map { .height($0) } ?? .medium
+    }
 
     /// Star rating based on Manhattan distance (0-30 range)
     /// 0-2: 5 stars, 3-5: 4 stars, 6-10: 3 stars, 11-18: 2 stars, 19+: 1 star
@@ -70,7 +78,13 @@ struct RoundResultDialog: View {
             .padding(.top, 32)
             .padding(.bottom, 24)
             .frame(maxWidth: .infinity)
+            .onGeometryChange(for: CGFloat.self, of: \.size.height) { contentHeight = $0 }
         }
+        .presentationDetents(
+            [fittedDetent, .large],
+            selection: .constant(prefersLargeDetent ? .large : fittedDetent)
+        )
+        .presentationDragIndicator(.visible)
         .onAppear {
             withAnimation(AnimationConstants.tweenShort) {
                 animateContent = true
@@ -244,8 +258,6 @@ struct RoundResultDialog: View {
         ),
         onNext: {}
     )
-    .presentationDetents([.medium])
-    .presentationDragIndicator(.visible)
 }
 
 #Preview("High Score") {
@@ -263,8 +275,6 @@ struct RoundResultDialog: View {
         ),
         onNext: {}
     )
-    .presentationDetents([.medium])
-    .presentationDragIndicator(.visible)
 }
 
 #Preview("Low Score") {
@@ -282,6 +292,4 @@ struct RoundResultDialog: View {
         ),
         onNext: {}
     )
-    .presentationDetents([.medium])
-    .presentationDragIndicator(.visible)
 }
