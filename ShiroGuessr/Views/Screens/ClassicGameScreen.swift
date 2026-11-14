@@ -92,13 +92,11 @@ struct ClassicGameScreen: View {
                 if let currentRound = viewModel.currentRound {
                     RoundResultDialog(
                         round: currentRound,
+                        prefersLargeDetent: horizontalSizeClass == .regular,
                         onNext: {
                             viewModel.nextRound()
                         }
                     )
-                    .presentationDetents([.medium, .large],
-                        selection: .constant(horizontalSizeClass == .regular ? .large : .medium))
-                    .presentationDragIndicator(.visible)
                     .modifier(FormPresentationSizingModifier())
                 }
             }

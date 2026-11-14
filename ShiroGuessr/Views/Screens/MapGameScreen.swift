@@ -60,14 +60,12 @@ struct MapGameScreen: View {
             if let currentRound = viewModel.currentRound {
                 RoundResultDialog(
                     round: currentRound,
+                    prefersLargeDetent: horizontalSizeClass == .regular,
                     onNext: {
                         viewModel.showingResult = false
                         viewModel.nextRound()
                     }
                 )
-                .presentationDetents([.medium, .large],
-                    selection: .constant(horizontalSizeClass == .regular ? .large : .medium))
-                .presentationDragIndicator(.visible)
                 .modifier(FormPresentationSizingModifier())
             }
         }
